@@ -63,6 +63,22 @@ double leerDoble() {
 
 // Función para leer un carácter, permite solo un carácter
 char leerCaracter() {
+    char c;
+    char caracter = '\0'; // Caracter vacío inicial
+    cout << "\nIngrese un caracter: ";
+    while (true) {
+        c = getch();
+        if (isprint(c) && caracter == '\0') { // Acepta solo un carácter imprimible
+            caracter = c;
+            cout << c;
+        } else if (c == 8 && caracter != '\0') { // Backspace permite borrar el carácter
+            cout << "\b \b";
+            caracter = '\0'; // Restablece el carácter para permitir otro ingreso
+        } else if (c == 13 && caracter != '\0') { // Enter para confirmar el carácter
+            cout << endl;
+            return caracter;
+        }
+    }
 }
 
 // Función para leer un valor booleano (0 o 1)
