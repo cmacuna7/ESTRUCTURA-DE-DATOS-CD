@@ -71,7 +71,17 @@ bool leerBooleano() {
 
 // Función para leer una cadena de texto (string)
 string leerCadena() {
+    string valor;
+    cout << "\nIngrese una cadena de texto: ";
+    getline(cin, valor);
+    while (valor.empty()) {
+        cout << "\nError: La cadena no debe estar vacia. Intente de nuevo.\n";
+        cout << "Ingrese una cadena de texto: ";
+        getline(cin, valor);
+    }
+    return valor;
 }
+
 
 int main() {
     int entero = leerEntero();
