@@ -1,3 +1,13 @@
+/************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                               *
+ * Proposito:                      Ingreso de Datos                                 *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz *                      *
+ * Fecha de creacion:              06/11/2024                                       *
+ * Fecha de modificacion:          08/11/2024                                       *
+ * Materia:                        Estructura de datos                              *
+ * NRC :                           1992                                             *
+ ***********************************************************************************/
+
 #include <iostream>
 #include <conio.h> // Para getch()
 #include <string>
@@ -12,10 +22,10 @@ using std::stof;
 using std::stod;
 
 // Función para leer un número entero, solo acepta dígitos
-int leerEntero() {
+int leerEntero(const string& mensaje) {
     string input = "";
     char c;
-    cout << "\nIngrese un valor entero: ";
+    cout << mensaje;
     while (true) {
         c = getch();
         if (c == 13 && !input.empty()) { // Enter y al menos un dígito
@@ -32,11 +42,11 @@ int leerEntero() {
 }
 
 // Función para leer un número flotante, solo acepta dígitos y un punto decimal
-float leerFlotante() {
+float leerFlotante(const string& mensaje) {
     string input = "";
     char c;
     bool hasDot = false;
-    cout << "\nIngrese un valor flotante: ";
+    cout << mensaje;
     while (true) {
         c = getch();
         if (c == 13 && !input.empty()) { // Enter y al menos un dígito
@@ -57,12 +67,12 @@ float leerFlotante() {
     return stof(input);
 }
 
-// Función para leer un valor double, similar a float
-double leerDoble() {
+// Función para leer un valor de doble precisión, similar a float
+double leerDoble(const string& mensaje) {
     string input = "";
     char c;
     bool hasDot = false;
-    cout << "\nIngrese un valor de doble precision: ";
+    cout << mensaje;
     while (true) {
         c = getch();
         if (c == 13 && !input.empty()) {
@@ -81,14 +91,13 @@ double leerDoble() {
         }
     }
     return stod(input);
-
 }
 
-// Función para leer un carácter, permite solo un carácter
-char leerCaracter() {
+// Función para leer un carácter, permite solo un carácter y borrar
+char leerCaracter(const string& mensaje) {
     char c;
     char caracter = '\0'; // Caracter vacío inicial
-    cout << "\nIngrese un caracter: ";
+    cout << mensaje;
     while (true) {
         c = getch();
         if (isprint(c) && caracter == '\0') { // Acepta solo un carácter imprimible
@@ -104,11 +113,11 @@ char leerCaracter() {
     }
 }
 
-// Función para leer un valor booleano (0 o 1)
-bool leerBooleano() {
+// Función para leer un valor booleano (0 o 1), permite borrar y Enter
+bool leerBooleano(const string& mensaje) {
     string input = "";
     char c;
-    cout << "Ingrese un valor booleano (0 para falso, 1 para verdadero): ";
+    cout << mensaje;
     while (true) {
         c = getch();
         if ((c == '0' || c == '1') && input.empty()) { // Solo permite 0 o 1
@@ -120,31 +129,29 @@ bool leerBooleano() {
             input.pop_back();
             cout << "\b \b";
         }
-
     }
 }
 
 // Función para leer una cadena de texto (string)
-string leerCadena() {
+string leerCadena(const string& mensaje) {
     string valor;
-    cout << "\nIngrese una cadena de texto: ";
+    cout << mensaje;
     getline(cin, valor);
     while (valor.empty()) {
         cout << "\nError: La cadena no debe estar vacia. Intente de nuevo.\n";
-        cout << "Ingrese una cadena de texto: ";
+        cout << mensaje;
         getline(cin, valor);
     }
     return valor;
 }
 
-
 int main() {
-    int entero = leerEntero();
-    float flotante = leerFlotante();
-    double doble = leerDoble();
-    char caracter = leerCaracter();
-    bool booleano = leerBooleano();
-    string cadena = leerCadena();
+    int entero = leerEntero("\nIngrese un valor entero: ");
+    float flotante = leerFlotante("\nIngrese un valor flotante: ");
+    double doble = leerDoble("\nIngrese un valor de doble: ");
+    char caracter = leerCaracter("\nIngrese un caracter: ");
+    bool booleano = leerBooleano("Ingrese un valor booleano (0 para falso, 1 para verdadero): ");
+    string cadena = leerCadena("\nIngrese una cadena de texto: ");
 
     cout << "\nValores ingresados:\n";
     cout << "Entero: " << entero << endl;
