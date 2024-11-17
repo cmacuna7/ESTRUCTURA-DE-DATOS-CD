@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar main",
+            "type": "shell",
+            "command": "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                "-I", "${workspaceFolder}/include",                 // Ruta de los headers
+                "${workspaceFolder}/src/main.cpp",                   // Archivo fuente principal
+                "-o", "${workspaceFolder}/build/main.exe",           // Salida del ejecutable
+                "-L", "${workspaceFolder}/build",                    // Ruta a la carpeta de la DLL
+                "-lMatrizHelper"                                     // Enlazar con la biblioteca DLL (MatrizHelper.dll)
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Compilación del proyecto principal con MatrizHelper.dll"
+        },
+        {
+            "label": "Ejecutar programa",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/main.exe",  // Cambiado a ruta relativa
+            "group": "test",
+            "dependsOn": "Compilar programa", 
+            "problemMatcher": [],
+            "detail": "Ejecutando el programa después de compilar."
+        }
+    ]
+}
