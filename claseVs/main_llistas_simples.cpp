@@ -48,7 +48,7 @@ int main() {
             string cedula;
             // Pedir y validar cédula
             do {
-                cout << "Ingrese la cedula (10 digitos): ";
+                cout << "Ingrese la cedula: ";
                 cin >> cedula;
                 // Llamar al método de validación para la cédula
                 cedulaValida = ingresar_string.validarCedula(cedula);
@@ -62,8 +62,8 @@ int main() {
 
             // Insertar nombre
             do{
-            dato_nombre = ingresar_string.ingresar("\nIngrese el nombre: ", "string");
-             }while (dato_nombre.empty());
+            dato_nombre = ingresar_string.ingresar("Ingrese el nombre: ", "string");
+            }while (dato_nombre.empty());
             lista_datos->Insertar_cabeza(dato_nombre);
             //lista_datos->Insertar_cola(dato_nombre);
                         
@@ -88,15 +88,25 @@ int main() {
         case '3': {
             caracter = ingresar_string.ingresar("Ingrese el caracter a borrar: ", "char")[0];
             Lista_Simple<string> nuevaLista = lista_datos->EliminarCaracter(caracter);
-            
-            cout << "\nContenido de la nueva lista (despues de borrar '" << caracter << "'):\n";
+            // Mostrar la lista original
+            cout << "Contenido de la lista original:\n";
+            lista_datos->Mostrar();
+
+            // Mostrar la nueva lista
+            cout << "\nContenido de la lista auxiliar (despues de borrar '" << caracter << "'):\n";
             nuevaLista.Mostrar();
             system("pause");
             break;
         }
         case '4': {
-            cout << "Contenido de la lista:\n";
+            Lista_Simple<string> nuevaLista = lista_datos->EliminarCaracter(caracter);
+            // Mostrar la lista original
+            cout << "Contenido de la lista original:\n";
             lista_datos->Mostrar();
+
+            // Mostrar la nueva lista
+            cout << "\nContenido de la lista auxiliar:\n";
+            nuevaLista.Mostrar();
             system("pause");
             break;
         }
