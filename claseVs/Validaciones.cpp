@@ -14,63 +14,134 @@ template<typename T>
 Validaciones<T>::Validaciones() {}
 
 template<typename T>
-T Validaciones<T>::ingresar(const std::string& msj, const std::string& tipo) {
-    char cad[100]; // Buffer para almacenar entrada
+T Validaciones<T>::ingresar(char *msj, char *tipo)
+{
+    char cad[10];
     char c;
     int i = 0;
     T valor;
-    std::cout << msj;
-
-    while ((c = getch()) != 13) { // 13 es Enter
-        if (tipo == "entero") {
-            if (isdigit(c)) {
-                std::cout << c;
+    printf("%s", msj);
+    while ((c = getch()) != 13)
+    {
+        if (tipo == "entero")
+        {
+            if (c >= '0' && c <= '9')
+            {
+                printf("%c", c);
                 cad[i++] = c;
-            } else if (c == 8 && i > 0) { // Backspace
-                std::cout << "\b \b";
-                i--;
             }
-        } else if (tipo == "flotante" || tipo == "double") {
-            if (isdigit(c) || (c == '.' && strchr(cad, '.') == nullptr)) {
-                std::cout << c;
+            else if (c == 8)
+            {
+                if (i > 0)
+                {
+                    printf("\b \b");
+                    i--;
+                }
+            }
+        }
+        else if (tipo == "flotante" || tipo == "double")
+        {
+            if (c >= '0' && c <= '9')
+            {
+                printf("%c", c);
                 cad[i++] = c;
-            } else if (c == 8 && i > 0) { // Backspace
-                std::cout << "\b \b";
-                i--;
             }
-        } else if (tipo == "string") {
-            if (isalpha(c)) {
-                std::cout << c;
+            else if (c == 8)
+            {
+                if (i > 0)
+                {
+                    printf("\b \b");
+                    i--;
+                }
+            }
+            else if (c == 46)
+            {
+                bool aux = false;
+                for (int j = 0; cad[j] != '\0'; j++)
+                {
+                    if (cad[j] == 46)
+                    {
+                        aux = true;
+                        break;
+                    }
+                }
+                if (aux == false)
+                {
+                    printf("%c", c);
+                    cad[i++] = c;
+                }
+            }
+        }
+        else if (tipo == "string")
+        {
+            if (isalpha(c))
+            {
+                printf("%c", c);
                 cad[i++] = c;
-            } else if (c == 8 && i > 0) { // Backspace
-                std::cout << "\b \b";
-                i--;
             }
-        } else if (tipo == "char") {
-            if (isalnum(c)) {  // Acepta tanto letras como números
-                std::cout << c;
+            else if (c == 8)
+            {
+                if (i > 0)
+                {
+                    printf("\b \b");
+                    i--;
+                }
+            }
+        }
+        else if (tipo == "char")
+        {
+            if (isalpha(c))
+            {
+                printf("%c", c);
                 valor = c;
                 break;
-            } else {
-                std::cout << "Caracter no valido. Intente nuevamente.\n";
+            }
+            else if (c == 8)
+            {
+                if (c >= 'a' && c <= 'z')
+                {
+                    printf("\b \b");
+                }
             }
         }
     }
-    cad[i] = '\0'; // Termina la cadena
-
-    if (tipo == "entero") {
-        return valor = std::atoi(cad);
-    } else if (tipo == "flotante") {
-        return valor = std::stof(cad); // Conversión directa a float
-    } else if (tipo == "double") {
-        return valor = std::stod(cad); // Conversión directa a double
-    } else if (tipo == "string") {
-        return valor = std::string(cad);
-    } else if (tipo == "char") {
-        return valor; // Ya asignado anteriormente
+    cad[i] = '\0';
+    if (tipo == "entero")
+    {
+        int entero;
+        entero = atoi(cad);
+        return valor = entero;
     }
-
-    throw std::invalid_argument("Tipo no válido en función ingresar.");
+    else if (tipo == "flotante")
+    {
+        float flotante;
+        for (int j = 0; cad[j] != '\0'; j++)
+        {
+            flotante = atof(cad);
+        }
+        return valor = flotante;
+    }
+    else if (tipo == "double")
+    {
+        double doble;
+        for (int j = 0; cad[j] != '\0'; j++)
+        {
+            doble = atof(cad);
+        }
+        return valor = doble;
+    }
+    else if (tipo == "char")
+    {
+        return valor;
+    }
+    else if (tipo == "string")
+    {
+        for (int j = 0; cad[j] != '\0'; j++)
+        {
+            valor = valor + cad[j];
+        }
+        return valor;
+    }
 }
 
 template<typename T>

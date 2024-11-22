@@ -26,7 +26,7 @@ class Validaciones
    public:
       Validaciones();
       // Método para ingresar datos
-      T ingresar(const std::string& msj, const std::string& tipo);
+      T ingresar(char *msj, char *tipo);
       // Método para validar cédula ecuatoriana
       bool validarCedula(const std::string& cedula); // Cambiado el tipo a std::string
    protected:

@@ -16,6 +16,7 @@
 using namespace std;
 
 
+
 bool esEntero(string);
 
 int main() {
@@ -28,7 +29,7 @@ int main() {
     char opcion;
     char caracter;
     bool cedulaValida = false;
-
+    std::string dato_nombre, dato_apellido;
     do {
         system("cls");
         cout << "*********** Menu ***********" << endl;
@@ -57,14 +58,22 @@ int main() {
             } while (!cedulaValida);
 
             lista_datos->Insertar_cabeza(cedula);
+            //lista_datos->Insertar_cola(cedula);
 
             // Insertar nombre
-            string dato_nombre = ingresar_string.ingresar("Ingrese el nombre: ", "string");
+            do{
+            dato_nombre = ingresar_string.ingresar("\nIngrese el nombre: ", "string");
+             }while (dato_nombre.empty());
             lista_datos->Insertar_cabeza(dato_nombre);
-
+            //lista_datos->Insertar_cola(dato_nombre);
+                        
+            do{
             // Insertar apellido
-            string dato_apellido = ingresar_string.ingresar("\nIngrese el apellido: ", "string");
+            dato_apellido = ingresar_string.ingresar("\nIngrese el apellido: ", "string");
+            }while (dato_apellido.empty());
+
             lista_datos->Insertar_cabeza(dato_apellido);
+            //lista_datos->Insertar_cola(dato_apellido);
 
             cout << "\nDatos ingresados correctamente." << endl;
             system("pause");
