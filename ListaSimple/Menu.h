@@ -39,18 +39,16 @@ public:
             cout << "4. Mostrar lista\n";
             cout << "5. Salir\n";
             cout << "Seleccione una opcion: ";
-            cin >> opcion;
-
+            opcion = Validaciones::getInstance().leerCaracter("");
             switch (opcion) {
                 case '1': {
                     string nombre, apellido, cedula;
-                    cout << "Ingrese el nombre: ";
-                    cin >> nombre;
-                    cout << "Ingrese el apellido: ";
-                    cin >> apellido;
+                    nombre = Validaciones::getInstance().leerCadenaSinNumero("\nIngrese el nombre: ");
+
+                    apellido = Validaciones::getInstance().leerCadenaSinNumero("\nIngrese el apellido: ");
+
                     do {
-                        cout << "Ingrese la cedula: ";
-                        cin >> cedula;
+                        cedula = Validaciones::getInstance().leerCadena("Ingrese la cedula: ");
                         if (!Validaciones::getInstance().validarCedula(cedula)) {
                             cout << "Cedula invalida. Intente de nuevo.\n";
                         }
@@ -67,16 +65,14 @@ public:
                 }
 
                 case '2': {
-                    cout << "Ingrese el caracter a buscar: ";
-                    cin >> caracter;
+                    caracter = Validaciones::getInstance().leerCaracter("\nIngrese el caracter a buscar: ");
                     lista.buscarPorCaracter(caracter);
                     pausa(); 
                     break;
                 }
 
                 case '3': {
-                    cout << "Ingrese el caracter a borrar: ";
-                    cin >> caracter;
+                    caracter = Validaciones::getInstance().leerCaracter("\nIngrese el caracter a borrar: ");
                     // Crear una nueva lista con las palabras modificadas
                     ListaEnlazada nuevaLista = lista.borrarCaracter(caracter);
                     cout << "Contenido de la nueva lista (despues de borrar '" << caracter << "'):\n";
@@ -97,7 +93,7 @@ public:
                     break;
 
                 default:
-                    cout << "Opcion invalida. Intente de nuevo.\n";
+                    cout << "\nOpcion invalida. Intente de nuevo.\n";
                     pausa(); 
                     break;
             }
