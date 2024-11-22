@@ -1,11 +1,11 @@
 /***************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
  * Proposito:                      Programa sobre lista simple                         *
- * Autor:                          Josue Chango, Adonny Calero, Eduardo altamirano     *
- * Fecha de creacion:              18/11/2024                                          *
- * Fecha de modificacion:          18/11/2024                                          *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
+ * Fecha de creacion:              21/11/2024                                          *
+ * Fecha de modificacion:          21/11/2024                                          *
  * Materia:                        Estructura de datos                                 *
- * NRC :                           1978                                                *
+ * NRC :                           1992                                                *
  **************************************************************************************/
 #include "Lista_Simple.h"
 
@@ -35,8 +35,8 @@ void Lista_Simple<T>::Insertar_cabeza(T _dato)
 }
 
 template<typename T> 
- void Lista_Simple<T>::Insertar_cola(T _dato) 
- {
+void Lista_Simple<T>::Insertar_cola(T _dato) 
+{
     Nodo<T>* nuevo = new Nodo<T>(_dato);
     if (cabeza == NULL) {
         cabeza = nuevo;
@@ -51,7 +51,7 @@ template<typename T>
 }
 
 template<typename T> 
- void Lista_Simple<T>::Buscar(T _dato) {
+void Lista_Simple<T>::Buscar(T _dato) {
     Nodo<T>* aux = cabeza;
     while (aux != NULL) {
         if (aux->getDato() == _dato) {
@@ -64,7 +64,7 @@ template<typename T>
 }
 
 template<typename T> 
- void Lista_Simple<T>::Eliminar(T _dato) {
+void Lista_Simple<T>::Eliminar(T _dato) {
     Nodo<T>* aux = cabeza;
     Nodo<T>* anterior = NULL;
     while (aux != NULL) {
@@ -86,11 +86,57 @@ template<typename T>
 }
 
 template<typename T> 
- void Lista_Simple<T>::Mostrar() {
+void Lista_Simple<T>::Mostrar() {
     Nodo<T>* aux = cabeza;
     while (aux != NULL) {
         cout << aux->getDato() << " -> ";
         aux = aux->getSiguiente();
     }
     cout << "NULL" << endl;
+}
+
+template<typename T>
+void Lista_Simple<T>::BuscarPorCaracter(char caracter) {
+    Nodo<T>* aux = cabeza;
+    bool encontrado = false;
+
+    while (aux != nullptr) {
+        string palabra = aux->getDato(); // Asumimos que `T` puede convertirse a string
+        for (char c : palabra) {
+            if (tolower(c) == tolower(caracter)) {
+                cout << "\nPalabra encontrada: " << palabra << endl;
+                encontrado = true;
+                break;
+            }
+        }
+        aux = aux->getSiguiente();
+    }
+
+    if (!encontrado) {
+        cout << "\nNo se encontraron palabras con el caracter '" << caracter << "'.\n";
+    }
+}
+
+template<typename T>
+Lista_Simple<string> Lista_Simple<T>::EliminarCaracter(char caracter) {
+    Lista_Simple<string> nuevaLista;
+    Nodo<T>* aux = cabeza;
+
+    while (aux != nullptr) {
+        string palabra = aux->getDato();
+        string palabraModificada = "";
+
+        // Eliminar el carácter de la palabra
+        for (char c : palabra) {
+            if (tolower(c) != tolower(caracter)) {
+                palabraModificada += c;
+            }
+        }
+
+        // Insertar palabra modificada en la nueva lista
+        nuevaLista.Insertar_cabeza(palabraModificada);
+        aux = aux->getSiguiente();
+    }
+
+    return nuevaLista;
 }

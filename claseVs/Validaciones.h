@@ -1,14 +1,20 @@
 /***************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
- * Proposito:                      Programa sobre lista simple                         *
- * Autor:                          Josue Chango, Adonny Calero, Eduardo altamirano     *
- * Fecha de creacion:              18/11/2024                                          *
- * Fecha de modificacion:          18/11/2024                                          *
+ * Proposito:                      Validaciones                                        *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
+ * Fecha de creacion:              21/11/2024                                          *
+ * Fecha de modificacion:          21/11/2024                                          *
  * Materia:                        Estructura de datos                                 *
- * NRC :                           1978                                                *
+ * NRC :                           1992                                                *
  **************************************************************************************/
 
-#include <conio.h>
+#include <string>   // Para std::string
+#include <iostream> // Para std::cout
+#include <cctype>   // Para isdigit e isalpha
+#include <cstdlib>  // Para atoi y atof
+#include <stdexcept> // Para std::invalid_argument
+#include <cstring>  // Para strchr
+#include <conio.h>  // Para getch (específico de Windows)
 
 
 #if !defined(__Validaciones_Validaciones_h)
@@ -19,12 +25,13 @@ class Validaciones
 {
    public:
       Validaciones();
-      T ingresar(char *msj, char *tipo);
+      // Método para ingresar datos
+      T ingresar(const std::string& msj, const std::string& tipo);
+      // Método para validar cédula ecuatoriana
+      bool validarCedula(const std::string& cedula); // Cambiado el tipo a std::string
    protected:
    private:
       T numero;
-
-
 };
 
 #endif
