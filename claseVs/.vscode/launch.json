@@ -8,8 +8,8 @@
         "args": [],
         "stopAtEntry": false,
         "externalConsole": true,
-        "cwd": "C:/Users/User/Desktop/Estructura de Datos/ESTRUCTURA-DE-DATOS-CD/claseVs",
-        "program": "C:/Users/User/Desktop/Estructura de Datos/ESTRUCTURA-DE-DATOS-CD/claseVs/output/main_llistas_simples.exe",
+        "cwd": "C:/Users/mateo/Desktop/Estructura/ESTRUCTURA-DE-DATOS-CD/claseVs",
+        "program": "C:/Users/mateo/Desktop/Estructura/ESTRUCTURA-DE-DATOS-CD/claseVs/output/main_llistas_simples.exe",
         "MIMode": "gdb",
         "miDebuggerPath": "C:/MinGW/bin/gdb.exe",
         "setupCommands": [
