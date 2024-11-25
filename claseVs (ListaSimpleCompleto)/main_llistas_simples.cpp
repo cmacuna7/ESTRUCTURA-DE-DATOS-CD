@@ -20,24 +20,27 @@ using namespace std;
 bool esEntero(string);
 
 int main() {
-    // Crear instancias de la clase Validaciones para enteros y strings
+    //Crear instancias de la clase Validaciones para enteros y strings
     Validaciones<int> ingresar_entero;
     Validaciones<string> ingresar_string;
 
     Lista_Simple<string>* lista_datos = new Lista_Simple<string>();
+    Lista_Simple<string> lista_auxiliar; // Lista auxiliar global para modificaciones
 
     char opcion;
     char caracter;
     bool cedulaValida = false;
     std::string dato_nombre, dato_apellido;
+
     do {
         system("cls");
         cout << "*********** Menu ***********" << endl;
         cout << "1. Insertar datos" << endl;
         cout << "2. Buscar palabras por caracter" << endl;
         cout << "3. Borrar un caracter de las palabras" << endl;
-        cout << "4. Mostrar lista" << endl;
-        cout << "5. Salir" << endl;
+        cout << "4. Reemplazar un caracter por otro en las palabras" << endl;
+        cout << "5. Mostrar lista" << endl;
+        cout << "6. Salir" << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
         cin.ignore();
@@ -46,11 +49,9 @@ int main() {
         case '1': {
             // Insertar cedula
             string cedula;
-            // Pedir y validar cédula
             do {
                 cout << "Ingrese la cedula: ";
                 cin >> cedula;
-                // Llamar al método de validación para la cédula
                 cedulaValida = ingresar_string.validarCedula(cedula);
                 if (!cedulaValida) {
                     cout << "Cedula invalida" << endl;
@@ -58,22 +59,18 @@ int main() {
             } while (!cedulaValida);
 
             lista_datos->Insertar_cabeza(cedula);
-            //lista_datos->Insertar_cola(cedula);
 
             // Insertar nombre
-            do{
-            dato_nombre = ingresar_string.ingresar("Ingrese el nombre: ", "string");
-            }while (dato_nombre.empty());
+            do {
+                dato_nombre = ingresar_string.ingresar("Ingrese el nombre: ", "string");
+            } while (dato_nombre.empty());
             lista_datos->Insertar_cabeza(dato_nombre);
-            //lista_datos->Insertar_cola(dato_nombre);
-                        
-            do{
-            // Insertar apellido
-            dato_apellido = ingresar_string.ingresar("\nIngrese el apellido: ", "string");
-            }while (dato_apellido.empty());
 
+            // Insertar apellido
+            do {
+                dato_apellido = ingresar_string.ingresar("\nIngrese el apellido: ", "string");
+            } while (dato_apellido.empty());
             lista_datos->Insertar_cabeza(dato_apellido);
-            //lista_datos->Insertar_cola(dato_apellido);
 
             cout << "\nDatos ingresados correctamente." << endl;
             system("pause");
@@ -86,31 +83,49 @@ int main() {
             break;
         }
         case '3': {
-            caracter = ingresar_string.ingresar("Ingrese el caracter a borrar: ", "char")[0];
-            Lista_Simple<string> nuevaLista = lista_datos->EliminarCaracter(caracter);
-            // Mostrar la lista original
-            cout << "Contenido de la lista original:\n";
+            cout << "Ingrese el caracter a borrar: ";
+            char borrar = ingresar_string.ingresar("", "char")[0];
+
+            lista_auxiliar = lista_datos->ModificarCaracter(borrar);
+
+            cout << "\nContenido de la lista original:\n";
             lista_datos->Mostrar();
 
-            // Mostrar la nueva lista
-            cout << "\nContenido de la lista auxiliar (despues de borrar '" << caracter << "'):\n";
-            nuevaLista.Mostrar();
+            cout << "Contenido de la lista auxiliar (despues de borrar '" << borrar << "'):\n";
+            lista_auxiliar.Mostrar();
+
             system("pause");
             break;
         }
         case '4': {
-            Lista_Simple<string> nuevaLista = lista_datos->EliminarCaracter(caracter);
-            // Mostrar la lista original
+            cout << "Ingrese el caracter a borrar: ";
+            char borrar = ingresar_string.ingresar("", "char")[0];
+
+            cout << "\nIngrese el caracter por el que se reemplazara: ";
+            char reemplazar = ingresar_string.ingresar("", "char")[0];
+
+            lista_auxiliar = lista_datos->ModificarCaracter(borrar, reemplazar);
+
             cout << "Contenido de la lista original:\n";
             lista_datos->Mostrar();
 
-            // Mostrar la nueva lista
-            cout << "\nContenido de la lista auxiliar:\n";
-            nuevaLista.Mostrar();
+            cout << "Contenido de la lista auxiliar (modificada):\n";
+            lista_auxiliar.Mostrar();
+
             system("pause");
             break;
         }
-        case '5':
+        case '5': { // Mostrar lista original y auxiliar
+            cout << "Contenido de la lista original:\n";
+            lista_datos->Mostrar();
+
+            cout << "\nContenido de la lista auxiliar:\n";
+            lista_auxiliar.Mostrar();
+
+            system("pause");
+            break;
+        }
+        case '6':
             cout << "Saliendo del sistema." << endl;
             break;
         default:
@@ -118,7 +133,7 @@ int main() {
             system("pause");
             break;
         }
-    } while (opcion != '5');
+    } while (opcion != '6');
 
     delete lista_datos;
     return 0;

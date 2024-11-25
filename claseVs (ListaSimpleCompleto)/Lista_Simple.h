@@ -25,6 +25,7 @@ public:
     void Eliminar(T);
     void Mostrar();
     void BuscarPorCaracter(char); // Nuevo método
+    Lista_Simple<string> ModificarCaracter(char borrar, char reemplazar = '\0');
     Lista_Simple<string> EliminarCaracter(char); // Nuevo método para crear una lista nueva sin el carácter
 };
 

@@ -140,3 +140,33 @@ Lista_Simple<string> Lista_Simple<T>::EliminarCaracter(char caracter) {
 
     return nuevaLista;
 }
+
+template<typename T>
+Lista_Simple<string> Lista_Simple<T>::ModificarCaracter(char borrar, char reemplazar) {
+    Lista_Simple<string> nuevaLista; // Crear lista auxiliar
+    Nodo<T>* aux = cabeza;
+
+    while (aux != nullptr) {
+        string palabra = aux->getDato();
+        string palabraModificada = "";
+
+        // Procesar cada carácter en la palabra
+        for (char c : palabra) {
+            if (tolower(c) == tolower(borrar)) {
+                // Si `reemplazar` no es el carácter nulo, lo reemplazamos
+                if (reemplazar != '\0') {
+                    palabraModificada += reemplazar;
+                }
+                // De lo contrario, simplemente no lo agregamos (se elimina)
+            } else {
+                palabraModificada += c;
+            }
+        }
+
+        // Insertar la palabra modificada en la lista auxiliar
+        nuevaLista.Insertar_cabeza(palabraModificada);
+        aux = aux->getSiguiente();
+    }
+
+    return nuevaLista;
+}
