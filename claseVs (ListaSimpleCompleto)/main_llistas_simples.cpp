@@ -31,6 +31,7 @@ int main() {
     char caracter;
     bool cedulaValida = false;
     std::string dato_nombre, dato_apellido;
+    bool primera_edicion = true;
 
     do {
         system("cls");
@@ -86,7 +87,12 @@ int main() {
             cout << "Ingrese el caracter a borrar: ";
             char borrar = ingresar_string.ingresar("", "char")[0];
 
-            lista_auxiliar = lista_datos->ModificarCaracter(borrar);
+            if (primera_edicion) {
+                lista_auxiliar = lista_datos->ModificarCaracter(borrar);
+                primera_edicion = false; // Cambiar a false después de la primera edición
+            } else {
+                lista_auxiliar = lista_auxiliar.ModificarCaracter(borrar);
+            }
 
             cout << "\nContenido de la lista original:\n";
             lista_datos->Mostrar();
@@ -104,7 +110,12 @@ int main() {
             cout << "\nIngrese el caracter por el que se reemplazara: ";
             char reemplazar = ingresar_string.ingresar("", "char")[0];
 
-            lista_auxiliar = lista_datos->ModificarCaracter(borrar, reemplazar);
+            if (primera_edicion) {
+                lista_auxiliar = lista_datos->ModificarCaracter(borrar, reemplazar);
+                primera_edicion = false; // Cambiar a false después de la primera edición
+            } else {
+                lista_auxiliar = lista_auxiliar.ModificarCaracter(borrar, reemplazar);
+            }
 
             cout << "Contenido de la lista original:\n";
             lista_datos->Mostrar();
@@ -115,6 +126,7 @@ int main() {
             system("pause");
             break;
         }
+        
         case '5': { // Mostrar lista original y auxiliar
             cout << "Contenido de la lista original:\n";
             lista_datos->Mostrar();
