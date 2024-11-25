@@ -48,35 +48,27 @@ int main() {
 
         switch (opcion) {
         case '1': {
-            // Insertar cedula
             string cedula;
             do {
                 cout << "Ingrese la cedula: ";
                 cin >> cedula;
-                cedulaValida = ingresar_string.validarCedula(cedula);
-                if (!cedulaValida) {
-                    cout << "Cedula invalida" << endl;
+                if (!ingresar_string.validarCedula(cedula)) {
+                    cout << "Cedula invalida. Intente nuevamente." << endl;
                 }
-            } while (!cedulaValida);
-
+            } while (!ingresar_string.validarCedula(cedula));
             lista_datos->Insertar_cabeza(cedula);
 
-            // Insertar nombre
-            do {
-                dato_nombre = ingresar_string.ingresar("Ingrese el nombre: ", "string");
-            } while (dato_nombre.empty());
-            lista_datos->Insertar_cabeza(dato_nombre);
+            string nombre = ingresar_string.ingresar("Ingrese el nombre: ", "string");
+            lista_datos->Insertar_cabeza(nombre);
 
-            // Insertar apellido
-            do {
-                dato_apellido = ingresar_string.ingresar("\nIngrese el apellido: ", "string");
-            } while (dato_apellido.empty());
-            lista_datos->Insertar_cabeza(dato_apellido);
+            string apellido = ingresar_string.ingresar("Ingrese el apellido: ", "string");
+            lista_datos->Insertar_cabeza(apellido);
 
             cout << "\nDatos ingresados correctamente." << endl;
             system("pause");
             break;
         }
+
         case '2': {
             caracter = ingresar_string.ingresar("Ingrese el caracter a buscar: ", "char")[0];
             lista_datos->BuscarPorCaracter(caracter);
