@@ -95,7 +95,7 @@ int main() {
             break;
         }
         case '3': {
-    char caracter;
+            char caracter;
             cout << "Ingrese el caracter a borrar: ";
             caracter = ingresar_string.ingresar("", "char")[0];
 

@@ -74,16 +74,29 @@ int main() {
         }
         case '2': {
             char caracter;
-            cout << "Ingrese el caracter a buscar: ";
-            cin >> caracter;
+            do {
+                cout << "Ingrese un unico caracter a buscar: ";
+                cin >> caracter;
+                // Validación para asegurar que solo se ingresó un carácter
+                if (cin.peek() != '\n') {
+                    cout << "Error: Ingrese unicamente un caracter valido." << endl;
+                    // Limpia el buffer de entrada en caso de error
+                    cin.clear();
+                    while (cin.get() != '\n') {
+                    // Descartar el resto de la entrada
+                    }
+                } else {
+                    break; // Entrada válida, salir del bucle
+                }
+            } while (true);
             lista_datos->buscarPorCaracter(caracter);
             system("pause");
             break;
         }
-       case '3': {
+        case '3': {
         char caracter;
         cout << "Ingrese el caracter a borrar: ";
-        cin >> caracter;
+        caracter = ingresar_string.ingresar("", "char")[0];
 
         if (lista_auxiliar == nullptr) {
             // Primera vez: se opera sobre lista_datos
@@ -98,7 +111,7 @@ int main() {
         }
 
         // Mostrar contenido de lista_auxiliar después de la operación
-        cout << "\nContenido de la lista auxiliar (después de borrar el carácter):" << endl;
+        cout << "\nContenido de la lista auxiliar (despues de borrar el caracter):" << endl;
         lista_auxiliar->mostrar();
 
         system("pause");
@@ -108,16 +121,16 @@ int main() {
         case '4': {
             char viejo, nuevo;
             cout << "Ingrese el caracter a reemplazar: ";
-            cin >> viejo;
+            viejo = ingresar_string.ingresar("", "char")[0];
             cout << "Ingrese el nuevo caracter: ";
-            cin >> nuevo;
+            nuevo = ingresar_string.ingresar("", "char")[0];
 
             // Si ya existe una lista auxiliar, realizamos el reemplazo en ella.
             if (lista_auxiliar != nullptr) {
                 // Reemplazar el carácter en la lista auxiliar
                 lista_auxiliar->reemplazarCaracter(viejo, nuevo);
 
-                cout << "\nContenido de la lista auxiliar (después de reemplazar el carácter):" << endl;
+                cout << "\nContenido de la lista auxiliar (despues de reemplazar el caracter):" << endl;
                 lista_auxiliar->mostrar();
             } else {
                 cout << "No hay lista auxiliar para realizar el reemplazo." << endl;

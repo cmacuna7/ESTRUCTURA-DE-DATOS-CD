@@ -74,7 +74,22 @@ int main() {
         }
 
         case '2': {
-            caracter = ingresar_string.ingresar("Ingrese el caracter a buscar: ", "char")[0];
+            char caracter;
+            do {
+                cout << "Ingrese un unico caracter a buscar: ";
+                cin >> caracter;
+                // Validación para asegurar que solo se ingresó un carácter
+                if (cin.peek() != '\n') {
+                    cout << "Error: Ingrese unicamente un caracter valido." << endl;
+                    // Limpia el buffer de entrada en caso de error
+                    cin.clear();
+                    while (cin.get() != '\n') {
+                    // Descartar el resto de la entrada
+                    }
+                } else {
+                    break; // Entrada válida, salir del bucle
+                }
+            } while (true);
             lista_datos->BuscarPorCaracter(caracter);
             system("pause");
             break;
