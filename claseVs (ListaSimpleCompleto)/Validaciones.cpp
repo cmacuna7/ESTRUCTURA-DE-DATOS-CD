@@ -10,81 +10,141 @@
 
 #include "Validaciones.h"
 
-template <typename T>
+template<typename T>
 Validaciones<T>::Validaciones() {}
 
-template <typename T>
-T Validaciones<T>::ingresar(char* msj, char* tipo) {
-    char cad[50];
+template<typename T>
+T Validaciones<T>::ingresar(char *msj, char *tipo)
+{
+    char cad[10];
     char c;
     int i = 0;
     T valor;
     printf("%s", msj);
-
-    while ((c = getch()) != 13) {
-        if (tipo == "entero") {
-            if (c >= '0' && c <= '9') {
+    while ((c = getch()) != 13)
+    {
+        if (tipo == "entero")
+        {
+            if (c >= '0' && c <= '9')
+            {
                 printf("%c", c);
                 cad[i++] = c;
-            } else if (c == 8 && i > 0) {
-                printf("\b \b");
-                i--;
             }
-        } else if (tipo == "flotante" || tipo == "double") {
-            if ((c >= '0' && c <= '9') || c == '.') {
+            else if (c == 8)
+            {
+                if (i > 0)
+                {
+                    printf("\b \b");
+                    i--;
+                }
+            }
+        }
+        else if (tipo == "flotante" || tipo == "double")
+        {
+            if (c >= '0' && c <= '9')
+            {
                 printf("%c", c);
                 cad[i++] = c;
-            } else if (c == 8 && i > 0) {
-                printf("\b \b");
-                i--;
             }
-        } else if (tipo == "string") {
-            do {
-                i = 0;
-                printf("%s", msj);
-                while ((c = getch()) != 13) {
-                    if (isalpha(c) || c == ' ') {
-                        printf("%c", c);
-                        cad[i++] = c;
-                    } else if (c == 8 && i > 0) {
-                        printf("\b \b");
-                        i--;
+            else if (c == 8)
+            {
+                if (i > 0)
+                {
+                    printf("\b \b");
+                    i--;
+                }
+            }
+            else if (c == 46)
+            {
+                bool aux = false;
+                for (int j = 0; cad[j] != '\0'; j++)
+                {
+                    if (cad[j] == 46)
+                    {
+                        aux = true;
+                        break;
                     }
                 }
-                cad[i] = '\0';
-                if (!validarNombre(cad)) {
-                    printf("\nEntrada invalida. Solo se permiten letras y espacios. Intente nuevamente.\n");
+                if (aux == false)
+                {
+                    printf("%c", c);
+                    cad[i++] = c;
                 }
-            } while (!validarNombre(cad));
-            for (int j = 0; cad[j] != '\0'; j++) {
-                valor = valor + cad[j];
             }
-            return valor;
-        } else if (tipo == "char") {
-            if (isalpha(c)) {
+        }
+        else if (tipo == "string")
+        {
+            if (isalpha(c))
+            {
+                printf("%c", c);
+                cad[i++] = c;
+            }
+            else if (c == 8)
+            {
+                if (i > 0)
+                {
+                    printf("\b \b");
+                    i--;
+                }
+            }
+        }
+        else if (tipo == "char")
+        {
+            if (isalpha(c))
+            {
                 printf("%c", c);
                 valor = c;
                 break;
-            } else if (c == 8) {
-                printf("\b \b");
+            }
+            else if (c == 8)
+            {
+                if (c >= 'a' && c <= 'z')
+                {
+                    printf("\b \b");
+                }
             }
         }
     }
     cad[i] = '\0';
-    if (tipo == "entero") {
-        return valor = atoi(cad);
-    } else if (tipo == "flotante") {
-        return valor = atof(cad);
-    } else if (tipo == "double") {
-        return valor = atof(cad);
-    } else if (tipo == "string") {
-        return valor = cad;
-    } else if (tipo == "char") {
+    if (tipo == "entero")
+    {
+        int entero;
+        entero = atoi(cad);
+        return valor = entero;
+    }
+    else if (tipo == "flotante")
+    {
+        float flotante;
+        for (int j = 0; cad[j] != '\0'; j++)
+        {
+            flotante = atof(cad);
+        }
+        return valor = flotante;
+    }
+    else if (tipo == "double")
+    {
+        double doble;
+        for (int j = 0; cad[j] != '\0'; j++)
+        {
+            doble = atof(cad);
+        }
+        return valor = doble;
+    }
+    else if (tipo == "char")
+    {
+        return valor;
+    }
+    else if (tipo == "string")
+    {
+        for (int j = 0; cad[j] != '\0'; j++)
+        {
+            valor = valor + cad[j];
+        }
         return valor;
     }
 }
 
-template <typename T>
+template<typename T>
 bool Validaciones<T>::validarCedula(const std::string& cedula) {
     if (cedula.length() != 10) return false;
 
@@ -107,17 +167,4 @@ bool Validaciones<T>::validarCedula(const std::string& cedula) {
 
     int digitoVerificacion = (suma % 10 == 0) ? 0 : 10 - (suma % 10);
     return digitoVerificacion == (cedula[9] - '0');
-}
-
-template <typename T>
-bool Validaciones<T>::validarNombre(const std::string& nombre) {
-    if (nombre.empty()) {
-        return false; // No puede estar vacío
-    }
-    for (char c : nombre) {
-        if (!isalpha(c) && c != ' ') {
-            return false; // Solo permite letras y espacios
-        }
-    }
-    return true; // Es un nombre válido
 }
