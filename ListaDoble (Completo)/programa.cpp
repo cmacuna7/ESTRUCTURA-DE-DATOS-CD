@@ -118,24 +118,22 @@ int main() {
             // Convertir el carácter viejo a minúscula para comparar uniformemente
             char viejoMinuscula = std::tolower(viejo);
 
-            // Elimina cualquier lista auxiliar existente
+            // Si la lista auxiliar existe, operamos sobre ella
             if (lista_auxiliar != nullptr) {
-                delete lista_auxiliar;
-                lista_auxiliar = nullptr;
+                // Reemplazar el carácter en la lista auxiliar
+                lista_auxiliar->reemplazarCaracter(viejoMinuscula, nuevo);
+
+                // Mostrar el contenido actualizado de la lista auxiliar
+                cout << "\nContenido de la lista auxiliar (después de reemplazar el carácter):" << endl;
+                lista_auxiliar->mostrar();
+            } else {
+                cout << "La lista auxiliar no existe." << endl;
             }
-
-            // Crear una nueva lista auxiliar con los cambios
-            lista_auxiliar = new ListaDoble<string>(lista_datos->reemplazarCaracterEnAuxiliar(viejoMinuscula, nuevo));
-
-            cout << "\nContenido de la lista original:" << endl;
-            lista_datos->mostrar();
-
-            cout << "\nContenido de la lista auxiliar (después de reemplazar el carácter):" << endl;
-            lista_auxiliar->mostrar();
 
             system("pause");
             break;
         }
+
 
         case '5': {
             cout << "\nContenido de la lista original:" << endl;

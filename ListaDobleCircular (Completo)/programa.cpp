@@ -80,30 +80,31 @@ int main() {
             system("pause");
             break;
         }
-        case '3': {
-            char caracter;
-            cout << "Ingrese el caracter a borrar: ";
-            cin >> caracter;
+       case '3': {
+        char caracter;
+        cout << "Ingrese el caracter a borrar: ";
+        cin >> caracter;
 
-            if (lista_auxiliar == nullptr) {
-                // Primera vez: se opera sobre lista_datos
-                lista_auxiliar = new ListaCircular<string>(lista_datos->eliminarCaracterEnAuxiliar(caracter));
-                cout << "\nContenido de la lista original (después de borrar el carácter):" << endl;
-                lista_datos->mostrar();
-            } else {
-                // Siguientes veces: se opera sobre lista_auxiliar
-                ListaCircular<string>* nuevaLista = new ListaCircular<string>(lista_auxiliar->eliminarCaracterEnAuxiliar(caracter));
-                delete lista_auxiliar; // Elimina la lista auxiliar previa
-                lista_auxiliar = nuevaLista;
-            }
-
-            // Mostrar contenido de lista_auxiliar después de la operación
-            cout << "\nContenido de la lista auxiliar (después de borrar el carácter):" << endl;
-            lista_auxiliar->mostrar();
-
-            system("pause");
-            break;
+        if (lista_auxiliar == nullptr) {
+            // Primera vez: se opera sobre lista_datos
+            lista_auxiliar = new ListaCircular<string>(lista_datos->eliminarCaracterEnAuxiliar(caracter));
+            cout << "\nContenido de la lista original (después de borrar el carácter):" << endl;
+            lista_datos->mostrar();
+        } else {
+            // Siguientes veces: se opera sobre lista_auxiliar
+            ListaCircular<string>* nuevaLista = new ListaCircular<string>(lista_auxiliar->eliminarCaracterEnAuxiliar(caracter));
+            delete lista_auxiliar; // Elimina la lista auxiliar previa
+            lista_auxiliar = nuevaLista;
         }
+
+        // Mostrar contenido de lista_auxiliar después de la operación
+        cout << "\nContenido de la lista auxiliar (después de borrar el carácter):" << endl;
+        lista_auxiliar->mostrar();
+
+        system("pause");
+        break;
+    }
+
         case '4': {
             char viejo, nuevo;
             cout << "Ingrese el caracter a reemplazar: ";
@@ -111,24 +112,22 @@ int main() {
             cout << "Ingrese el nuevo caracter: ";
             cin >> nuevo;
 
-            // Elimina cualquier lista auxiliar existente
+            // Si ya existe una lista auxiliar, realizamos el reemplazo en ella.
             if (lista_auxiliar != nullptr) {
-                delete lista_auxiliar;
-                lista_auxiliar = nullptr;
+                // Reemplazar el carácter en la lista auxiliar
+                lista_auxiliar->reemplazarCaracter(viejo, nuevo);
+
+                cout << "\nContenido de la lista auxiliar (después de reemplazar el carácter):" << endl;
+                lista_auxiliar->mostrar();
+            } else {
+                cout << "No hay lista auxiliar para realizar el reemplazo." << endl;
             }
-
-            // Crear una nueva lista auxiliar con los cambios
-            lista_auxiliar = new ListaCircular<string>(lista_datos->reemplazarCaracterEnAuxiliar(viejo, nuevo));
-
-            cout << "\nContenido de la lista original:" << endl;
-            lista_datos->mostrar();
-
-            cout << "\nContenido de la lista auxiliar (después de reemplazar el carácter):" << endl;
-            lista_auxiliar->mostrar();
 
             system("pause");
             break;
         }
+
+
 
         case '5': {
             cout << "\nContenido de la lista original:" << endl;

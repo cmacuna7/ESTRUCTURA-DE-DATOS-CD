@@ -103,9 +103,6 @@ ListaCircular<T> ListaCircular<T>::eliminarCaracterEnAuxiliar(char caracter) {
     ListaCircular<T> nuevaLista; // Lista auxiliar
     Nodo<T>* actual = cabeza;
 
-    // Convertir el carácter ingresado a minúscula
-    char caracterMinuscula = std::tolower(caracter);
-
     do {
         std::string datoModificado = actual->getDato();
 
@@ -114,26 +111,24 @@ ListaCircular<T> ListaCircular<T>::eliminarCaracterEnAuxiliar(char caracter) {
             std::remove_if(
                 datoModificado.begin(),
                 datoModificado.end(),
-                [caracterMinuscula](char c) { return std::tolower(c) == caracterMinuscula; }
+                [caracter](char c) { return std::tolower(c) == std::tolower(caracter); } // Compara sin distinguir entre mayúsculas y minúsculas
             ),
             datoModificado.end()
         );
 
         nuevaLista.insertar(datoModificado);
         actual = actual->getSiguiente();
-    } while (actual != cabeza);
+    } while (actual != cabeza); // Asegúrate de recorrer toda la lista circular
 
     return nuevaLista;
 }
+
 
 // Método auxiliar para reemplazar un caracter
 template <typename T>
 ListaCircular<T> ListaCircular<T>::reemplazarCaracterEnAuxiliar(char viejo, char nuevo) {
     ListaCircular<T> nuevaLista; // Lista auxiliar
     Nodo<T>* actual = cabeza;
-
-    // Convertir el carácter viejo a minúscula
-    char viejoMinuscula = std::tolower(viejo);
 
     do {
         std::string datoModificado = actual->getDato();
@@ -143,14 +138,16 @@ ListaCircular<T> ListaCircular<T>::reemplazarCaracterEnAuxiliar(char viejo, char
             datoModificado.begin(),
             datoModificado.end(),
             datoModificado.begin(),
-            [viejoMinuscula, nuevo](char c) {
-                return std::tolower(c) == viejoMinuscula ? nuevo : c;
+            [viejo, nuevo](char c) {
+                // Compara el carácter sin distinguir entre mayúsculas y minúsculas
+                return std::tolower(c) == std::tolower(viejo) ? nuevo : c;
             }
         );
 
         nuevaLista.insertar(datoModificado);
         actual = actual->getSiguiente();
-    } while (actual != cabeza);
+    } while (actual != cabeza); // Asegúrate de recorrer toda la lista circular
 
     return nuevaLista;
 }
+
