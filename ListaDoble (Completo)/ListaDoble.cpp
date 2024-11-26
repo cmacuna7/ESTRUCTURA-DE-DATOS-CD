@@ -91,14 +91,29 @@ void ListaDoble<T>::reemplazarCaracter(char viejo, char nuevo) {
     cout << "Caracter '" << viejo << "' reemplazado por '" << nuevo << "' en todas las palabras." << endl;
 }
 
+#include <cctype> // Para std::tolower
+
 template <typename T>
 ListaDoble<T> ListaDoble<T>::eliminarCaracterEnAuxiliar(char caracter) {
     ListaDoble<T> nuevaLista; // Lista auxiliar
     Nodo<T>* actual = cabeza;
 
+    // Convertir el carácter ingresado a minúscula
+    char caracterMinuscula = std::tolower(caracter);
+
     while (actual) {
         std::string datoModificado = actual->getDato();
-        datoModificado.erase(std::remove(datoModificado.begin(), datoModificado.end(), caracter), datoModificado.end());
+
+        // Usar std::remove_if para eliminar caracteres ignorando mayúsculas/minúsculas
+        datoModificado.erase(
+            std::remove_if(
+                datoModificado.begin(),
+                datoModificado.end(),
+                [caracterMinuscula](char c) { return std::tolower(c) == caracterMinuscula; }
+            ),
+            datoModificado.end()
+        );
+
         nuevaLista.insertar(datoModificado);
         actual = actual->getSiguiente();
     }
@@ -106,14 +121,28 @@ ListaDoble<T> ListaDoble<T>::eliminarCaracterEnAuxiliar(char caracter) {
     return nuevaLista;
 }
 
+
 template <typename T>
 ListaDoble<T> ListaDoble<T>::reemplazarCaracterEnAuxiliar(char viejo, char nuevo) {
     ListaDoble<T> nuevaLista; // Lista auxiliar
     Nodo<T>* actual = cabeza;
 
+    // Convertir el carácter viejo a minúscula
+    char viejoMinuscula = std::tolower(viejo);
+
     while (actual) {
         std::string datoModificado = actual->getDato();
-        std::replace(datoModificado.begin(), datoModificado.end(), viejo, nuevo);
+
+        // Reemplazar ignorando mayúsculas/minúsculas
+        std::transform(
+            datoModificado.begin(),
+            datoModificado.end(),
+            datoModificado.begin(),
+            [viejoMinuscula, nuevo](char c) {
+                return std::tolower(c) == viejoMinuscula ? nuevo : c;
+            }
+        );
+
         nuevaLista.insertar(datoModificado);
         actual = actual->getSiguiente();
     }

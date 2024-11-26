@@ -16,6 +16,8 @@
 using namespace std;
 
 // Función principal
+bool esEntero(string);
+
 int main() {
 
     //Crear instancias de la clase Validaciones para enteros y strings
@@ -28,6 +30,7 @@ int main() {
 
     char opcion;
     std::string dato_nombre, dato_apellido;
+    bool primera_edicion = true;
 
     do {
         system("cls");
@@ -79,28 +82,32 @@ int main() {
             break;
         }
         case '3': {
-            char caracter;
+    char caracter;
             cout << "Ingrese el caracter a borrar: ";
             cin >> caracter;
 
-            // Elimina cualquier lista auxiliar existente
-            if (lista_auxiliar != nullptr) {
-                delete lista_auxiliar;
-                lista_auxiliar = nullptr;
+            if (lista_auxiliar == nullptr) {
+                // Primera vez: se opera sobre lista_datos
+                lista_auxiliar = new ListaDoble<string>(lista_datos->eliminarCaracterEnAuxiliar(caracter));
+                cout << "\nContenido de la lista original (después de borrar el carácter):" << endl;
+                lista_datos->mostrar();
+            } else {
+                // Siguientes veces: se opera sobre lista_auxiliar
+                ListaDoble<string>* nuevaLista = new ListaDoble<string>(lista_auxiliar->eliminarCaracterEnAuxiliar(caracter));
+                delete lista_auxiliar; // Elimina la lista auxiliar previa
+                lista_auxiliar = nuevaLista;
             }
 
-            // Crear una nueva lista auxiliar con los cambios
-            lista_auxiliar = new ListaDoble<string>(lista_datos->eliminarCaracterEnAuxiliar(caracter));
-
-            cout << "\nContenido de la lista original:" << endl;
-            lista_datos->mostrar();
-
+            // Mostrar contenido de lista_auxiliar después de la operación
             cout << "\nContenido de la lista auxiliar (después de borrar el carácter):" << endl;
             lista_auxiliar->mostrar();
 
             system("pause");
             break;
         }
+
+
+
         case '4': {
             char viejo, nuevo;
             cout << "Ingrese el caracter a reemplazar: ";
@@ -108,6 +115,9 @@ int main() {
             cout << "Ingrese el nuevo caracter: ";
             cin >> nuevo;
 
+            // Convertir el carácter viejo a minúscula para comparar uniformemente
+            char viejoMinuscula = std::tolower(viejo);
+
             // Elimina cualquier lista auxiliar existente
             if (lista_auxiliar != nullptr) {
                 delete lista_auxiliar;
@@ -115,7 +125,7 @@ int main() {
             }
 
             // Crear una nueva lista auxiliar con los cambios
-            lista_auxiliar = new ListaDoble<string>(lista_datos->reemplazarCaracterEnAuxiliar(viejo, nuevo));
+            lista_auxiliar = new ListaDoble<string>(lista_datos->reemplazarCaracterEnAuxiliar(viejoMinuscula, nuevo));
 
             cout << "\nContenido de la lista original:" << endl;
             lista_datos->mostrar();
@@ -126,6 +136,7 @@ int main() {
             system("pause");
             break;
         }
+
         case '5': {
             cout << "\nContenido de la lista original:" << endl;
             lista_datos->mostrar();
