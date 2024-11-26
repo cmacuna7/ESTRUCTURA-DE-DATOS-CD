@@ -23,6 +23,8 @@ int main() {
     Validaciones<string> ingresar_string;
 
     ListaDoble<string>* lista_datos = new ListaDoble<string>();
+    ListaDoble<string>* lista_auxiliar = nullptr; // Lista auxiliar inicializada como vacía
+
 
     char opcion;
     std::string dato_nombre, dato_apellido;
@@ -80,7 +82,22 @@ int main() {
             char caracter;
             cout << "Ingrese el caracter a borrar: ";
             cin >> caracter;
-            lista_datos->borrarCaracter(caracter);
+
+            // Elimina cualquier lista auxiliar existente
+            if (lista_auxiliar != nullptr) {
+                delete lista_auxiliar;
+                lista_auxiliar = nullptr;
+            }
+
+            // Crear una nueva lista auxiliar con los cambios
+            lista_auxiliar = new ListaDoble<string>(lista_datos->eliminarCaracterEnAuxiliar(caracter));
+
+            cout << "\nContenido de la lista original:" << endl;
+            lista_datos->mostrar();
+
+            cout << "\nContenido de la lista auxiliar (después de borrar el carácter):" << endl;
+            lista_auxiliar->mostrar();
+
             system("pause");
             break;
         }
@@ -90,13 +107,36 @@ int main() {
             cin >> viejo;
             cout << "Ingrese el nuevo caracter: ";
             cin >> nuevo;
-            lista_datos->reemplazarCaracter(viejo, nuevo);
+
+            // Elimina cualquier lista auxiliar existente
+            if (lista_auxiliar != nullptr) {
+                delete lista_auxiliar;
+                lista_auxiliar = nullptr;
+            }
+
+            // Crear una nueva lista auxiliar con los cambios
+            lista_auxiliar = new ListaDoble<string>(lista_datos->reemplazarCaracterEnAuxiliar(viejo, nuevo));
+
+            cout << "\nContenido de la lista original:" << endl;
+            lista_datos->mostrar();
+
+            cout << "\nContenido de la lista auxiliar (después de reemplazar el carácter):" << endl;
+            lista_auxiliar->mostrar();
+
             system("pause");
             break;
         }
         case '5': {
-            cout << "Contenido de la lista:" << endl;
+            cout << "\nContenido de la lista original:" << endl;
             lista_datos->mostrar();
+
+            if (lista_auxiliar != nullptr) {
+                cout << "\nContenido de la lista auxiliar:" << endl;
+                lista_auxiliar->mostrar();
+            } else {
+                cout << "\nLa lista auxiliar esta vacia o no ha sido creada." << endl;
+            }
+
             system("pause");
             break;
         }
@@ -104,12 +144,16 @@ int main() {
             cout << "Saliendo del sistema." << endl;
             break;
         default:
-            cout << "Opción no válida. Intente de nuevo." << endl;
+            cout << "Opcion no valida. Intente de nuevo." << endl;
             system("pause");
             break;
         }
     } while (opcion != '6');
 
     delete lista_datos;
+    if (lista_auxiliar != nullptr) {
+        delete lista_auxiliar;
+        lista_auxiliar = nullptr;
+    }   
     return 0;
 }

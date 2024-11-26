@@ -20,6 +20,10 @@ public:
     void insertar(T dato);
     void mostrar();
     void buscarPorCaracter(char caracter);
-    void borrarCaracter(char caracter);
-    void reemplazarCaracter(char viejo, char nuevo);
+    void borrarCaracter(char caracter); // Trabaja sobre la lista original
+    void reemplazarCaracter(char viejo, char nuevo); // Trabaja sobre la lista original
+
+    // Métodos que devuelven listas auxiliares
+    ListaDoble<T> eliminarCaracterEnAuxiliar(char caracter);
+    ListaDoble<T> reemplazarCaracterEnAuxiliar(char viejo, char nuevo);
 };

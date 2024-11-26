@@ -90,3 +90,33 @@ void ListaDoble<T>::reemplazarCaracter(char viejo, char nuevo) {
     }
     cout << "Caracter '" << viejo << "' reemplazado por '" << nuevo << "' en todas las palabras." << endl;
 }
+
+template <typename T>
+ListaDoble<T> ListaDoble<T>::eliminarCaracterEnAuxiliar(char caracter) {
+    ListaDoble<T> nuevaLista; // Lista auxiliar
+    Nodo<T>* actual = cabeza;
+
+    while (actual) {
+        std::string datoModificado = actual->getDato();
+        datoModificado.erase(std::remove(datoModificado.begin(), datoModificado.end(), caracter), datoModificado.end());
+        nuevaLista.insertar(datoModificado);
+        actual = actual->getSiguiente();
+    }
+
+    return nuevaLista;
+}
+
+template <typename T>
+ListaDoble<T> ListaDoble<T>::reemplazarCaracterEnAuxiliar(char viejo, char nuevo) {
+    ListaDoble<T> nuevaLista; // Lista auxiliar
+    Nodo<T>* actual = cabeza;
+
+    while (actual) {
+        std::string datoModificado = actual->getDato();
+        std::replace(datoModificado.begin(), datoModificado.end(), viejo, nuevo);
+        nuevaLista.insertar(datoModificado);
+        actual = actual->getSiguiente();
+    }
+
+    return nuevaLista;
+}
