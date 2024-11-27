@@ -1,3 +1,12 @@
+/***************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
+ * Proposito:                      Programa sobre lista doble circular                 *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
+ * Fecha de creacion:              25/11/2024                                          *
+ * Fecha de modificacion:          25/11/2024                                          *
+ * Materia:                        Estructura de datos                                 *
+ * NRC :                           1992                                                *
+ ***************************************************************************************/
 #ifndef NODO_H
 #define NODO_H
 
@@ -9,8 +18,8 @@ private:
     Nodo* anterior;
 
 public:
-    // Constructor
-    Nodo(T dato) : dato(dato), siguiente(nullptr), anterior(nullptr) {}
+    Nodo(T dato) : dato(dato), siguiente(this), anterior(this) {} // Nodo se apunta a sí mismo
+    ~Nodo() {}
 
     // Getters
     T getDato() const { return dato; }

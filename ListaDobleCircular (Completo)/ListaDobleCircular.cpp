@@ -1,3 +1,12 @@
+/***************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
+ * Proposito:                      Programa sobre lista doble circular                 *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
+ * Fecha de creacion:              25/11/2024                                          *
+ * Fecha de modificacion:          25/11/2024                                          *
+ * Materia:                        Estructura de datos                                 *
+ * NRC :                           1992                                                *
+ ***************************************************************************************/
 #include "ListaDobleCircular.h"
 #include <algorithm> // Para std::replace
 #include <iterator>  // Para iteradores (opcional)
@@ -5,31 +14,27 @@
 // Destructor
 template <typename T>
 ListaCircular<T>::~ListaCircular() {
-    if (!cabeza) return;
-
-    Nodo<T>* actual = cabeza;
-    do {
-        Nodo<T>* siguiente = actual->getSiguiente();
-        delete actual;
-        actual = siguiente;
-    } while (actual != cabeza);
+        if (!cabeza) return;
+        Nodo<T>* actual = cabeza;
+        do {
+            Nodo<T>* siguiente = actual->getSiguiente();
+            delete actual;
+            actual = siguiente;
+        } while (actual != cabeza);
 }
 
 // Insertar al final
 template <typename T>
 void ListaCircular<T>::insertar(T dato) {
     Nodo<T>* nuevo = new Nodo<T>(dato);
-
     if (!cabeza) {
-        cabeza = cola = nuevo;
-        cabeza->setSiguiente(cabeza);
-        cabeza->setAnterior(cabeza);
+        cabeza = nuevo;
     } else {
-        nuevo->setSiguiente(cabeza);
-        nuevo->setAnterior(cola);
+        Nodo<T>* cola = cabeza->getAnterior();
         cola->setSiguiente(nuevo);
+        nuevo->setAnterior(cola);
+        nuevo->setSiguiente(cabeza);
         cabeza->setAnterior(nuevo);
-        cola = nuevo;
     }
 }
 
@@ -40,17 +45,12 @@ void ListaCircular<T>::mostrar() {
         cout << "La lista está vacía." << endl;
         return;
     }
-
     Nodo<T>* actual = cabeza;
-    cout << " <-> ";
     do {
-        cout << "[" << actual->getDato() << "]";
-        if (actual->getSiguiente() != cabeza) {
-            cout << " <-> ";
-        }
+        cout << "[" << actual->getDato() << "] <-> ";
         actual = actual->getSiguiente();
     } while (actual != cabeza);
-    cout << " <-> " << endl;
+    cout << "(retorno a la cabeza)" << endl;
 }
 
 // Buscar palabras que contengan un caracter
@@ -81,7 +81,7 @@ void ListaCircular<T>::borrarCaracter(char caracter) {
         actual->setDato(dato);
         actual = actual->getSiguiente();
     } while (actual != cabeza);
-    cout << "Caracter '" << caracter << "' eliminado de todas las palabras." << endl;
+    cout << "\nCaracter '" << caracter << "' eliminado de todas las palabras." << endl;
 }
 
 // Reemplazar un caracter por otro

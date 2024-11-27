@@ -1,3 +1,12 @@
+/***************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
+ * Proposito:                      Programa sobre lista doble circular                 *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
+ * Fecha de creacion:              25/11/2024                                          *
+ * Fecha de modificacion:          25/11/2024                                          *
+ * Materia:                        Estructura de datos                                 *
+ * NRC :                           1992                                                *
+ ***************************************************************************************/
 #ifndef LISTACIRCULAR_H
 #define LISTACIRCULAR_H
 
@@ -16,7 +25,7 @@ private:
 
 public:
     // Constructor
-    ListaCircular() : cabeza(nullptr), cola(nullptr) {}
+    ListaCircular() : cabeza(nullptr){}
 
     // Destructor
     ~ListaCircular();

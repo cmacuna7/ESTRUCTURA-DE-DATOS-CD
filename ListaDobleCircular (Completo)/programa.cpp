@@ -1,6 +1,6 @@
 /***************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
- * Proposito:                      Programa sobre lista doble                          *
+ * Proposito:                      Programa sobre lista doble circular                 *
  * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
  * Fecha de creacion:              25/11/2024                                          *
  * Fecha de modificacion:          25/11/2024                                          *
@@ -122,7 +122,7 @@ int main() {
             char viejo, nuevo;
             cout << "Ingrese el caracter a reemplazar: ";
             viejo = ingresar_string.ingresar("", "char")[0];
-            cout << "Ingrese el nuevo caracter: ";
+            cout << "\nIngrese el nuevo caracter: ";
             nuevo = ingresar_string.ingresar("", "char")[0];
 
             // Si ya existe una lista auxiliar, realizamos el reemplazo en ella.

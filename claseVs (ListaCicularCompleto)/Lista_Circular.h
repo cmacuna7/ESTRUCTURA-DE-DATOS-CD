@@ -1,6 +1,6 @@
 /***************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
- * Proposito:                      Programa sobre lista simple                         *
+ * Proposito:                      Programa sobre lista circular                       *
  * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
  * Fecha de creacion:              21/11/2024                                          *
  * Fecha de modificacion:          21/11/2024                                          *
