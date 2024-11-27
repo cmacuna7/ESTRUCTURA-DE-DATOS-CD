@@ -21,7 +21,6 @@ template <typename T>
 class ListaCircular {
 private:
     Nodo<T>* cabeza;
-    Nodo<T>* cola;
 
 public:
     // Constructor
