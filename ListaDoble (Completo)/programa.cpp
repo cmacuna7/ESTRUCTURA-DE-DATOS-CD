@@ -28,7 +28,7 @@ int main() {
     ListaDoble<string>* lista_auxiliar = nullptr; // Lista auxiliar inicializada como vacía
 
 
-    char opcion;
+    char opcion, caracter, viejo, nuevo;
     std::string dato_nombre, dato_apellido;
     bool primera_edicion = true;
 
@@ -74,30 +74,23 @@ int main() {
             break;
         }
         case '2': {
-            char caracter;
+
             do {
-                cout << "Ingrese un unico caracter a buscar: ";
-                cin >> caracter;
-                // Validación para asegurar que solo se ingresó un carácter
-                if (cin.peek() != '\n') {
-                    cout << "Error: Ingrese unicamente un caracter valido." << endl;
-                    // Limpia el buffer de entrada en caso de error
-                    cin.clear();
-                    while (cin.get() != '\n') {
-                    // Descartar el resto de la entrada
-                    }
-                } else {
-                    break; // Entrada válida, salir del bucle
-                }
-            } while (true);
+                cout << "\nIngrese un unico caracter a buscar: ";
+                caracter = ingresar_string.ingresar("", "char")[0];
+            } while (caracter == '\0'); 
+
             lista_datos->buscarPorCaracter(caracter);
             system("pause");
             break;
         }
         case '3': {
-            char caracter;
-            cout << "Ingrese el caracter a borrar: ";
-            caracter = ingresar_string.ingresar("", "char")[0];
+
+            do {
+                cout << "\nIngrese el caracter a borrar: ";
+                caracter = ingresar_string.ingresar("", "char")[0];
+            } while (caracter == '\0');  
+
 
             if (lista_auxiliar == nullptr) {
                 // Primera vez: se opera sobre lista_datos
@@ -122,11 +115,17 @@ int main() {
 
 
         case '4': {
-            char viejo, nuevo;
-            cout << "Ingrese el caracter a reemplazar: ";
-            viejo = ingresar_string.ingresar("", "char")[0];
-            cout << "\nIngrese el nuevo caracter: ";
-            nuevo = ingresar_string.ingresar("", "char")[0];
+
+            do {
+                cout << "\nIngrese el caracter a reemplazar: ";
+                viejo = ingresar_string.ingresar("", "char")[0];
+            } while (viejo == '\0');  
+
+            do {
+                cout << "\nIngrese el nuevo caracter: ";
+                nuevo = ingresar_string.ingresar("", "char")[0];
+            } while (nuevo == '\0');  
+
 
             // Convertir el carácter viejo a minúscula para comparar uniformemente
             char viejoMinuscula = std::tolower(viejo);
@@ -143,6 +142,7 @@ int main() {
                 cout << "La lista auxiliar no existe." << endl;
             }
 
+  
             system("pause");
             break;
         }

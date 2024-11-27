@@ -60,7 +60,7 @@ template <typename T>
 void ListaDoble<T>::buscarPorCaracter(char caracter) {
     Nodo<T>* actual = cabeza;
     bool encontrado = false;
-    cout << "Palabras que contienen el caracter '" << caracter << "':" << endl;
+    cout << "\nPalabras que contienen el caracter '" << caracter << "':" << endl;
     while (actual) {
         if (actual->getDato().find(caracter) != string::npos) {
             cout << actual->getDato() << " ";
@@ -69,7 +69,7 @@ void ListaDoble<T>::buscarPorCaracter(char caracter) {
         actual = actual->getSiguiente();
     }
     if (!encontrado) {
-        cout << "Ninguna palabra contiene el caracter especificado." << endl;
+        cout << "\nNinguna palabra contiene el caracter especificado." << endl;
     }
 }
 

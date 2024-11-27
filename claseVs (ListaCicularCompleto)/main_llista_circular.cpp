@@ -25,7 +25,7 @@ int main() {
     Lista_Circular<string> lista_auxiliar; // Lista auxiliar global para modificaciones
 
     char opcion;
-    char caracter;
+    char caracter, borrar, reemplazar;
     bool cedulaValida = false;
     std::string dato_nombre, dato_apellido;
     bool primera_edicion = true;
@@ -74,29 +74,22 @@ int main() {
         }
 
         case '2': {
-            char caracter;
+
             do {
-                cout << "Ingrese un unico caracter a buscar: ";
-                cin >> caracter;
-                // Validación para asegurar que solo se ingresó un carácter
-                if (cin.peek() != '\n') {
-                    cout << "Error: Ingrese unicamente un caracter valido." << endl;
-                    // Limpia el buffer de entrada en caso de error
-                    cin.clear();
-                    while (cin.get() != '\n') {
-                    // Descartar el resto de la entrada
-                    }
-                } else {
-                    break; // Entrada válida, salir del bucle
-                }
-            } while (true);
+                cout << "\nIngrese un unico caracter a buscar: ";
+                caracter = ingresar_string.ingresar("", "char")[0];
+            } while (caracter == '\0');  
+
             lista_datos->BuscarPorCaracter(caracter);
             system("pause");
             break;
         }
         case '3': {
-            cout << "Ingrese el caracter a borrar: ";
-            char borrar = ingresar_string.ingresar("", "char")[0];
+            do {
+                cout << "\nIngrese el caracter a borrar: ";
+                borrar = ingresar_string.ingresar("", "char")[0];
+            } while (borrar == '\0');  
+            
 
             if (primera_edicion) {
                 lista_auxiliar = lista_datos->ModificarCaracter(borrar);
@@ -115,11 +108,14 @@ int main() {
             break;
         }
         case '4': {
-            cout << "Ingrese el caracter a borrar: ";
-            char borrar = ingresar_string.ingresar("", "char")[0];
-
-            cout << "\nIngrese el caracter por el que se reemplazara: ";
-            char reemplazar = ingresar_string.ingresar("", "char")[0];
+            do {
+                cout << "\nIngrese el caracter a borrar: ";
+                borrar = ingresar_string.ingresar("", "char")[0];
+            } while (borrar == '\0');  
+            do {
+                cout << "\nIngrese el caracter por el que se reemplazara: ";
+                reemplazar = ingresar_string.ingresar("", "char")[0];
+            } while (reemplazar == '\0');  
 
             if (primera_edicion) {
                 lista_auxiliar = lista_datos->ModificarCaracter(borrar, reemplazar);
@@ -139,7 +135,7 @@ int main() {
         }
         
         case '5': { // Mostrar lista original y auxiliar
-            cout << "Contenido de la lista original:\n";
+            cout << "\nContenido de la lista original:\n";
             lista_datos->Mostrar();
 
             cout << "\nContenido de la lista auxiliar:\n";
