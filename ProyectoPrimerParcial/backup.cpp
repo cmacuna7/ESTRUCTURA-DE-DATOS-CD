@@ -2,6 +2,7 @@
 #include <vector>
 #include <windows.h>  // Para las funciones de Windows
 #include "ListaCircularDoble.h"
+#include "Backup.h"
 #include <direct.h> // Para mkdir en Windows
 #include <sys/stat.h>  // Para usar _stat
 #include <fstream>  // Para trabajar con archivos

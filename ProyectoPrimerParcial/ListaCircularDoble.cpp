@@ -2,6 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <string>
+#include <direct.h>  // Para mkdir en Windows
+#include <sys/stat.h>  // Para usar _stat
+#include "Backup.h"  // Incluir el archivo de cabecera con la declaración de la función
 
 using namespace std;
 
@@ -150,11 +154,22 @@ void ListaCircularDoble::cargarLibrosDesdeArchivo() {
 
 // Backup
 void ListaCircularDoble::crearBackup(const string& nombreArchivo) {
-    ofstream archivo(nombreArchivo);
+    string carpetaBackup = "backup";  // Carpeta donde se almacenan los backups
+    
+    // Asegurarnos de que la carpeta de backups exista
+    crearCarpetaSiNoExiste(carpetaBackup);
+
+    // Crear la ruta completa para el archivo de backup dentro de la carpeta "backup"
+    string rutaCompleta = carpetaBackup + "\\" + nombreArchivo;
+
+    // Crear el archivo de backup
+    ofstream archivo(rutaCompleta);
     if (!archivo.is_open()) {
-        cout << "Error al crear el archivo de backup.\n";
+        cout << "Error al crear el archivo de backup en la ruta: " << rutaCompleta << endl;
         return;
     }
+
+    // Iterar sobre los elementos de la lista circular y guardar los datos de cada libro en el archivo
     Nodo* actual = cabeza;
     if (actual) {
         do {
@@ -165,8 +180,10 @@ void ListaCircularDoble::crearBackup(const string& nombreArchivo) {
             actual = actual->siguiente;
         } while (actual != cabeza);
     }
+
+    // Cerrar el archivo después de escribir los datos
     archivo.close();
-    cout << "Backup creado: " << nombreArchivo << endl;
+    cout << "Backup creado correctamente en: " << rutaCompleta << endl;
 }
 
 // Restaurar backup y sobreescribir archivo
