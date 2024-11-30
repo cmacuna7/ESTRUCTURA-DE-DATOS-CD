@@ -85,7 +85,13 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 lista.crearBackup(ss.str());
             } else if (opciones[seleccion] == "Restaurar backup") {
                 string nombreArchivo;
-                cout << "Ingrese el nombre del archivo de backup: "; cin >> nombreArchivo;
+                cout << "Ingrese el nombre del archivo de backup (incluya la extensión .txt): "; 
+                cin >> nombreArchivo;
+                // Verificar si el archivo tiene extensión ".txt"
+                if (nombreArchivo.find(".txt") == string::npos) {
+                    cout << "El nombre del archivo no tiene la extensión .txt. Intentelo de nuevo.\n";
+                    continue;
+                }
                 lista.restaurarBackup(nombreArchivo);
             } else if (opciones[seleccion] == "Salir") {
                 break;

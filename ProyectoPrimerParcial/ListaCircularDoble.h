@@ -12,6 +12,8 @@ using namespace std;
 class ListaCircularDoble {
 private:
     Nodo* cabeza = nullptr;
+    string archivoLibros = "libros.txt";  // Archivo donde se guardarán los libros
+    bool evitarGuardar = false;           // Bandera para controlar el guardado
 
 public:
     // Agregar libro
@@ -31,6 +33,15 @@ public:
 
     // Restaurar backup
     void restaurarBackup(const string& nombreArchivo);
+
+    // Guardar todos los libros en el archivo
+    void guardarLibrosEnArchivo();
+
+    // Cargar los libros desde el archivo
+    void cargarLibrosDesdeArchivo();
+
+    // Cargar los libros desde el archivo
+    void limpiarLista();
 };
 
 #endif

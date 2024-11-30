@@ -20,6 +20,24 @@ void ListaCircularDoble::agregarLibro(const Libro& libro) {
         ultimo->siguiente = nuevo;
     }
     cout << "Libro agregado: " << libro.getTitulo() << endl;
+    // Guardar solo si no se está restaurando un backup
+    if (!evitarGuardar) {
+        guardarLibrosEnArchivo();
+    }
+}
+
+// Limpiar la lista actual
+void ListaCircularDoble::limpiarLista() {
+    if (!cabeza) return;
+
+    Nodo* actual = cabeza;
+    do {
+        Nodo* siguiente = actual->siguiente;
+        delete actual;
+        actual = siguiente;
+    } while (actual != cabeza);
+
+    cabeza = nullptr;
 }
 
 // Imprimir todos los libros
@@ -51,13 +69,15 @@ Nodo* ListaCircularDoble::buscarLibro(const string& titulo) {
     return nullptr;
 }
 
-// Eliminar libro
+// Eliminar libro y actualizar archivo
 void ListaCircularDoble::eliminarLibro(const string& titulo) {
     if (!cabeza) return;
     Nodo* actual = cabeza;
+    bool encontrado = false;
     do {
         if (actual->libro.getTitulo() == titulo) {
-            if (actual->siguiente == actual) {
+            encontrado = true;
+            if (actual->siguiente == actual) {  // Si es el único libro
                 cabeza = nullptr;
             } else {
                 Nodo* anterior = actual->anterior;
@@ -68,11 +88,64 @@ void ListaCircularDoble::eliminarLibro(const string& titulo) {
             }
             delete actual;
             cout << "Libro eliminado: " << titulo << endl;
-            return;
+            break;
         }
         actual = actual->siguiente;
     } while (actual != cabeza);
-    cout << "Libro no encontrado: " << titulo << endl;
+
+    if (!encontrado) {
+        cout << "Libro no encontrado: " << titulo << endl;
+    }
+
+    // Actualizar el archivo después de la eliminación
+    guardarLibrosEnArchivo();  
+}
+
+// Guardar los libros en el archivo (actualizado)
+void ListaCircularDoble::guardarLibrosEnArchivo() {
+    ofstream archivo("libros_temp.txt");
+    if (!archivo.is_open()) {
+        cout << "Error al abrir el archivo temporal para guardar.\n\n";
+        return;
+    }
+
+    Nodo* actual = cabeza;
+    if (actual) {
+        do {
+            archivo << actual->libro.getTitulo() << ";" << actual->libro.getAutor() << ";" 
+                    << actual->libro.getIsbn() << ";" << actual->libro.getAnio() << endl;
+            actual = actual->siguiente;
+        } while (actual != cabeza);
+    }
+
+    archivo.close();
+    rename("libros_temp.txt", archivoLibros.c_str());
+    cout << "Libros guardados en el archivo.\n";
+}
+
+// Cargar los libros desde el archivo
+void ListaCircularDoble::cargarLibrosDesdeArchivo() {
+    ifstream archivo(archivoLibros);
+    if (!archivo.is_open()) {
+        cout << "Error al abrir el archivo para cargar los libros.\n";
+        return;
+    }
+
+    string linea;
+    while (getline(archivo, linea)) {
+        stringstream ss(linea);
+        string titulo, autor, isbn;
+        int anio;
+        getline(ss, titulo, ';');
+        getline(ss, autor, ';');
+        getline(ss, isbn, ';');
+        ss >> anio;
+        
+        Libro libro(titulo, autor, isbn, anio);
+        agregarLibro(libro);
+    }
+    archivo.close();
+    cout << "Libros cargados desde el archivo.\n";
 }
 
 // Backup
@@ -96,7 +169,7 @@ void ListaCircularDoble::crearBackup(const string& nombreArchivo) {
     cout << "Backup creado: " << nombreArchivo << endl;
 }
 
-// Restaurar backup
+// Restaurar backup y sobreescribir archivo
 void ListaCircularDoble::restaurarBackup(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
@@ -104,16 +177,11 @@ void ListaCircularDoble::restaurarBackup(const string& nombreArchivo) {
         return;
     }
 
-    // Limpiar la lista actual
-    while (cabeza) {
-        Nodo* temp = cabeza->siguiente;
-        delete cabeza;
-        if (temp == cabeza) break;
-        cabeza = temp;
-    }
-    cabeza = nullptr;
+    cout << "Cargando backup desde: " << nombreArchivo << endl;
 
-    // Leer datos del archivo
+    limpiarLista();
+    evitarGuardar = true; // Evitar guardar durante la restauración
+
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
@@ -122,10 +190,19 @@ void ListaCircularDoble::restaurarBackup(const string& nombreArchivo) {
         getline(ss, titulo, ';');
         getline(ss, autor, ';');
         getline(ss, isbn, ';');
-        ss >> anio;
+
+        if (!(ss >> anio)) {
+            cout << "Error al leer el año del libro. Línea ignorada.\n";
+            continue;
+        }
+
         Libro libro(titulo, autor, isbn, anio);
         agregarLibro(libro);
     }
+
+    evitarGuardar = false; // Volver a guardar normalmente
     archivo.close();
+
+    guardarLibrosEnArchivo();
     cout << "Backup restaurado: " << nombreArchivo << endl;
 }

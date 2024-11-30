@@ -3,6 +3,8 @@
 
 int main() {
     ListaCircularDoble lista;
+    // Cargar los libros desde el archivo al iniciar
+    lista.cargarLibrosDesdeArchivo();
     mostrarMenu(lista);
     return 0;
 }
