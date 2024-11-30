@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "backup.cpp"
 #include <iostream>
 #include <conio.h> // Para captura de teclas
 #include <vector>
@@ -84,15 +85,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 << tiempo->tm_hour << "_" << tiempo->tm_min << "_" << tiempo->tm_sec << ".txt";
                 lista.crearBackup(ss.str());
             } else if (opciones[seleccion] == "Restaurar backup") {
-                string nombreArchivo;
-                cout << "Ingrese el nombre del archivo de backup (incluya la extensión .txt): "; 
-                cin >> nombreArchivo;
-                // Verificar si el archivo tiene extensión ".txt"
-                if (nombreArchivo.find(".txt") == string::npos) {
-                    cout << "El nombre del archivo no tiene la extensión .txt. Intentelo de nuevo.\n";
-                    continue;
-                }
-                lista.restaurarBackup(nombreArchivo);
+                restaurarBackup(lista);  // Llama a la función para restaurar el backup
             } else if (opciones[seleccion] == "Salir") {
                 break;
             }
