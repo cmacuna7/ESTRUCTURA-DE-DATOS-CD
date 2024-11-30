@@ -11,6 +11,13 @@
 #include <algorithm> // Para std::replace
 #include <iterator>  // Para iteradores (opcional)
 
+
+// Implementación del método getCabeza
+template <typename T>
+Nodo<T>* ListaCircular<T>::getCabeza() const {
+    return cabeza;
+}
+
 // Destructor
 template <typename T>
 ListaCircular<T>::~ListaCircular() {
@@ -151,3 +158,35 @@ ListaCircular<T> ListaCircular<T>::reemplazarCaracterEnAuxiliar(char viejo, char
     return nuevaLista;
 }
 
+template <typename T>
+auto codificarCaracter = [](ListaCircular<T>& lista, char caracter, int desplazamiento) {
+    if (!lista.getCabeza()) { // Verifica si la lista está vacía
+        std::cout << "La lista esta vacia." << std::endl;
+        return;
+    }
+
+    auto cifrar = [desplazamiento](char c) -> char {
+        if (isalpha(c)) {
+            char base = islower(c) ? 'a' : 'A';
+            return base + (c - base + desplazamiento) % 26;
+        }
+        return c;
+    };
+
+    auto procesarNodo = [caracter, cifrar](T& dato) {
+        std::transform(dato.begin(), dato.end(), dato.begin(),
+                    [caracter, cifrar](char c) {
+                        return c == caracter ? cifrar(c) : c;
+                    });
+    };
+
+    Nodo<T>* actual = lista.getCabeza();
+    do {
+        T dato = actual->getDato();
+        procesarNodo(dato);
+        actual->setDato(dato);
+        actual = actual->getSiguiente();
+    } while (actual != lista.getCabeza());
+
+    std::cout << "Caracter '" << caracter << "' codificado con un desplazamiento de " << desplazamiento << "." << std::endl;
+};

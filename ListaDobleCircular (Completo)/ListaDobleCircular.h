@@ -39,6 +39,9 @@ public:
     // Métodos que devuelven listas auxiliares
     ListaCircular<T> eliminarCaracterEnAuxiliar(char caracter);
     ListaCircular<T> reemplazarCaracterEnAuxiliar(char viejo, char nuevo);
+
+    // Nuevo método para obtener el nodo cabeza
+    Nodo<T>* getCabeza() const;
 };
 
 #endif
