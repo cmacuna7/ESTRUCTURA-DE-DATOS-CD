@@ -123,8 +123,28 @@ void ListaCircularDoble::guardarLibrosEnArchivo() {
     }
 
     archivo.close();
-    rename("libros_temp.txt", archivoLibros.c_str());
-    cout << "Libros guardados en el archivo.\n";
+
+    // Verificar si el archivo temporal se creó correctamente
+    if (FILE* file = fopen("libros_temp.txt", "r")) {
+        fclose(file);
+    } else {
+        cout << "No se pudo crear el archivo temporal correctamente.\n";
+        return;
+    }
+
+    // Eliminar el archivo de destino si ya existe
+    if (remove(archivoLibros.c_str()) != 0) {
+        // Si el archivo no se puede eliminar, mostrar error
+        cout << "Error al eliminar el archivo de destino: " << archivoLibros << endl;
+    }
+
+    // Renombrar el archivo temporal a la ubicación final
+    if (rename("libros_temp.txt", archivoLibros.c_str()) != 0) {
+        // Mostrar error si renombrar falla
+        perror("Error al renombrar el archivo temporal");
+    } else {
+        cout << "Libros guardados en el archivo: " << archivoLibros << endl;
+    }
 }
 
 // Cargar los libros desde el archivo
