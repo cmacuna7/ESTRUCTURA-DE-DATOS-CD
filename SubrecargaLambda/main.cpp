@@ -18,6 +18,7 @@ int main() {
     // Crear operadores
     CustomOperator add([](int a, int b) { return a + b; });
     CustomOperator multiply([](int a, int b) { return a * b; });
+    CustomOperator combined = add + multiply;
 
     do {
         menu();
@@ -45,6 +46,7 @@ int main() {
             case 4:
                 std::cout << "1. Sumar" << std::endl;
                 std::cout << "2. Multiplicar" << std::endl;
+                std::cout << "3. Sumar y multiplicar" << std::endl;
                 std::cout << "Elija una operacion: ";
                 opChoice = leerEntero();
 
@@ -55,6 +57,8 @@ int main() {
                     list.applyOperation(add, operand);
                 } else if (opChoice == 2) {
                     list.applyOperation(multiply, operand);
+                } else if (opChoice == 3) {
+                    list.applyOperation(combined, operand);
                 } else {
                     std::cout << "Opcion de operacion no valida." << std::endl;
                 }
