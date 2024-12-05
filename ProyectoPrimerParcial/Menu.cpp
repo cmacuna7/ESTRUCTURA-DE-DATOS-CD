@@ -2,6 +2,7 @@
 #include "Backup.cpp"
 #include "Ayuda.cpp"
 #include <iostream>
+#include "Validaciones.h" // Incluir la clase de validaciones
 #include <conio.h> // Para captura de teclas
 #include <vector>
 #include <sstream>
@@ -38,17 +39,50 @@ void mostrarMenu(ListaCircularDoble& lista) {
             seleccion = (seleccion + 1) % opciones.size();
         } else if (tecla == '\r') { // Enter
             if (opciones[seleccion] == "Agregar libro") {
-                string titulo, autor, isbn;
-                int anio;
-                cout << "Ingrese titulo: "; cin >> ws; getline(cin, titulo);
-                cout << "Ingrese autor: "; getline(cin, autor);
-                cout << "Ingrese ISBN: "; cin >> isbn;
-                cout << "Ingrese anio: "; cin >> anio;
-                Libro libro(titulo, autor, isbn, anio);
+                string titulo, nombreAutor, isbn;
+                string fechaNac, fechaPub;
+
+                // Solicitar datos del libro con validaciones
+                do {
+                    cout << "Ingrese titulo: ";
+                    cin >> ws; getline(cin, titulo);
+                } while (!Validaciones::validarTextoNoVacio(titulo, "Titulo"));
+
+                do {
+                    cout << "Ingrese nombre del autor: ";
+                    getline(cin, nombreAutor);
+                } while (!Validaciones::validarTexto(nombreAutor, "Nombre del Autor"));
+
+                // Solicitar fecha de nacimiento del autor
+                do {
+                    cout << "Ingrese fecha de nacimiento del autor (DD-MM-YYYY): ";
+                    getline(cin, fechaNac);
+                } while (!Validaciones::validarFecha(fechaNac));
+
+                // Solicitar ISBN
+                do {
+                    cout << "Ingrese ISBN: ";
+                    getline(cin, isbn);
+                } while (!Validaciones::validarIsbn(isbn));
+
+                // Solicitar fecha de publicación
+                do {
+                    cout << "Ingrese fecha de publicacion del libro (DD-MM-YYYY): ";
+                    getline(cin, fechaPub);
+                } while (!Validaciones::validarFecha(fechaPub));
+
+                // Crear los objetos necesarios
+                Fecha fechaNacimientoAutor = Fecha::crearDesdeCadena(fechaNac);
+                Persona autor(nombreAutor, fechaNacimientoAutor);
+                Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
+                Libro libro(titulo, isbn, autor, fechaPublicacion);
+
+                // Agregar libro a la lista
                 lista.agregarLibro(libro);
             } else if (opciones[seleccion] == "Buscar libro") {
                 string titulo;
-                cout << "Ingrese el titulo del libro a buscar: "; cin >> ws; getline(cin, titulo);
+                cout << "Ingrese el titulo del libro a buscar: ";
+                cin >> ws; getline(cin, titulo);
                 Nodo* libro = lista.buscarLibro(titulo);
                 if (libro) {
                     libro->libro.mostrar();
@@ -57,7 +91,8 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 }
             } else if (opciones[seleccion] == "Eliminar libro") {
                 string titulo;
-                cout << "Ingrese el titulo del libro a eliminar: "; cin >> ws; getline(cin, titulo);
+                cout << "Ingrese el titulo del libro a eliminar: ";
+                cin >> ws; getline(cin, titulo);
                 lista.eliminarLibro(titulo);
             } else if (opciones[seleccion] == "Ver todos los libros") {
                 lista.imprimirLibros();

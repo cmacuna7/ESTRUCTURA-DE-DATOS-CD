@@ -1,2 +1,0 @@
-python;abner;1651564564;2024
-Realidad Nacional;Lucas;54654;254

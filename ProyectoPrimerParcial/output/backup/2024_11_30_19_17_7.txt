@@ -1,2 +1,0 @@
-Python;Abner;1654;2024
-Realidad;Abner;456465;2015
