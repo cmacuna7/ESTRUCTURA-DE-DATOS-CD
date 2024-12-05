@@ -1,8 +1,8 @@
 #include "Menu.h"
-#include "Backup.cpp"
+#include "BackupManager.cpp"
 #include "Ayuda.cpp"
 #include <iostream>
-#include "Validaciones.h" // Incluir la clase de validaciones
+#include "Validaciones.cpp" // Incluir la clase de validaciones
 #include <conio.h> // Para captura de teclas
 #include <vector>
 #include <sstream>
@@ -104,7 +104,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 << tiempo->tm_hour << "_" << tiempo->tm_min << "_" << tiempo->tm_sec << ".txt";
                 lista.crearBackup(ss.str());
             } else if (opciones[seleccion] == "Restaurar backup") {
-                restaurarBackup(lista);  // Llama a la función para restaurar el backup
+                BackupManager::restaurarBackup(lista);  // Llama a la función para restaurar el backup
             } else if (opciones[seleccion] == "Salir") {
                 break;
             }

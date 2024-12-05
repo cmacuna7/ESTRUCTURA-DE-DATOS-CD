@@ -5,7 +5,7 @@
 #include <string>
 #include <direct.h>  // Para mkdir en Windows
 #include <sys/stat.h>  // Para usar _stat
-#include "Backup.h"  // Incluir el archivo de cabecera con la declaración de la función
+#include "BackupManager.h"  // Incluir el archivo de cabecera con la declaración de la función
 
 using namespace std;
 
@@ -192,7 +192,7 @@ void ListaCircularDoble::crearBackup(const string& nombreArchivo) {
     string carpetaBackup = "backup";  // Carpeta donde se almacenan los backups
     
     // Asegurarnos de que la carpeta de backups exista
-    crearCarpetaSiNoExiste(carpetaBackup);
+    BackupManager::crearCarpetaSiNoExiste(carpetaBackup);
 
     // Crear la ruta completa para el archivo de backup dentro de la carpeta "backup"
     string rutaCompleta = carpetaBackup + "\\" + nombreArchivo;

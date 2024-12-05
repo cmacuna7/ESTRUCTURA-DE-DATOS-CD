@@ -1,17 +1,17 @@
+#include "BackupManager.h"
 #include <iostream>
-#include <vector>
-#include <windows.h>  // Para las funciones de Windows
-#include "ListaCircularDoble.h"
-#include "Backup.h"
-#include <direct.h> // Para mkdir en Windows
-#include <sys/stat.h>  // Para usar _stat
-#include <fstream>  // Para trabajar con archivos
+#include <windows.h> // Para las funciones de Windows
+#include <direct.h>  // Para mkdir en Windows
+#include <sys/stat.h> // Para _stat
+#include <fstream>   // Para trabajar con archivos
+
 using namespace std;
 
-// Función para verificar si la carpeta existe, y si no, crearla
-void crearCarpetaSiNoExiste(const string& ruta) {
+// Implementación de los métodos de BackupManager
+
+void BackupManager::crearCarpetaSiNoExiste(const string& ruta) {
     struct _stat st;
-    
+
     // Verificar si la carpeta existe
     if (_stat(ruta.c_str(), &st) != 0) {
         // Si la carpeta no existe, la creamos
@@ -25,10 +25,9 @@ void crearCarpetaSiNoExiste(const string& ruta) {
     }
 }
 
-// Función para listar archivos en una carpeta
-vector<string> listarArchivosEnCarpeta(const string& carpeta) {
+vector<string> BackupManager::listarArchivosEnCarpeta(const string& carpeta) {
     vector<string> archivos;
-    string path = carpeta + "\\*";  // Agregar comodín para buscar todos los archivos
+    string path = carpeta + "\\*"; // Agregar comodín para buscar todos los archivos
     WIN32_FIND_DATAA findFileData;
     HANDLE hFind = FindFirstFileA(path.c_str(), &findFileData);
 
@@ -39,7 +38,7 @@ vector<string> listarArchivosEnCarpeta(const string& carpeta) {
 
     do {
         string archivo = findFileData.cFileName;
-        if (archivo != "." && archivo != "..") {  // Ignorar "." y ".."
+        if (archivo != "." && archivo != "..") { // Ignorar "." y ".."
             archivos.push_back(archivo);
         }
     } while (FindNextFileA(hFind, &findFileData) != 0);
@@ -48,9 +47,8 @@ vector<string> listarArchivosEnCarpeta(const string& carpeta) {
     return archivos;
 }
 
-// Función para restaurar el backup
-void restaurarBackup(ListaCircularDoble& lista) {
-    string carpetaBackup = "backup";  // Carpeta donde se almacenan los backups
+void BackupManager::restaurarBackup(ListaCircularDoble& lista) {
+    string carpetaBackup = "backup"; // Carpeta donde se almacenan los backups
     vector<string> archivos = listarArchivosEnCarpeta(carpetaBackup);
 
     if (archivos.empty()) {

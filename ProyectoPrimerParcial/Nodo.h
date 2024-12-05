@@ -1,7 +1,7 @@
 #ifndef NODO_H
 #define NODO_H
 
-#include "Libro.h"
+#include "Libro.cpp"
 
 // Nodo de la lista circular doblemente enlazada
 struct Nodo {
