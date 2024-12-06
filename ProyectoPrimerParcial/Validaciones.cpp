@@ -98,7 +98,10 @@ int Validaciones::calcularDigitoControlIsbn13(const string& isbn) {
 
 // Validación de ISNI
 bool Validaciones::validarIsni(const string& isni) {
-    if (isni.size() != 16 || !std::all_of(isni.begin(), isni.end(), ::isdigit)) {
+    string isniSinEspacios = isni;
+    isniSinEspacios.erase(remove(isniSinEspacios.begin(), isniSinEspacios.end(), ' '), isniSinEspacios.end());
+
+    if (isniSinEspacios.size() != 16 || !all_of(isniSinEspacios.begin(), isniSinEspacios.end(), ::isdigit)) {
         cout << "Error: El ISNI debe contener exactamente 16 dígitos.\n";
         return false;
     }
@@ -106,17 +109,18 @@ bool Validaciones::validarIsni(const string& isni) {
     int sum = 0;
     int weight = 1; // Alternating weights (1 and 2)
     for (int i = 0; i < 15; ++i) {
-        int digit = isni[i] - '0';
+        int digit = isniSinEspacios[i] - '0';
         sum += digit * weight;
         weight = (weight == 1) ? 2 : 1;
     }
 
     int remainder = sum % 11;
     int checkDigit = (12 - remainder) % 11;
-    int lastDigit = isni[15] - '0';
+    int lastDigit = isniSinEspacios[15] - '0';
 
     return checkDigit == lastDigit;
 }
+
 
 // Validación de texto no vacío
 bool Validaciones::validarTextoNoVacio(const string& texto, const string& campo) {

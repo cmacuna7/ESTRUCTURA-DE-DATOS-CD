@@ -51,21 +51,26 @@ void ListaCircularDoble::imprimirLibros() {
         return;
     }
     Nodo* actual = cabeza;
-    cout << left << setw(20) << "Titulo" << setw(25) << "Autor" << setw(25) << "ISBN"
-        << setw(15) << "Publicacion" << setw(15) << "Nac. Autor" << endl;
-    cout << string(100, '-') << endl;
+    cout << left << setw(41) << "Título" 
+        << setw(25) << "Autor" 
+        << setw(25) << "ISNI" 
+        << setw(20) << "ISBN"
+        << setw(15) << "Publicación" 
+        << setw(15) << "Nac. Autor" << endl;
+    cout << string(140, '-') << endl;
 
     do {
-        cout << left << setw(20) << actual->libro.getTitulo()
+        cout << left << setw(40) << actual->libro.getTitulo()
             << setw(25) << actual->libro.getAutor().getNombre()
-            << setw(25) << actual->libro.getIsbn()
+            << setw(25) << actual->libro.getAutor().getIsni()
+            << setw(20) << actual->libro.getIsbn()
             << setw(15) << actual->libro.getFechaPublicacion().mostrar()
             << setw(15) << actual->libro.getAutor().getFechaNacimiento().mostrar() << endl;
         actual = actual->siguiente;
     } while (actual != cabeza);
 }
 
-// Buscar libro
+// Buscar libro por título
 Nodo* ListaCircularDoble::buscarLibro(const string& titulo) {
     if (!cabeza) return nullptr;
     Nodo* actual = cabeza;
@@ -74,6 +79,30 @@ Nodo* ListaCircularDoble::buscarLibro(const string& titulo) {
         actual = actual->siguiente;
     } while (actual != cabeza);
     return nullptr;
+}
+
+// Buscar libro por ISBN
+Nodo* ListaCircularDoble::buscarLibroPorIsbn(const string& isbn) {
+    if (!cabeza) return nullptr;
+    Nodo* actual = cabeza;
+    do {
+        if (actual->libro.getIsbn() == isbn)
+            return actual;
+        actual = actual->siguiente;
+    } while (actual != cabeza);
+    return nullptr;
+}
+
+// Buscar autor por ISNI
+Persona ListaCircularDoble::buscarAutorPorIsni(const string& isni) {
+    if (!cabeza) return Persona();
+    Nodo* actual = cabeza;
+    do {
+        if (actual->libro.getAutor().getIsni() == isni)
+            return actual->libro.getAutor();
+        actual = actual->siguiente;
+    } while (actual != cabeza);
+    return Persona();
 }
 
 // Eliminar libro y actualizar archivo
@@ -121,6 +150,7 @@ void ListaCircularDoble::guardarLibrosEnArchivo() {
         do {
             archivo << actual->libro.getTitulo() << ";"
                     << actual->libro.getAutor().getNombre() << ";"
+                    << actual->libro.getAutor().getIsni() << ";"
                     << actual->libro.getAutor().getFechaNacimiento().mostrar() << ";"
                     << actual->libro.getIsbn() << ";"
                     << actual->libro.getFechaPublicacion().mostrar() << endl;
@@ -164,22 +194,19 @@ void ListaCircularDoble::cargarLibrosDesdeArchivo() {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string titulo, autor, fechaNacAutor, isbn, fechaPublicacion;
+        string titulo, nombreAutor, isni, fechaNacAutor, isbn, fechaPublicacion;
         getline(ss, titulo, ';');
-        getline(ss, autor, ';');
+        getline(ss, nombreAutor, ';');
+        getline(ss, isni, ';');
         getline(ss, fechaNacAutor, ';');
         getline(ss, isbn, ';');
         getline(ss, fechaPublicacion, ';');
 
         // Procesar fechas
-        int dia, mes, anio;
-        sscanf(fechaNacAutor.c_str(), "%d/%d/%d", &dia, &mes, &anio);
-        Fecha fechaNacimientoAutor(dia, mes, anio);
+        Fecha fechaNacimientoAutor = Fecha::crearDesdeCadena(fechaNacAutor);
+        Fecha fechaPublicacionLibro = Fecha::crearDesdeCadena(fechaPublicacion);
 
-        sscanf(fechaPublicacion.c_str(), "%d/%d/%d", &dia, &mes, &anio);
-        Fecha fechaPublicacionLibro(dia, mes, anio);
-
-        Persona autorPersona(autor, fechaNacimientoAutor);
+        Persona autorPersona(nombreAutor, isni, fechaNacimientoAutor);
         Libro libro(titulo, isbn, autorPersona, fechaPublicacionLibro);
         agregarLibro(libro);
     }
@@ -217,6 +244,7 @@ void ListaCircularDoble::crearBackup(const string& nombreArchivo) {
             // Guardar los datos en el archivo en un formato delimitado
             archivo << libro.getTitulo() << ";" 
                     << autor.getNombre() << ";"
+                    << autor.getIsni() << ";"
                     << fechaNac.getDia() << "-" << fechaNac.getMes() << "-" << fechaNac.getAnio() << ";"
                     << libro.getIsbn() << ";"
                     << fechaPub.getDia() << "-" << fechaPub.getMes() << "-" << fechaPub.getAnio() << "\n";
@@ -245,11 +273,12 @@ void ListaCircularDoble::restaurarBackup(const string& nombreArchivo) {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string titulo, nombreAutor, fechaNacStr, isbn, fechaPubStr;
+        string titulo, nombreAutor, isni, fechaNacStr, isbn, fechaPubStr;
 
         // Leer datos del archivo
         getline(ss, titulo, ';');
         getline(ss, nombreAutor, ';');
+        getline(ss, isni, ';');
         getline(ss, fechaNacStr, ';');
         getline(ss, isbn, ';');
         getline(ss, fechaPubStr, ';');
@@ -257,7 +286,7 @@ void ListaCircularDoble::restaurarBackup(const string& nombreArchivo) {
         // Parsear la fecha de nacimiento del autor
         int diaNac, mesNac, anioNac;
         sscanf(fechaNacStr.c_str(), "%d-%d-%d", &diaNac, &mesNac, &anioNac);
-        Fecha fechaNacimiento(diaNac, mesNac, anioNac);
+        Fecha fechaNacimientoAutor(diaNac, mesNac, anioNac);
 
         // Parsear la fecha de publicación
         int diaPub, mesPub, anioPub;
@@ -265,7 +294,7 @@ void ListaCircularDoble::restaurarBackup(const string& nombreArchivo) {
         Fecha fechaPublicacion(diaPub, mesPub, anioPub);
 
         // Crear los objetos correspondientes
-        Persona autor(nombreAutor, fechaNacimiento);
+        Persona autor(nombreAutor, isni, fechaNacimientoAutor);
         Libro libro(titulo, isbn, autor, fechaPublicacion);
 
         // Agregar libro a la lista

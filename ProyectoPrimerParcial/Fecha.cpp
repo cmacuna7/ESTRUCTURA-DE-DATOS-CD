@@ -34,7 +34,7 @@ void Fecha::setMes(int m) {
 }
 
 void Fecha::setAnio(int a) {
-    if (!esFechaValida(dia, mes, a)) throw invalid_argument("Anio invalido");
+    if (!esFechaValida(dia, mes, a)) throw invalid_argument("Año invalido");
     anio = a;
 }
 

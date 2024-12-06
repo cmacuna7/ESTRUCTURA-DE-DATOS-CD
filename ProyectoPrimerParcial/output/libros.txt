@@ -1,3 +1,2 @@
-Realidad nacional;Abner;05/06/2024;5465465;05/12/2002
-Python;Abner;05/06/2025;978-3-16-148410-0;05/06/2025
-C++;Adolfo;05/06/2025;978-3-16-148410-0;05/06/2002
+Cien a¤os de soledad;Gabriel Garcia Marquez;0000 0001 2103 6613;06/03/1927;978-8497592208;30/05/1967
+El amor en los tiempos del c¢lera;Gabriel Garcia Marquez;0000 0001 2103 6613;06/03/1927;978-0307389732;05/06/1985

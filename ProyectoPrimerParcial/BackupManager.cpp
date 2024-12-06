@@ -64,7 +64,7 @@ void BackupManager::restaurarBackup(ListaCircularDoble& lista) {
 
     // Seleccionar archivo
     int seleccion;
-    cout << "Seleccione un archivo para restaurar (ingrese el numero): ";
+    cout << "Seleccione un archivo para restaurar (ingrese el número): ";
     cin >> seleccion;
 
     if (seleccion < 1 || seleccion > archivos.size()) {

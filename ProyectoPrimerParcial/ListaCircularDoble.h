@@ -5,6 +5,8 @@
 #include <string>
 #include <sstream>
 #include "Nodo.h"
+#include "Libro.h"
+#include "Persona.cpp"
 
 using namespace std;
 
@@ -19,8 +21,12 @@ public:
     void agregarLibro(const Libro& libro);
     // Imprimir todos los libros
     void imprimirLibros();
-    // Buscar libro
+    // Buscar libro por título
     Nodo* buscarLibro(const string& titulo);
+    // Buscar libro por ISBN
+    Nodo* buscarLibroPorIsbn(const string& isbn);
+    // Buscar autor por ISNI
+    Persona buscarAutorPorIsni(const string& isni);
     // Eliminar libro
     void eliminarLibro(const string& titulo);
     // Crear backup
@@ -31,7 +37,7 @@ public:
     void guardarLibrosEnArchivo();
     // Cargar los libros desde el archivo
     void cargarLibrosDesdeArchivo();
-    // Cargar los libros desde el archivo
+    // Limpiar la lista
     void limpiarLista();
 };
 

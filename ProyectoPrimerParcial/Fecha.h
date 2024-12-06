@@ -66,7 +66,7 @@ public:
 
     void setAnio(int a) {
         if (!esFechaValida(dia, mes, a)) {
-            throw invalid_argument("Anio invalido");
+            throw invalid_argument("Año invalido");
         }
         anio = a;
     }
@@ -97,9 +97,9 @@ public:
 
         ss >> d >> separador1 >> m >> separador2 >> a;
 
-        if (separador1 != '-' || separador2 != '-' || !esFechaValida(d, m, a)) {
-            throw invalid_argument("Formato o fecha invalida: " + fechaStr);
-        }
+        if ((separador1 != '-' && separador1 != '/') || (separador2 != '-' && separador2 != '/') || !esFechaValida(d, m, a)) {
+        throw invalid_argument("Formato o fecha invalida: " + fechaStr);
+    }
 
         return Fecha(d, m, a);
     }

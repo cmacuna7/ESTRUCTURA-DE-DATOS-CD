@@ -15,9 +15,17 @@ void Libro::setAutor(const Persona& a) { autor = a; }
 void Libro::setFechaPublicacion(const Fecha& fp) { fechaPublicacion = fp; }
 
 void Libro::mostrar() const {
-    cout << "Titulo: " << titulo 
-        << ", Autor: " << autor.getNombre() 
-        << " (Nacido el: " << autor.getFechaNacimiento().mostrar() << ")"
-        << ", ISBN: " << isbn 
-        << ", Fecha de publicacion: " << fechaPublicacion.mostrar() << endl;
+    cout << left << setw(41) << "Título" 
+        << setw(25) << "Autor" 
+        << setw(25) << "ISNI" 
+        << setw(20) << "ISBN"
+        << setw(15) << "Publicación" 
+        << setw(15) << "Nac. Autor" << endl;
+    cout << string(140, '-') << endl;
+    cout << left << setw(40) << titulo
+            << setw(25) << autor.getNombre()
+            << setw(25) << autor.getIsni() 
+            << setw(20) << isbn
+            << setw(15) << fechaPublicacion.mostrar()
+            << setw(15) << autor.getFechaNacimiento().mostrar() << endl;
 }

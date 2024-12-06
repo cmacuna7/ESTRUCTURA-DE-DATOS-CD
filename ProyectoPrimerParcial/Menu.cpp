@@ -2,7 +2,7 @@
 #include "BackupManager.cpp"
 #include "Ayuda.cpp"
 #include <iostream>
-#include "Validaciones.cpp" // Incluir la clase de validaciones
+#include "Validaciones.cpp" // Incluir el header de Validaciones
 #include <conio.h> // Para captura de teclas
 #include <vector>
 #include <sstream>
@@ -39,25 +39,15 @@ void mostrarMenu(ListaCircularDoble& lista) {
             seleccion = (seleccion + 1) % opciones.size();
         } else if (tecla == '\r') { // Enter
             if (opciones[seleccion] == "Agregar libro") {
-                string titulo, nombreAutor, isbn;
-                string fechaNac, fechaPub;
+                string titulo, isbn, isni;
+                string fechaPub;
+                Persona autor;
 
-                // Solicitar datos del libro con validaciones
+                // Solicitar titulo del libro
                 do {
-                    cout << "Ingrese titulo: ";
+                    cout << "Ingrese título del libro: ";
                     cin >> ws; getline(cin, titulo);
-                } while (!Validaciones::validarTextoNoVacio(titulo, "Titulo"));
-
-                do {
-                    cout << "Ingrese nombre del autor: ";
-                    getline(cin, nombreAutor);
-                } while (!Validaciones::validarTexto(nombreAutor, "Nombre del Autor"));
-
-                // Solicitar fecha de nacimiento del autor
-                do {
-                    cout << "Ingrese fecha de nacimiento del autor (DD-MM-YYYY): ";
-                    getline(cin, fechaNac);
-                } while (!Validaciones::validarFecha(fechaNac));
+                } while (!Validaciones::validarTextoNoVacio(titulo, "Título"));
 
                 // Solicitar ISBN
                 do {
@@ -65,35 +55,78 @@ void mostrarMenu(ListaCircularDoble& lista) {
                     getline(cin, isbn);
                 } while (!Validaciones::validarIsbn(isbn));
 
-                // Solicitar fecha de publicación
-                do {
-                    cout << "Ingrese fecha de publicacion del libro (DD-MM-YYYY): ";
-                    getline(cin, fechaPub);
-                } while (!Validaciones::validarFecha(fechaPub));
+                // Verificar si el ISBN ya existe
+                Nodo* libroExistente = lista.buscarLibroPorIsbn(isbn);
+                if (libroExistente) {
+                    cout << "El ISBN ya existe. Información del libro existente:\n";
+                    libroExistente->libro.mostrar();
+                } else {
+                    // Solicitar ISNI del autor
+                    do {
+                        cout << "Ingrese ISNI del autor: ";
+                        getline(cin, isni);
+                    } while (!Validaciones::validarIsni(isni));
 
-                // Crear los objetos necesarios
-                Fecha fechaNacimientoAutor = Fecha::crearDesdeCadena(fechaNac);
-                Persona autor(nombreAutor, fechaNacimientoAutor);
-                Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
-                Libro libro(titulo, isbn, autor, fechaPublicacion);
+                    // Verificar si el ISNI ya existe
+                    Persona autorExistente = lista.buscarAutorPorIsni(isni);
+                    if (autorExistente.getNombre() != "") {
+                        cout << "Autor existente encontrado. Usando información del autor.\n";
+                        autor = autorExistente;
+                    } else {
+                        string nombreAutor, fechaNac;
 
-                // Agregar libro a la lista
-                lista.agregarLibro(libro);
+                        // Solicitar nombre del autor
+                        do {
+                            cout << "Ingrese nombre del autor: ";
+                            getline(cin, nombreAutor);
+                        } while (!Validaciones::validarTexto(nombreAutor, "Nombre del Autor"));
+
+                        // Solicitar fecha de nacimiento del autor
+                        do {
+                            cout << "Ingrese fecha de nacimiento del autor (DD-MM-YYYY): ";
+                            getline(cin, fechaNac);
+                        } while (!Validaciones::validarFecha(fechaNac));
+
+                        // Crear el autor
+                        Fecha fechaNacimientoAutor = Fecha::crearDesdeCadena(fechaNac);
+                        autor = Persona(nombreAutor, isni, fechaNacimientoAutor);
+                    }
+
+                    // Solicitar fecha de publicación del libro
+                    do {
+                        cout << "Ingrese fecha de publicación del libro (DD-MM-YYYY): ";
+                        getline(cin, fechaPub);
+                    } while (!Validaciones::validarFecha(fechaPub));
+
+                    // Crear el libro
+                    Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
+                    Libro libro(titulo, isbn, autor, fechaPublicacion);
+
+                    // Agregar libro a la lista
+                    lista.agregarLibro(libro);
+                }
             } else if (opciones[seleccion] == "Buscar libro") {
-                string titulo;
-                cout << "Ingrese el titulo del libro a buscar: ";
-                cin >> ws; getline(cin, titulo);
-                Nodo* libro = lista.buscarLibro(titulo);
+                string isbn;
+                cout << "Ingrese el ISBN del libro a buscar: ";
+                cin >> ws; getline(cin, isbn);
+                Nodo* libro = lista.buscarLibroPorIsbn(isbn);
                 if (libro) {
                     libro->libro.mostrar();
                 } else {
                     cout << "Libro no encontrado.\n";
                 }
             } else if (opciones[seleccion] == "Eliminar libro") {
-                string titulo;
-                cout << "Ingrese el titulo del libro a eliminar: ";
-                cin >> ws; getline(cin, titulo);
-                lista.eliminarLibro(titulo);
+                string isbn;
+                cout << "Ingrese el ISBN del libro a eliminar: ";
+                cin >> ws; getline(cin, isbn);
+                // Eliminar usando ISBN
+                Nodo* libroAEliminar = lista.buscarLibroPorIsbn(isbn);
+                if (libroAEliminar) {
+                    string titulo = libroAEliminar->libro.getTitulo();
+                    lista.eliminarLibro(titulo);
+                } else {
+                    cout << "Libro no encontrado con ISBN: " << isbn << endl;
+                }
             } else if (opciones[seleccion] == "Ver todos los libros") {
                 lista.imprimirLibros();
             } else if (opciones[seleccion] == "Crear backup") {
