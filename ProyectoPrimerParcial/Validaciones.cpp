@@ -16,10 +16,63 @@ bool Validaciones::validarFecha(const string& fecha) {
         return false;
     }
 
+    // Obtener el año actual
+    time_t t = time(0);
+    tm* ahora = localtime(&t);
+    int anioActual = 1900 + ahora->tm_year;
+
+    if (anio > anioActual) {
+        cout << "Error: El año no puede ser mayor al actual (" << anioActual << ").\n";
+        return false;
+    }
+
     return true;
 }
 
+bool Validaciones::validarFechaPublicacion(const string& fechaPub, const string& fechaNacAutor) {
+    try {
+        // Crear objetos Fecha a partir de las cadenas de texto
+        Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
+        Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacAutor);
+
+        // Mostrar las fechas para depuración (opcional)
+        cout << "Fecha de nacimiento del autor: " << fechaNacimiento.mostrar() << endl;
+        cout << "Fecha de publicación: " << fechaPublicacion.mostrar() << endl;
+
+        // Comparar si el año de la fecha de publicación es menor al año de nacimiento
+        if (fechaPublicacion.getAnio() < fechaNacimiento.getAnio()) {
+            cout << "Error: La fecha de publicación no puede ser anterior al año de nacimiento del autor (" 
+                << fechaNacimiento.getAnio() << ").\n";
+            return false;
+        }
+
+        // Validar la fecha de publicación (asegurándose de que tenga el formato correcto)
+        return validarFecha(fechaPub);  // Aquí se mantiene la validación del formato
+    } catch (const invalid_argument& e) {
+        // En caso de que alguna fecha no sea válida
+        cout << "Error: " << e.what() << endl;
+        return false;
+    }
+}
+
+
+
 bool Validaciones::validarIsbn(const string& isbn) {
+    if (isbn.empty()) {
+        cout << "Error: El ISBN no puede estar vacío.\n";
+        return false;
+    }
+
+    // Validar formato de guiones
+    if (isbn.front() == '-' || isbn.back() == '-') {
+        cout << "Error: El ISBN no puede comenzar ni terminar con un guion.\n";
+        return false;
+    }
+
+    if (isbn.find("--") != string::npos) {
+        cout << "Error: El ISBN no puede contener guiones consecutivos.\n";
+        return false;
+    }
     string isbnSinGuiones = isbn;
     isbnSinGuiones.erase(remove(isbnSinGuiones.begin(), isbnSinGuiones.end(), '-'), isbnSinGuiones.end());
 
@@ -98,34 +151,39 @@ int Validaciones::calcularDigitoControlIsbn13(const string& isbn) {
 
 // Validación de ISNI
 bool Validaciones::validarIsni(const string& isni) {
-    string isniSinEspacios = isni;
-    isniSinEspacios.erase(remove(isniSinEspacios.begin(), isniSinEspacios.end(), ' '), isniSinEspacios.end());
+    // Remover espacios y guiones del ISNI
+    std::string isniSinEspacios = isni;
+    isniSinEspacios.erase(
+        std::remove_if(isniSinEspacios.begin(), isniSinEspacios.end(),
+                    [](char c) { return c == '-' || c == ' '; }),
+        isniSinEspacios.end());
 
-    if (isniSinEspacios.size() != 16 || !all_of(isniSinEspacios.begin(), isniSinEspacios.end(), ::isdigit)) {
-        cout << "Error: El ISNI debe contener exactamente 16 dígitos.\n";
+    // Verificar que el tamaño sea exactamente 16 caracteres
+    if (isniSinEspacios.size() != 16) {
+        std::cout << "Error: El ISNI debe contener exactamente 16 caracteres (sin incluir espacios ni guiones).\n";
         return false;
     }
 
-    int suma = 0;
-    int pesoAlternante = 1; // Alterna entre 1 y 2
+    // Verificar que los primeros 15 caracteres sean numéricos
+    if (!std::all_of(isniSinEspacios.begin(), isniSinEspacios.end() - 1, ::isdigit)) {
+        std::cout << "Error: Los primeros 15 caracteres del ISNI deben ser numéricos.\n";
+        return false;
+    }
+
+    // Verificar que el último carácter sea un dígito o una 'X'
+    char lastChar = isniSinEspacios[15];
+    if (!(std::isdigit(lastChar) || lastChar == 'X')) {
+        std::cout << "Error: El último carácter del ISNI debe ser un dígito o 'X'.\n";
+        return false;
+    }
+
+    // Cálculo del dígito de control
+    int sum = 0;
+    int weight = 1; // Alternating weights: 1, 2
     for (int i = 0; i < 15; ++i) {
-        int digito = isniSinEspacios[i] - '0';
-        suma += digito * pesoAlternante;
-        pesoAlternante = (pesoAlternante == 1) ? 2 : 1;
-    }
-
-    int resto = suma % 11;
-    int digitoControlEsperado = (12 - resto) % 11;
-
-    // Si el dígito de control es 10, se representa como 'X' (caso extendido)
-    int digitoControlReal = isniSinEspacios[15] - '0';
-    if (isniSinEspacios[15] == 'X') {
-        digitoControlReal = 10;
-    }
-
-    if (digitoControlEsperado != digitoControlReal) {
-        cout << "Error: El dígito de control del ISNI no es válido.\n";
-        return false;
+        int digit = isniSinEspacios[i] - '0';
+        sum += digit * weight;
+        weight = (weight == 1) ? 2 : 1;
     }
 
     return true;
@@ -134,12 +192,8 @@ bool Validaciones::validarIsni(const string& isni) {
 
 // Validación de texto no vacío
 bool Validaciones::validarTextoNoVacio(const string& texto, const string& campo) {
-    regex formatoTexto(R"([a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+)"); // Incluye letras con tildes y ñ
     if (texto.empty() || texto.find_first_not_of(' ') == string::npos) {
         cout << "Error: El campo " << campo << " no puede estar vacío o contener solo espacios.\n";
-        return false;
-    } else if (!regex_match(texto, formatoTexto)) {
-        cout << "Error: El campo " << campo << " solo debe contener letras, espacios y caracteres válidos en español.\n";
         return false;
     }
     return true;
@@ -147,12 +201,12 @@ bool Validaciones::validarTextoNoVacio(const string& texto, const string& campo)
 
 // Validación de texto
 bool Validaciones::validarTexto(const string& texto, const string& campo) {
-    regex formatoTexto(R"([a-zA-Z\s]+)");
+    regex formatoTexto(R"([a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+)");
     if (texto.empty() || texto.find_first_not_of(' ') == string::npos) {
         cout << "Error: El campo " << campo << " no puede estar vacío o contener solo espacios.\n";
         return false;
     } else if (!regex_match(texto, formatoTexto)) {
-        cout << "Error: El campo " << campo << " solo debe contener letras y espacios.\n";
+        cout << "Error: El campo " << campo << " solo debe contener letras, espacios y caracteres válidos en español.\n";
         return false;
     }
     return true;

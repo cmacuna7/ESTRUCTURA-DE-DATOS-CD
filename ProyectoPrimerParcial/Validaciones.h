@@ -5,11 +5,13 @@
 #include <regex>
 #include <iostream>
 #include <cctype>
+#include "Fecha.h"
 
 using namespace std;
 
 class Validaciones {
 public:
+    static bool validarFechaPublicacion(const string& fechaPub, const string& fechaNacAutor);
     static bool validarFecha(const string& fecha);
     static bool validarIsbn(const string& isbn);
     static bool validarIsni(const string& isni);

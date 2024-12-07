@@ -40,13 +40,13 @@ void mostrarMenu(ListaCircularDoble& lista) {
         } else if (tecla == '\r') { // Enter
             if (opciones[seleccion] == "Agregar libro") {
                 string titulo, isbn, isni;
-                string fechaPub;
+                string fechaPub, fechaNac;
                 Persona autor;
 
                 // Solicitar titulo del libro
                 do {
                     cout << "Ingrese título del libro: ";
-                    cin >> ws; getline(cin, titulo);
+                    getline(cin, titulo);
                 } while (!Validaciones::validarTextoNoVacio(titulo, "Título"));
 
                 // Solicitar ISBN
@@ -73,7 +73,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
                         cout << "Autor existente encontrado. Usando información del autor.\n";
                         autor = autorExistente;
                     } else {
-                        string nombreAutor, fechaNac;
+                        string nombreAutor;
 
                         // Solicitar nombre del autor
                         do {
@@ -96,7 +96,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
                     do {
                         cout << "Ingrese fecha de publicación del libro (DD-MM-YYYY): ";
                         getline(cin, fechaPub);
-                    } while (!Validaciones::validarFecha(fechaPub));
+                    } while (!Validaciones::validarFechaPublicacion(fechaPub, fechaNac));
 
                     // Crear el libro
                     Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);

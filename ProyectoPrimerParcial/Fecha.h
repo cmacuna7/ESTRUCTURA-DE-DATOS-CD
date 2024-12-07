@@ -34,6 +34,10 @@ private:
     }
 
 public:
+    // Método para comparar si una fecha es anterior a otra
+    bool esAnterior(const Fecha& otra) const {
+        return anio < otra.anio;
+    }
     // Constructor por defecto y parametrizado
     Fecha(int d = 1, int m = 1, int a = 1900) {
         if (!esFechaValida(d, m, a)) {
@@ -96,6 +100,9 @@ public:
         stringstream ss(fechaStr);
 
         ss >> d >> separador1 >> m >> separador2 >> a;
+
+        // Depuración para ver qué datos hemos leído
+        cout << "Fecha leída: " << d << "-" << m << "-" << a << endl;
 
         if ((separador1 != '-' && separador1 != '/') || (separador2 != '-' && separador2 != '/') || !esFechaValida(d, m, a)) {
         throw invalid_argument("Formato o fecha invalida: " + fechaStr);
