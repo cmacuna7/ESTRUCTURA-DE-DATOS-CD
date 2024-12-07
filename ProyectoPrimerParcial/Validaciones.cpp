@@ -106,26 +106,40 @@ bool Validaciones::validarIsni(const string& isni) {
         return false;
     }
 
-    int sum = 0;
-    int weight = 1; // Alternating weights (1 and 2)
+    int suma = 0;
+    int pesoAlternante = 1; // Alterna entre 1 y 2
     for (int i = 0; i < 15; ++i) {
-        int digit = isniSinEspacios[i] - '0';
-        sum += digit * weight;
-        weight = (weight == 1) ? 2 : 1;
+        int digito = isniSinEspacios[i] - '0';
+        suma += digito * pesoAlternante;
+        pesoAlternante = (pesoAlternante == 1) ? 2 : 1;
     }
 
-    int remainder = sum % 11;
-    int checkDigit = (12 - remainder) % 11;
-    int lastDigit = isniSinEspacios[15] - '0';
+    int resto = suma % 11;
+    int digitoControlEsperado = (12 - resto) % 11;
 
-    return checkDigit == lastDigit;
+    // Si el dígito de control es 10, se representa como 'X' (caso extendido)
+    int digitoControlReal = isniSinEspacios[15] - '0';
+    if (isniSinEspacios[15] == 'X') {
+        digitoControlReal = 10;
+    }
+
+    if (digitoControlEsperado != digitoControlReal) {
+        cout << "Error: El dígito de control del ISNI no es válido.\n";
+        return false;
+    }
+
+    return true;
 }
 
 
 // Validación de texto no vacío
 bool Validaciones::validarTextoNoVacio(const string& texto, const string& campo) {
+    regex formatoTexto(R"([a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+)"); // Incluye letras con tildes y ñ
     if (texto.empty() || texto.find_first_not_of(' ') == string::npos) {
         cout << "Error: El campo " << campo << " no puede estar vacío o contener solo espacios.\n";
+        return false;
+    } else if (!regex_match(texto, formatoTexto)) {
+        cout << "Error: El campo " << campo << " solo debe contener letras, espacios y caracteres válidos en español.\n";
         return false;
     }
     return true;
