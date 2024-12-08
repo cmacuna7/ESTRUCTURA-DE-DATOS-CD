@@ -5,6 +5,5 @@
 #include <vector>
 
 void mostrarMenu(ListaCircularDoble& lista);
-void mostrarAyuda();
 
 #endif
