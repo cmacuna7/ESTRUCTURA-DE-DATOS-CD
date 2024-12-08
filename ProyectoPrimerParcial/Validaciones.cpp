@@ -35,10 +35,6 @@ bool Validaciones::validarFechaPublicacion(const string& fechaPub, const string&
         Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacAutor);
 
-        // Mostrar las fechas para depuración (opcional)
-        cout << "Fecha de nacimiento del autor: " << fechaNacimiento.mostrar() << endl;
-        cout << "Fecha de publicación: " << fechaPublicacion.mostrar() << endl;
-
         // Comparar si el año de la fecha de publicación es menor al año de nacimiento
         if (fechaPublicacion.getAnio() < fechaNacimiento.getAnio()) {
             cout << "Error: La fecha de publicación no puede ser anterior al año de nacimiento del autor (" 

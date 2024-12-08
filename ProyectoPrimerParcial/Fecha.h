@@ -101,9 +101,6 @@ public:
 
         ss >> d >> separador1 >> m >> separador2 >> a;
 
-        // Depuración para ver qué datos hemos leído
-        cout << "Fecha leída: " << d << "-" << m << "-" << a << endl;
-
         if ((separador1 != '-' && separador1 != '/') || (separador2 != '-' && separador2 != '/') || !esFechaValida(d, m, a)) {
         throw invalid_argument("Formato o fecha invalida: " + fechaStr);
     }
