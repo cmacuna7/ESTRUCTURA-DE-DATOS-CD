@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <ctime>
+#include "pdf_generator.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
         "Buscar libro",
         "Eliminar libro",
         "Ver todos los libros",
+        "Exportar en archivo PDF",
         "Crear backup",
         "Restaurar backup",
         "Salir"
@@ -129,6 +131,12 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 }
             } else if (opciones[seleccion] == "Ver todos los libros") {
                 lista.imprimirLibros();
+            }else if (opciones[seleccion] == "Exportar en archivo PDF") {
+
+                    const std::string inputFile = "libros.txt";
+                    createPDF(inputFile);
+ 
+
             } else if (opciones[seleccion] == "Crear backup") {
                 time_t ahora = time(0);
                 tm* tiempo = localtime(&ahora);
