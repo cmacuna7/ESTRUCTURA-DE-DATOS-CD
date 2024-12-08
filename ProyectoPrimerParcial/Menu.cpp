@@ -48,7 +48,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 do {
                     cout << "Ingrese título del libro: ";
                     getline(cin, titulo);
-                } while (!Validaciones::validarTextoNoVacio(titulo, "Título"));
+                } while (!Validaciones::validarTitulo(titulo, "Título"));
 
                 // Solicitar ISBN
                 do {
@@ -80,7 +80,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
                         do {
                             cout << "Ingrese nombre del autor: ";
                             getline(cin, nombreAutor);
-                        } while (!Validaciones::validarTexto(nombreAutor, "Nombre del Autor"));
+                        } while (!Validaciones::validarTituloNombre(nombreAutor, "Nombre del Autor"));
 
                         // Solicitar fecha de nacimiento del autor
                         do {

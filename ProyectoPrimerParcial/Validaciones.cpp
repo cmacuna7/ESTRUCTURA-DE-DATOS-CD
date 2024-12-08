@@ -29,6 +29,50 @@ bool Validaciones::validarFecha(const string& fecha) {
     return true;
 }
 
+// Validación de título y nombre
+bool Validaciones::validarTituloNombre(const string& texto, const string& campo) {
+    regex formatoTituloNombre(R"(([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)(\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*)");
+    if (texto.empty() || texto.find_first_not_of(' ') == string::npos) {
+        cout << "Error: El campo " << campo << " no puede estar vacío o contener solo espacios.\n";
+        return false;
+    } else if (!regex_match(texto, formatoTituloNombre)) {
+        cout << "Error: El campo " << campo << " debe comenzar con una letra mayúscula y las demas minúsculas.\n";
+        return false;
+    }
+    return true;
+}
+
+// Validación de título
+bool Validaciones::validarTitulo(const string& texto, const string& campo) {
+    regex formatoTitulo(R"(([A-ZÁÉÍÓÚÑa-záéíóúñ0-9#\+\-]+)(\s[A-ZÁÉÍÓÚÑa-záéíóúñ0-9#\+\-]+)*)");
+    if (texto.empty() || texto.find_first_not_of(' ') == string::npos) {
+        cout << "Error: El campo " << campo << " no puede estar vacío o contener solo espacios.\n";
+        return false;
+    } else if (!regex_match(texto, formatoTitulo)) {
+        cout << "Error: El campo " << campo << " debe comenzar con una letra mayúscula, número o carácter especial permitido y cada palabra debe tener al menos una letra.\n";
+        return false;
+    }
+
+    // Verificar que cada palabra comience con mayúscula y las demás letras sean minúsculas o caracteres especiales permitidos
+    stringstream ss(texto);
+    string palabra;
+    while (ss >> palabra) {
+        if (!isupper(palabra[0])) {
+            cout << "Error: Cada palabra debe comenzar con una letra mayúscula.\n";
+            return false;
+        }
+        for (size_t i = 1; i < palabra.size(); ++i) {
+            if (!islower(palabra[i]) && !isdigit(palabra[i]) && palabra[i] != '#' && palabra[i] != '+' && palabra[i] != '-') {
+                cout << "Error: Las letras después de la primera deben ser minúsculas o caracteres especiales permitidos.\n";
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+
 bool Validaciones::validarFechaPublicacion(const string& fechaPub, const string& fechaNacAutor) {
     try {
         // Crear objetos Fecha a partir de las cadenas de texto
