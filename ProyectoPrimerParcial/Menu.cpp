@@ -1,6 +1,5 @@
 #include "Menu.h"
 #include "BackupManager.cpp"
-#include "Ayuda.cpp"
 #include <iostream>
 #include "Validaciones.cpp" // Incluir el header de Validaciones
 #include <conio.h> // Para captura de teclas
@@ -152,7 +151,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
             cout << "Presione cualquier tecla para continuar...\n";
             _getch();
         } else if (tecla == 59) { // F1
-            mostrarAyuda();
+            system("start cmd /K \"C:\\ESPE\\1992-ESTRUCTURA DE DATOS\\ESTRUCTURA-DE-DATOS-CD\\ProyectoPrimerParcial\\Ayuda\\output\\ayuda.exe");
         }
     }
 }
