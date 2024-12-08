@@ -135,7 +135,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
 
                     const std::string inputFile = "libros.txt";
                     createPDF(inputFile);
- 
+
 
             } else if (opciones[seleccion] == "Crear backup") {
                 time_t ahora = time(0);
