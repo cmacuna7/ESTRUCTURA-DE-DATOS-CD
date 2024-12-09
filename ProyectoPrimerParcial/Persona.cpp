@@ -1,3 +1,13 @@
+/********************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                       *
+ * Proposito:                      Clase persona                                            *
+ * Autor:                          Abner Arboleda, Christian Acuña, Christian Bonifaz       *
+ * Fecha de creacion:              01/12/2024                                               *
+ * Fecha de modificacion:          08/11/2024                                               *
+ * Materia:                        Estructura de datos                                      *
+ * NRC :                           1992                                                     *
+ ********************************************************************************************/
+
 #include "Persona.h"
 #include <iostream>
 

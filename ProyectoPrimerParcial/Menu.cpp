@@ -1,8 +1,19 @@
+/********************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                       *
+ * Proposito:                      Menu principal                                           *
+ * Autor:                          Abner Arboleda, Christian Acuña, Christian Bonifaz       *
+ * Fecha de creacion:              01/12/2024                                               *
+ * Fecha de modificacion:          08/11/2024                                               *
+ * Materia:                        Estructura de datos                                      *
+ * NRC :                           1992                                                     *
+ ********************************************************************************************/
+
+
 #include "Menu.h"
 #include "BackupManager.cpp"
 #include <iostream>
-#include "Validaciones.cpp" // Incluir el header de Validaciones
-#include <conio.h> // Para captura de teclas
+#include "Validaciones.cpp" 
+#include <conio.h> 
 #include <vector>
 #include <sstream>
 #include <ctime>
@@ -13,7 +24,7 @@ using namespace std;
 
 std::wstring getExecutablePath() {
     wchar_t buffer[MAX_PATH];
-    GetModuleFileNameW(NULL, buffer, MAX_PATH); // Usamos GetModuleFileNameW para Unicode
+    GetModuleFileNameW(NULL, buffer, MAX_PATH); 
     std::wstring path(buffer);
     return path.substr(0, path.find_last_of(L"\\/"));
 }
@@ -159,16 +170,10 @@ void mostrarMenu(ListaCircularDoble& lista) {
             cout << "Presione cualquier tecla para continuar...\n";
             _getch();
         } else if (tecla == 59) { // F1
-               std::wstring base_path = getExecutablePath();
-
-    // Ruta dinámica completa al archivo ayuda.exe
-    std::wstring ayuda_path = base_path + L"\\output\\ayuda.exe";
-
-    // Convertir la ruta a un formato adecuado para system()
-    std::string command = "start cmd /C \"" + std::string(ayuda_path.begin(), ayuda_path.end()) + "\"";
-
-    // Ejecutar el comando
-    system(command.c_str());
+            std::wstring base_path = getExecutablePath();
+            std::wstring ayuda_path = base_path + L"\\output\\ayuda.exe";
+            std::string command = "start cmd /C \"" + std::string(ayuda_path.begin(), ayuda_path.end()) + "\"";
+            system(command.c_str());
         }
     }
 }

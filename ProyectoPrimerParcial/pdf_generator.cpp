@@ -1,3 +1,13 @@
+/********************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                       *
+ * Proposito:                      Crear PDFs                                               *
+ * Autor:                          Abner Arboleda, Christian Acuña, Christian Bonifaz       *
+ * Fecha de creacion:              01/12/2024                                               *
+ * Fecha de modificacion:          08/11/2024                                               *
+ * Materia:                        Estructura de datos                                      *
+ * NRC :                           1992                                                     *
+ ********************************************************************************************/
+
 #include "pdf_generator.h"
 #include <iostream>
 #include <fstream>
