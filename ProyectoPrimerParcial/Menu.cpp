@@ -7,8 +7,16 @@
 #include <sstream>
 #include <ctime>
 #include "pdf_generator.h"
+#include <windows.h>
 
 using namespace std;
+
+std::wstring getExecutablePath() {
+    wchar_t buffer[MAX_PATH];
+    GetModuleFileNameW(NULL, buffer, MAX_PATH); // Usamos GetModuleFileNameW para Unicode
+    std::wstring path(buffer);
+    return path.substr(0, path.find_last_of(L"\\/"));
+}
 
 void mostrarMenu(ListaCircularDoble& lista) {
     vector<string> opciones = {
@@ -151,7 +159,16 @@ void mostrarMenu(ListaCircularDoble& lista) {
             cout << "Presione cualquier tecla para continuar...\n";
             _getch();
         } else if (tecla == 59) { // F1
-            system("start cmd /C \"C:\\ESPE\\1992-ESTRUCTURA DE DATOS\\ESTRUCTURA-DE-DATOS-CD\\ProyectoPrimerParcial\\Ayuda\\output\\ayuda.exe\"");
+               std::wstring base_path = getExecutablePath();
+
+    // Ruta dinámica completa al archivo ayuda.exe
+    std::wstring ayuda_path = base_path + L"\\output\\ayuda.exe";
+
+    // Convertir la ruta a un formato adecuado para system()
+    std::string command = "start cmd /C \"" + std::string(ayuda_path.begin(), ayuda_path.end()) + "\"";
+
+    // Ejecutar el comando
+    system(command.c_str());
         }
     }
 }
