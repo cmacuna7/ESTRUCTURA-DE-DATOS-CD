@@ -116,6 +116,12 @@ bool Validaciones::validarIsbn(const string& isbn) {
     string isbnSinGuiones = isbn;
     isbnSinGuiones.erase(remove(isbnSinGuiones.begin(), isbnSinGuiones.end(), '-'), isbnSinGuiones.end());
 
+    // Verificar que todos los caracteres no sean iguales
+    if (all_of(isbnSinGuiones.begin(), isbnSinGuiones.end(), [isbnSinGuiones](char c) { return c == isbnSinGuiones[0]; })) {
+        cout << "Error: El ISBN no puede contener todos los caracteres iguales.\n";
+        return false;
+    }
+
     if (isbnSinGuiones.size() == 10) {
         return validarIsbn10(isbnSinGuiones);
     } else if (isbnSinGuiones.size() == 13) {
@@ -214,6 +220,12 @@ bool Validaciones::validarIsni(const string& isni) {
     char lastChar = isniSinEspacios[15];
     if (!(std::isdigit(lastChar) || lastChar == 'X')) {
         std::cout << "Error: El último carácter del ISNI debe ser un dígito o 'X'.\n";
+        return false;
+    }
+
+    // Verificar que todos los caracteres no sean iguales
+    if (all_of(isniSinEspacios.begin(), isniSinEspacios.end(), [isniSinEspacios](char c) { return c == isniSinEspacios[0]; })) {
+        std::cout << "Error: Ingrese un Isni Valido.\n";
         return false;
     }
 
