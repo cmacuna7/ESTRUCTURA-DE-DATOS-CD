@@ -68,8 +68,8 @@ bool Validaciones::validarTitulo(const string& texto, const string& campo) {
     stringstream ss(texto);
     string palabra;
     while (ss >> palabra) {
-        if (!isupper(palabra[0])) {
-            cout << "Error: Cada palabra debe comenzar con una letra mayúscula.\n";
+        if (!isupper(palabra[0]) && !isdigit(palabra[0])) {
+            cout << "Error: Cada palabra debe comenzar con una letra mayúscula o un número.\n";
             return false;
         }
         for (size_t i = 1; i < palabra.size(); ++i) {
