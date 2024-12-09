@@ -151,7 +151,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
             cout << "Presione cualquier tecla para continuar...\n";
             _getch();
         } else if (tecla == 59) { // F1
-             system("start cmd /C \"C:\\ESPE\\1992-ESTRUCTURA DE DATOS\\ESTRUCTURA-DE-DATOS-CD\\ProyectoPrimerParcial\\Ayuda\\output\\ayuda.exe\"");
+            system("start cmd /C \"C:\\ESPE\\1992-ESTRUCTURA DE DATOS\\ESTRUCTURA-DE-DATOS-CD\\ProyectoPrimerParcial\\Ayuda\\output\\ayuda.exe\"");
         }
     }
 }

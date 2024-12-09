@@ -11,7 +11,7 @@ bool Validaciones::validarFecha(const string& fecha) {
     int dia, mes, anio;
     sscanf(fecha.c_str(), "%d-%d-%d", &dia, &mes, &anio);
 
-    if (anio < 0 || mes < 1 || mes > 12 || dia < 1 || dia > diasEnMes(mes, anio)) {
+    if (anio <= 0 || mes < 1 || mes > 12 || dia < 1 || dia > diasEnMes(mes, anio)) {
         cout << "Error: Fecha no valida.\n";
         return false;
     }
