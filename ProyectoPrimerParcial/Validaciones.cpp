@@ -86,10 +86,10 @@ bool Validaciones::validarFechaPublicacion(const string& fechaPub, const string&
         Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacAutor);
 
-        // Comparar si la diferencia de años es menor a 5
+        // Comparar si la diferencia de años es menor a 4
         int diferenciaAnios = fechaPublicacion.getAnio() - fechaNacimiento.getAnio();
-        if (diferenciaAnios < 5) {
-            cout << "Error: La fecha de publicación debe ser al menos 5 años posterior al año de nacimiento del autor (" 
+        if (diferenciaAnios < 4) {
+            cout << "Error: La fecha de publicación debe ser al menos 4 años posterior al año de nacimiento del autor (" 
                 << fechaNacimiento.getAnio() << ").\n";
             return false;
         }
