@@ -23,17 +23,13 @@ bool Validaciones::validarFecha(const string& fecha) {
     sscanf(fecha.c_str(), "%d-%d-%d", &dia, &mes, &anio);
 
     if (anio <= 0 || mes < 1 || mes > 12 || dia < 1 || dia > diasEnMes(mes, anio)) {
-        cout << "Error: Fecha no valida.\n";
+        cout << "Error: Fecha no válida.\n";
         return false;
     }
 
-    // Obtener el año actual
-    time_t t = time(0);
-    tm* ahora = localtime(&t);
-    int anioActual = 1900 + ahora->tm_year;
-
-    if (anio > anioActual) {
-        cout << "Error: El año no puede ser mayor al actual (" << anioActual << ").\n";
+    // Validar que el año sea menor a 2020
+    if (anio >= 2020) {
+        cout << "Error: El año debe ser menor a 2020.\n";
         return false;
     }
 
