@@ -28,8 +28,8 @@ bool Validaciones::validarFecha(const string& fecha) {
     }
 
     // Validar que el año sea menor a 2020
-    if (anio >= 2020) {
-        cout << "Error: El año debe ser menor a 2020.\n";
+    if (anio >= 2021) {
+        cout << "Error: El año debe ser menor a 2021.\n";
         return false;
     }
 
@@ -86,15 +86,16 @@ bool Validaciones::validarFechaPublicacion(const string& fechaPub, const string&
         Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacAutor);
 
-        // Comparar si el año de la fecha de publicación es menor al año de nacimiento
-        if (fechaPublicacion.getAnio() < fechaNacimiento.getAnio()) {
-            cout << "Error: La fecha de publicación no puede ser anterior al año de nacimiento del autor (" 
+        // Comparar si la diferencia de años es menor a 5
+        int diferenciaAnios = fechaPublicacion.getAnio() - fechaNacimiento.getAnio();
+        if (diferenciaAnios < 5) {
+            cout << "Error: La fecha de publicación debe ser al menos 5 años posterior al año de nacimiento del autor (" 
                 << fechaNacimiento.getAnio() << ").\n";
             return false;
         }
 
-        // Validar la fecha de publicación (asegurándose de que tenga el formato correcto)
-        return validarFecha(fechaPub);  // Aquí se mantiene la validación del formato
+        // Si pasa la validación de la diferencia de años, retornar true
+        return true;
     } catch (const invalid_argument& e) {
         // En caso de que alguna fecha no sea válida
         cout << "Error: " << e.what() << endl;
