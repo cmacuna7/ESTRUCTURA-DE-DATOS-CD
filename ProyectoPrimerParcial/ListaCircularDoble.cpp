@@ -16,9 +16,42 @@
 #include <direct.h>  // Para mkdir en Windows
 #include <sys/stat.h>  // Para usar _stat
 #include "BackupManager.h"  // Incluir el archivo de cabecera con la declaración de la función
+#include <functional>
 
 using namespace std;
+// Buscar libros por rango de fechas de publicación
+void ListaCircularDoble::buscarLibrosPorRangoFechas(const Fecha& inicio, const Fecha& fin) {
+    if (!cabeza) {
+        cout << "No hay libros registrados para buscar en el rango de fechas.\n";
+        return;
+    }
 
+    auto enRango = [&inicio, &fin](const Fecha& fecha) {
+        return fecha >= inicio && fecha <= fin;
+    };
+
+    Nodo* actual = cabeza;
+    bool encontrados = false;
+    cout << "Libros publicados entre " << inicio.mostrar() << " y " << fin.mostrar() << ":\n";
+    cout << left << setw(41) << "Título" 
+        << setw(25) << "Autor" 
+        << setw(20) << "Publicación" << endl;
+    cout << string(90, '-') << endl;
+
+    do {
+        if (enRango(actual->libro.getFechaPublicacion())) {
+            encontrados = true;
+            cout << left << setw(40) << actual->libro.getTitulo()
+                << setw(25) << actual->libro.getAutor().getNombre()
+                << setw(20) << actual->libro.getFechaPublicacion().mostrar() << endl;
+        }
+        actual = actual->siguiente;
+    } while (actual != cabeza);
+
+    if (!encontrados) {
+        cout << "No se encontraron libros en el rango especificado.\n";
+    }
+}
 // Agregar libro
 void ListaCircularDoble::agregarLibro(const Libro& libro) {
     Nodo* nuevo = new Nodo{libro, nullptr, nullptr};

@@ -117,6 +117,33 @@ public:
 
         return Fecha(d, m, a);
     }
+    
+    // Sobrecarga de operadores relacionales
+    bool operator==(const Fecha& otra) const {
+        return dia == otra.dia && mes == otra.mes && anio == otra.anio;
+    }
+
+    bool operator!=(const Fecha& otra) const {
+        return !(*this == otra);
+    }
+
+    bool operator<(const Fecha& otra) const {
+        if (anio != otra.anio) return anio < otra.anio;
+        if (mes != otra.mes) return mes < otra.mes;
+        return dia < otra.dia;
+    }
+
+    bool operator<=(const Fecha& otra) const {
+        return *this < otra || *this == otra;
+    }
+
+    bool operator>(const Fecha& otra) const {
+        return !(*this <= otra);
+    }
+
+    bool operator>=(const Fecha& otra) const {
+        return !(*this < otra);
+    }
 };
 
 #endif

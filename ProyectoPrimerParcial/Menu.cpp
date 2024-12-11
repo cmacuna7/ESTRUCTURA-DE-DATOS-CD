@@ -35,6 +35,7 @@ void mostrarMenu(ListaCircularDoble& lista) {
         "Buscar libro",
         "Eliminar libro",
         "Ver todos los libros",
+        "Buscar libros por rango de fechas", // Nueva opción
         "Exportar en archivo PDF",
         "Crear backup",
         "Restaurar backup",
@@ -149,11 +150,10 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 }
             } else if (opciones[seleccion] == "Ver todos los libros") {
                 lista.imprimirLibros();
-            }else if (opciones[seleccion] == "Exportar en archivo PDF") {
 
+            }else if (opciones[seleccion] == "Exportar en archivo PDF") {
                     const std::string inputFile = "libros.txt";
                     createPDF(inputFile);
-
 
             } else if (opciones[seleccion] == "Crear backup") {
                 time_t ahora = time(0);
@@ -166,6 +166,28 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 BackupManager::restaurarBackup(lista);  // Llama a la función para restaurar el backup
             } else if (opciones[seleccion] == "Salir") {
                 break;
+            } else if (opciones[seleccion] == "Buscar libros por rango de fechas") {
+                string fechaInicioStr, fechaFinStr;
+
+                cout << "Ingrese fecha de inicio (DD-MM-YYYY): ";
+                cin >> ws;
+                getline(cin, fechaInicioStr);
+                while (!Validaciones::validarFechaNormal(fechaInicioStr)) {
+                    cout << "Fecha inválida. Intente nuevamente (DD-MM-YYYY): ";
+                    getline(cin, fechaInicioStr);
+                }
+
+                cout << "Ingrese fecha de fin (DD-MM-YYYY): ";
+                getline(cin, fechaFinStr);
+                while (!Validaciones::validarFechaNormal(fechaFinStr)) {
+                    cout << "Fecha inválida. Intente nuevamente (DD-MM-YYYY): ";
+                    getline(cin, fechaFinStr);
+                }
+
+                Fecha fechaInicio = Fecha::crearDesdeCadena(fechaInicioStr);
+                Fecha fechaFin = Fecha::crearDesdeCadena(fechaFinStr);
+
+                lista.buscarLibrosPorRangoFechas(fechaInicio, fechaFin);
             }
             cout << "Presione cualquier tecla para continuar...\n";
             _getch();
