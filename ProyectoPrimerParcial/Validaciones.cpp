@@ -27,14 +27,29 @@ bool Validaciones::validarFecha(const string& fecha) {
         return false;
     }
 
-    // Validar que el año sea menor a 2020
-    if (anio >= 2021) {
-        cout << "Error: El año debe ser menor a 2021.\n";
+    // Obtener la fecha actual
+    time_t t = time(nullptr);
+    tm* fechaActual = localtime(&t);
+
+    int diaActual = fechaActual->tm_mday;
+    int mesActual = fechaActual->tm_mon + 1;
+    int anioActual = fechaActual->tm_year + 1900;
+
+    // Verificar que la fecha ingresada no sea mayor a la actual
+    if (anio > anioActual || (anio == anioActual && mes > mesActual) || (anio == anioActual && mes == mesActual && dia > diaActual)) {
+        cout << "Error: La fecha no puede ser mayor a la fecha actual.\n";
         return false;
     }
 
+    // Validar que la fecha de nacimiento sea al menos 5 años antes de la fecha actual
+    if (anio > anioActual - 5 || (anio == anioActual - 5 && (mes > mesActual || (mes == mesActual && dia > diaActual)))) {
+        cout << "Error: La fecha de nacimiento debe ser al menos 5 años antes de la fecha actual.\n";
+        return false;
+    }
+    
     return true;
 }
+
 
 // Validación de título y nombre
 bool Validaciones::validarTituloNombre(const string& texto, const string& campo) {
@@ -86,6 +101,25 @@ bool Validaciones::validarFechaPublicacion(const string& fechaPub, const string&
         Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacAutor);
 
+        // Validar que ambas fechas sean válidas
+        if (!Fecha::esFechaValida(fechaPublicacion.getDia(), fechaPublicacion.getMes(), fechaPublicacion.getAnio()) ||
+            !Fecha::esFechaValida(fechaNacimiento.getDia(), fechaNacimiento.getMes(), fechaNacimiento.getAnio())) {
+            cout << "Error: Una o ambas fechas no son válidas.\n";
+            return false;
+        }
+
+        // Validar que la fecha de publicación no sea mayor a la fecha actual
+        time_t t = time(nullptr);
+        tm* fechaActual = localtime(&t);
+
+        Fecha fechaHoy(fechaActual->tm_mday, fechaActual->tm_mon + 1, fechaActual->tm_year + 1900);
+        if (!fechaPublicacion.esAnterior(fechaHoy) && !(fechaPublicacion.getDia() == fechaHoy.getDia() &&
+                                                        fechaPublicacion.getMes() == fechaHoy.getMes() &&
+                                                        fechaPublicacion.getAnio() == fechaHoy.getAnio())) {
+            cout << "Error: La fecha de publicación no puede ser mayor a la fecha actual.\n";
+            return false;
+        }
+
         // Comparar si la diferencia de años es menor a 4
         int diferenciaAnios = fechaPublicacion.getAnio() - fechaNacimiento.getAnio();
         if (diferenciaAnios < 4) {
@@ -94,7 +128,6 @@ bool Validaciones::validarFechaPublicacion(const string& fechaPub, const string&
             return false;
         }
 
-        // Si pasa la validación de la diferencia de años, retornar true
         return true;
     } catch (const invalid_argument& e) {
         // En caso de que alguna fecha no sea válida
