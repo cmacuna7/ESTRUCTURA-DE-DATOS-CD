@@ -19,6 +19,7 @@
 #include <ctime>
 #include "pdf_generator.h"
 #include <windows.h>
+#include "funciones.h"
 
 using namespace std;
 
@@ -28,7 +29,32 @@ std::wstring getExecutablePath() {
     std::wstring path(buffer);
     return path.substr(0, path.find_last_of(L"\\/"));
 }
+int ingresarAnio(const string& mensaje) {
+    int anio;
+    string input;
+    while (true) {
+        cout << mensaje;
+        getline(cin, input);  // Usamos getline para permitir validación de la entrada completa
 
+        // Validar si la entrada está vacía o contiene solo espacios
+        if (input.empty() || input.find_first_not_of(' ') == string::npos) {
+            cout << "Error: Debe ingresar un dato (no puede estar vacío o contener solo espacios)." << endl;
+            continue;
+        }
+
+        // Validar que el año sea numérico y tenga 4 dígitos
+        try {
+            anio = stoi(input);  // Convertimos la entrada a entero
+            if (anio < 1 || anio > 2024) {
+                throw invalid_argument("Año fuera de rango.");
+            }
+            break;  // Salimos del bucle si el año es válido
+        } catch (const invalid_argument& e) {
+            cout << "Error: Ingrese un año válido de 4 dígitos entre 0001 y 2024." << endl;
+        }
+    }
+    return anio;
+}
 void mostrarMenu(ListaCircularDoble& lista) {
     vector<string> opciones = {
         "Agregar libro",
@@ -38,9 +64,12 @@ void mostrarMenu(ListaCircularDoble& lista) {
         "Exportar en archivo PDF",
         "Crear backup",
         "Restaurar backup",
+        "Buscar por rango",
         "Salir"
     };
     int seleccion = 0;
+    string ruta = "libros.txt"; // Ruta del archivo
+    int anioInicio, anioFin;
 
     while (true) {
         system("cls");
@@ -164,7 +193,27 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 lista.crearBackup(ss.str());
             } else if (opciones[seleccion] == "Restaurar backup") {
                 BackupManager::restaurarBackup(lista);  // Llama a la función para restaurar el backup
-            } else if (opciones[seleccion] == "Salir") {
+            } else if (opciones[seleccion] == "Buscar por rango"){
+                const std::string inputFile12 = "libros.txt";
+
+                while (true) {
+                     anioFin = ingresarAnio("Ingrese el año de fin (0001 a 2024): ");
+                    anioInicio = ingresarAnio("Ingrese el año de inicio (0001 a 2024): ");
+                   
+
+                    // Validar que el año final sea mayor al inicial
+                    if (anioFin > anioInicio) {
+                        break;
+                    } else {
+                        cout << "Error: El año de fin debe ser mayor al año de inicio, y no pueden ser iguales." << endl;
+                    }
+                }
+
+                cout << "Registros encontrados entre " << anioInicio << " y " << anioFin << ":\n";
+                buscarPorRango(ruta, anioInicio, anioFin);
+
+            
+            }else if (opciones[seleccion] == "Salir") {
                 break;
             }
             cout << "Presione cualquier tecla para continuar...\n";
