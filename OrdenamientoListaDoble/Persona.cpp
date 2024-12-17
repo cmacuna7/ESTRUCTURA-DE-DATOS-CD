@@ -39,10 +39,18 @@ void Persona::setCedula(const string& c) { cedula = c; }
 void Persona::setFechaNacimiento(const Fecha& fn) { fechaNacimiento = fn; }
 
 void Persona::mostrar() const {
-    cout << "Nombre: " << nombre 
-        << ", Segundo Nombre: " << segundoNombre 
-        << ", Apellido: " << apellido 
-        << ", Cedula: " << cedula 
-        << ", Fecha de nacimiento: " << fechaNacimiento.mostrar() 
-        << ", Correo: " << correo << endl;
+    cout << left << setw(20) << "Primer Nombre" 
+        << setw(20) << "Segundo Nombre"
+        << setw(15) << "Apellido"
+        << setw(20) << "Cedula" 
+        << setw(30) << "Correo"
+        << setw(30) << "Fecha de Nacimiento" << endl;
+    cout << string(130, '-') << endl;
+
+    cout << left << setw(20) << nombre
+        << setw(20) << segundoNombre
+        << setw(15) << apellido
+        << setw(20) << cedula 
+        << setw(30) << correo
+        << setw(30) << fechaNacimiento.mostrar() << endl;
 }
