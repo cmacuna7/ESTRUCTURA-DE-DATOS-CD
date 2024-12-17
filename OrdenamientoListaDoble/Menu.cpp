@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "BackupManager.cpp"
+#include "Utilidades.h"
 #include "Ayuda.cpp"
 #include <iostream>
 #include "Validaciones.cpp" // Incluir el header de Validaciones
@@ -9,21 +10,6 @@
 #include <ctime>
 
 using namespace std;
-
-string generarCorreo(string nombre, string sNombre, string apellido) {
-    // Crear el correo concatenando el primer caracter de nombre + primer caracter de segundo nombre + apellido
-    for (int i = 0; i < nombre.length(); i++) {
-        nombre[i] = tolower(nombre[i]);
-    }
-    for (int i = 0; i < sNombre.length(); i++) {
-        sNombre[i] = tolower(sNombre[i]);
-    }
-    for (int i = 0; i < apellido.length(); i++) {
-        apellido[i] = tolower(apellido[i]);
-    }
-    string correo = string(1, nombre[0]) + string(1, sNombre[0]) + apellido + "@espe.edu.ec";
-    return correo;
-}
 
 void mostrarMenu(ListaDoble& lista) {
     vector<string> opciones = {
@@ -55,7 +41,7 @@ void mostrarMenu(ListaDoble& lista) {
             seleccion = (seleccion + 1) % opciones.size();
         } else if (tecla == '\r') { // Enter
             if (opciones[seleccion] == "Agregar persona") {
-                string nombre, cedula, fechaNac, sNombre, apellido, correo;
+                string nombre, sNombre, apellido, cedula, fechaNac, correo;
 
                 // Solicitar nombre de la persona
                 do {
@@ -73,11 +59,10 @@ void mostrarMenu(ListaDoble& lista) {
                     getline(cin, apellido);
                 } while (!Validaciones::validarTituloNombre(apellido, "Apellido"));
 
-                    correo = generarCorreo(nombre, sNombre, apellido);
+                correo = Utilidades::generarCorreo(nombre, sNombre, apellido);
 
-                    // Mostrar el correo generado
-                    cout << "El correo generado es: " << correo << endl;
-
+                // Mostrar el correo generado
+                cout << "El correo generado es: " << correo << endl;
 
                 // Solicitar cédula
                 do {
@@ -93,7 +78,7 @@ void mostrarMenu(ListaDoble& lista) {
 
                 // Crear la persona
                 Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNac);
-                Persona persona(nombre, cedula, fechaNacimiento);
+                Persona persona(nombre, sNombre, apellido, cedula, fechaNacimiento);
 
                 // Agregar persona a la lista
                 lista.agregarPersona(persona);

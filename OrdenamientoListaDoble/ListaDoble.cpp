@@ -53,15 +53,21 @@ void ListaDoble::imprimirPersonas() {
         return;
     }
     Nodo* actual = cabeza;
-    cout << left << setw(25) << "Nombre" 
+    cout << left << setw(20) << "Primer Nombre" 
+        << setw(20) << "Segundo Nombre"
+        << setw(15) << "Apellido"
         << setw(20) << "Cedula" 
-        << setw(15) << "Fecha de Nacimiento" << endl;
-    cout << string(60, '-') << endl;
+        << setw(30) << "Correo"
+        << setw(30) << "Fecha de Nacimiento" << endl;
+    cout << string(130, '-') << endl;
 
     while (actual) {
-        cout << left << setw(25) << actual->persona.getNombre()
+        cout << left << setw(20) << actual->persona.getNombre()
+            << setw(20) << actual->persona.getSegundoNombre()
+            << setw(15) << actual->persona.getApellido()
             << setw(20) << actual->persona.getCedula()
-            << setw(15) << actual->persona.getFechaNacimiento().mostrar() << endl;
+            << setw(30) << actual->persona.getCorreo()
+            << setw(30) << actual->persona.getFechaNacimiento().mostrar() << endl;
         actual = actual->siguiente;
     }
 }
@@ -163,6 +169,8 @@ void ListaDoble::guardarPersonasEnArchivo() {
     Nodo* actual = cabeza;
     while (actual) {
         archivo << actual->persona.getNombre() << ";"
+                << actual->persona.getSegundoNombre() << ";"
+                << actual->persona.getApellido() << ";"
                 << actual->persona.getCedula() << ";"
                 << actual->persona.getFechaNacimiento().mostrar() << endl;
         actual = actual->siguiente;
@@ -200,15 +208,17 @@ void ListaDoble::cargarPersonasDesdeArchivo() {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, cedula, fechaNacimientoStr;
+        string nombre, segundoNombre, apellido, cedula, fechaNacimientoStr;
         getline(ss, nombre, ';');
+        getline(ss, segundoNombre, ';');
+        getline(ss, apellido, ';');
         getline(ss, cedula, ';');
         getline(ss, fechaNacimientoStr, ';');
 
         // Procesar fecha de nacimiento
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacimientoStr);
 
-        Persona persona(nombre, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento);
         agregarPersona(persona);
     }
     archivo.close();
@@ -241,6 +251,8 @@ void ListaDoble::crearBackup(const string& nombreArchivo) {
 
         // Guardar los datos en el archivo en un formato delimitado
         archivo << persona.getNombre() << ";" 
+                << persona.getSegundoNombre() << ";"
+                << persona.getApellido() << ";"
                 << persona.getCedula() << ";"
                 << fechaNac.getDia() << "-" << fechaNac.getMes() << "-" << fechaNac.getAnio() << "\n";
         actual = actual->siguiente;
@@ -267,10 +279,12 @@ void ListaDoble::restaurarBackup(const string& nombreArchivo) {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, cedula, fechaNacStr;
+        string nombre, segundoNombre, apellido, cedula, fechaNacStr;
 
         // Leer datos del archivo
         getline(ss, nombre, ';');
+        getline(ss, segundoNombre, ';');
+        getline(ss, apellido, ';');
         getline(ss, cedula, ';');
         getline(ss, fechaNacStr, ';');
 
@@ -280,7 +294,7 @@ void ListaDoble::restaurarBackup(const string& nombreArchivo) {
         Fecha fechaNacimiento(diaNac, mesNac, anioNac);
 
         // Crear el objeto correspondiente
-        Persona persona(nombre, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento);
 
         // Agregar persona a la lista
         agregarPersona(persona);
@@ -312,15 +326,17 @@ void ListaDoble::ordenarPorCedula() {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, cedula, fechaNacimientoStr;
+        string nombre, segundoNombre, apellido, cedula, fechaNacimientoStr;
         getline(ss, nombre, ';');
+        getline(ss, segundoNombre, ';');
+        getline(ss, apellido, ';');
         getline(ss, cedula, ';');
         getline(ss, fechaNacimientoStr, ';');
 
         // Procesar fecha de nacimiento
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacimientoStr);
 
-        Persona persona(nombre, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento);
         personas.push_back(persona);
     }
     archivo.close();
@@ -339,6 +355,8 @@ void ListaDoble::ordenarPorCedula() {
 
     for (const auto& persona : personas) {
         archivoOrdenado << persona.getNombre() << ";"
+                        << persona.getSegundoNombre() << ";"
+                        << persona.getApellido() << ";"
                         << persona.getCedula() << ";"
                         << persona.getFechaNacimiento().mostrar() << endl;
     }
