@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <conio.h> // Para _getch() en Windows
+#include "conversion.cpp"
+#include "validaciones.cpp"
 
 using namespace std;
 
@@ -63,15 +65,22 @@ int main() {
                 break;
             }
             case 3: {
-                cout << "Convirtiendo a prefijo..." << endl;
-                prefix = "Prefijo_Expresion"; // Simulación
-                cout << "Expresion prefija: " << prefix << endl;
+                 if (infix.empty()) {
+                    cout << "Error: No se ha ingresado una expresion infija." << endl;
+                } else {
+                    prefix = infixToPrefix(infix);
+                    cout << "Expresion prefija: " << prefix << endl;
+                }
                 break;
             }
+            
             case 4: {
-                cout << "Convirtiendo a posfijo..." << endl;
-                postfix = "Posfijo_Expresion"; // Simulación
-                cout << "Expresion posfija: " << postfix << endl;
+                if (infix.empty()) {
+                    cout << "Error: No se ha ingresado una expresion infija." << endl;
+                } else {
+                    postfix = infixToPostfix(infix);
+                    cout << "Expresion posfija: " << postfix << endl;
+                }
                 break;
             }
             case 5:
