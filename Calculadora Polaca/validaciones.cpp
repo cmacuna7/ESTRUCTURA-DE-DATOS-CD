@@ -6,92 +6,55 @@
 using namespace std;
 
 // Función para validar si una expresión infija es válida
-bool isValidExpression(const string& expr) {
-    int parentheses = 0;        // Contador para balance de paréntesis
-    bool lastWasOperator = true; // Controla que no haya operadores consecutivos ni operadores al inicio
-    bool lastWasOpenParen = false; // Para validar que un paréntesis de apertura no sea seguido directamente por un operador
+bool isValidExpression(const std::string& expr) {
+    int parentheses = 0;            // Contador para balance de paréntesis
+    bool lastWasOperator = true;    // Controla si el último carácter fue un operador
+    bool lastWasOpenParen = false;  // Verifica si el último carácter fue '('
 
     for (size_t i = 0; i < expr.length(); i++) {
         char c = expr[i];
 
-        // Verificar que no haya espacios
-        if (isspace(c)) {
-            cout << "Error: La expresion no debe contener espacios." << endl;
+        // 1. Verificar que no haya espacios
+        if (std::isspace(c)) {
+            std::cout << "Error: La expresion no debe contener espacios." << std::endl;
             return false;
         }
 
-        // Verificar caracteres válidos
-        if (!(isdigit(c) || c == '+' || c == '-' || 
-            c == '*' || c == '/' || c == '^' || c == '(' || c == ')')) {
-            cout << "Error: La expresion contiene caracteres invalidos: " << c << endl;
+        // 2. Verificar caracteres válidos
+        if (!(std::isdigit(c) || c == '+' || c == '-' || 
+              c == '*' || c == '/' || c == '^' || c == '(' || c == ')')) {
+            std::cout << "Error: La expresion contiene caracteres invalidos: " << c << std::endl;
             return false;
         }
 
-        // Verificar balance y uso correcto de paréntesis
+        // 3. Manejar paréntesis
         if (c == '(') {
             parentheses++;
             lastWasOpenParen = true;
-            lastWasOperator = true; // Un paréntesis de apertura puede preceder a un número o signo
-            continue;
         } else if (c == ')') {
+            if (parentheses == 0) {
+                std::cout << "Error: Parantesis desbalanceados." << std::endl;
+                return false;
+            }
             parentheses--;
-            if (parentheses < 0) {
-                cout << "Error: Parentesis desbalanceados o mal ordenados." << endl;
-                return false;
-            }
-            if (lastWasOperator) {
-                cout << "Error: Un operador no puede preceder un parentesis de cierre." << endl;
-                return false;
-            }
         }
 
-        // Verificar que los operadores no estén consecutivos ni al inicio/final
+        // 4. Manejar operadores
         if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
-            // Permitir un '-' inicial o después de un '(' como signo
-            if ((i == 0 || lastWasOpenParen) && c == '-') {
-                lastWasOperator = false; // Tratar el signo como parte de un número
-                continue;
-            }
-
-            if (lastWasOperator) {
-                cout << "Error: Operadores consecutivos o mal colocados." << endl;
+            if (lastWasOperator && !lastWasOpenParen) {
+                std::cout << "Error: Operador en posicion invalida." << std::endl;
                 return false;
             }
             lastWasOperator = true;
-
-            // Validar si el operador está al final de la expresión
-            if (i == expr.length() - 1) {
-                cout << "Error: La expresion no puede terminar con un operador." << endl;
-                return false;
-            }
-
-            // Validar si un operador aparece antes de un paréntesis de cierre
-            if (i + 1 < expr.length() && expr[i + 1] == ')') {
-                cout << "Error: Un operador no puede estar antes de un parentesis de cierre." << endl;
-                return false;
-            }
         } else {
-            lastWasOperator = false; // Si encontramos un número o paréntesis de cierre
+            lastWasOperator = false;
         }
 
-        // Un paréntesis de apertura no puede ser seguido directamente por un operador (excepto '-')
-        if (lastWasOpenParen && (c == '+' || c == '*' || c == '/' || c == '^')) {
-            cout << "Error: Un parentesis de apertura no puede ser seguido directamente por un operador." << endl;
-            return false;
-        }
-
-        lastWasOpenParen = (c == '(');
+        lastWasOpenParen = false;
     }
 
-    // Verificar si los paréntesis están equilibrados
     if (parentheses != 0) {
-        cout << "Error: Parentesis desbalanceados." << endl;
-        return false;
-    }
-
-    // Verificar que la expresión no termine con un operador
-    if (lastWasOperator) {
-        cout << "Error: La expresion no puede terminar con un operador." << endl;
+        std::cout << "Error: Parentesis desbalanceados." << std::endl;
         return false;
     }
 
