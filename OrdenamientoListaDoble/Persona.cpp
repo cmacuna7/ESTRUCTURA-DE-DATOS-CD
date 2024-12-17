@@ -1,10 +1,13 @@
 #include "Persona.h"
 #include "Utilidades.cpp" // Include the header for Utilidades
 #include <iostream>
+#include <iomanip>
 
-Persona::Persona(string n, string sn, string a, string c, Fecha fn)
-    : nombre(n), segundoNombre(sn), apellido(a), cedula(c), fechaNacimiento(fn) {
-    correo = Utilidades::generarCorreo(n, sn, a);
+Persona::Persona(string n, string sn, string a, string c, Fecha fn, string correo)
+    : nombre(n), segundoNombre(sn), apellido(a), cedula(c), fechaNacimiento(fn), correo(correo) {
+    if (correo.empty()) {
+        this->correo = Utilidades::generarCorreo(n, sn, a);
+    }
 }
 
 string Persona::getNombre() const { return nombre; }

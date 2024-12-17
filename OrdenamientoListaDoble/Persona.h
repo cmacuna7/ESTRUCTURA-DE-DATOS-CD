@@ -17,7 +17,7 @@ private:
     string correo;
 
 public:
-    Persona(string n = "", string sn = "", string a = "", string c = "", Fecha fn = Fecha());
+    Persona(string n = "", string sn = "", string a = "", string c = "", Fecha fn = Fecha(), string correo = "");
 
     string getNombre() const;
     string getSegundoNombre() const;

@@ -172,6 +172,7 @@ void ListaDoble::guardarPersonasEnArchivo() {
                 << actual->persona.getSegundoNombre() << ";"
                 << actual->persona.getApellido() << ";"
                 << actual->persona.getCedula() << ";"
+                << actual->persona.getCorreo() << ";"
                 << actual->persona.getFechaNacimiento().mostrar() << endl;
         actual = actual->siguiente;
     }
@@ -208,17 +209,18 @@ void ListaDoble::cargarPersonasDesdeArchivo() {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, segundoNombre, apellido, cedula, fechaNacimientoStr;
+        string nombre, segundoNombre, apellido, cedula, correo, fechaNacimientoStr;
         getline(ss, nombre, ';');
         getline(ss, segundoNombre, ';');
         getline(ss, apellido, ';');
         getline(ss, cedula, ';');
+        getline(ss, correo, ';');
         getline(ss, fechaNacimientoStr, ';');
 
         // Procesar fecha de nacimiento
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacimientoStr);
 
-        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento, correo);
         agregarPersona(persona);
     }
     archivo.close();
@@ -254,6 +256,7 @@ void ListaDoble::crearBackup(const string& nombreArchivo) {
                 << persona.getSegundoNombre() << ";"
                 << persona.getApellido() << ";"
                 << persona.getCedula() << ";"
+                << persona.getCorreo() << ";"
                 << fechaNac.getDia() << "-" << fechaNac.getMes() << "-" << fechaNac.getAnio() << "\n";
         actual = actual->siguiente;
     }
@@ -279,13 +282,14 @@ void ListaDoble::restaurarBackup(const string& nombreArchivo) {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, segundoNombre, apellido, cedula, fechaNacStr;
+        string nombre, segundoNombre, apellido, cedula, correo, fechaNacStr;
 
         // Leer datos del archivo
         getline(ss, nombre, ';');
         getline(ss, segundoNombre, ';');
         getline(ss, apellido, ';');
         getline(ss, cedula, ';');
+        getline(ss, correo, ';');
         getline(ss, fechaNacStr, ';');
 
         // Parsear la fecha de nacimiento
@@ -294,7 +298,7 @@ void ListaDoble::restaurarBackup(const string& nombreArchivo) {
         Fecha fechaNacimiento(diaNac, mesNac, anioNac);
 
         // Crear el objeto correspondiente
-        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento, correo);
 
         // Agregar persona a la lista
         agregarPersona(persona);
@@ -326,17 +330,18 @@ void ListaDoble::ordenarPorCedula() {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, segundoNombre, apellido, cedula, fechaNacimientoStr;
+        string nombre, segundoNombre, apellido, cedula, correo, fechaNacimientoStr;
         getline(ss, nombre, ';');
         getline(ss, segundoNombre, ';');
         getline(ss, apellido, ';');
         getline(ss, cedula, ';');
+        getline(ss, correo, ';');
         getline(ss, fechaNacimientoStr, ';');
 
         // Procesar fecha de nacimiento
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacimientoStr);
 
-        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento, correo);
         personas.push_back(persona);
     }
     archivo.close();
@@ -358,6 +363,7 @@ void ListaDoble::ordenarPorCedula() {
                         << persona.getSegundoNombre() << ";"
                         << persona.getApellido() << ";"
                         << persona.getCedula() << ";"
+                        << persona.getCorreo() << ";"
                         << persona.getFechaNacimiento().mostrar() << endl;
     }
     archivoOrdenado.close();
