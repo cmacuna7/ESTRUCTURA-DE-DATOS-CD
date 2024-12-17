@@ -5,11 +5,12 @@
 
 using namespace std;
 
-// Funcion para validar si una expresion infija es valida
+// Función para validar si una expresión infija es válida
 bool isValidExpression(const std::string& expr) {
     int parentheses = 0;            // Contador para balance de parentesis
     bool lastWasOperator = true;    // Controla si el ultimo caracter fue un operador
     bool lastWasOpenParen = false;  // Verifica si el ultimo caracter fue '('
+    bool lastWasNegativeSign = false;  // Verifica si el último signo fue un negativo
 
     for (size_t i = 0; i < expr.length(); i++) {
         char c = expr[i];
@@ -20,7 +21,7 @@ bool isValidExpression(const std::string& expr) {
             return false;
         }
 
-        // 2. Verificar caracteres validos (numeros, operadores y parentesis)
+        // 2. Verificar caracteres validos
         if (!(std::isdigit(c) || c == '+' || c == '-' || 
               c == '*' || c == '/' || c == '^' || c == '(' || c == ')')) {
             std::cout << "Error: La expresion contiene caracteres invalidos: " << c << std::endl;
@@ -46,16 +47,14 @@ bool isValidExpression(const std::string& expr) {
 
         // 4. Manejar el '-' como signo negativo o como operador
         if (c == '-') {
-            if (lastWasOperator || lastWasOpenParen) {
+            if (lastWasOperator || lastWasOpenParen || lastWasNegativeSign) {
                 // Se permite como signo negativo
                 lastWasOperator = false; 
+                lastWasNegativeSign = true; // Es un signo negativo
             } else {
                 // Es un operador de resta
-                if (lastWasOperator) {
-                    std::cout << "Error: Operador '-' en posicion invalida." << std::endl;
-                    return false;
-                }
                 lastWasOperator = true;
+                lastWasNegativeSign = true; 
             }
         }
         // 5. Manejar otros operadores
@@ -64,31 +63,24 @@ bool isValidExpression(const std::string& expr) {
                 std::cout << "Error: Operador en posicion invalida o dos operadores consecutivos." << std::endl;
                 return false;
             }
+            if (c == '/' || c== '*' || c== '+' || c== '^' && i + 1 < expr.length() && expr[i + 1] == '-') {
+                std::cout << "Error: No se permite un operador seguido de un signo negativo." << std::endl;
+                return false;
+            }
             lastWasOperator = true;
+            lastWasNegativeSign = false;
         } 
-        // 6. Manejar operandos
+        // 6. Manejar operandos (numeros)
         else if (std::isdigit(c)) {
             lastWasOperator = false;
+            lastWasNegativeSign = false;
         }
 
-        // 7. Verificar despues de '(' debe haber un operando o '('
-        if (lastWasOpenParen && !(std::isdigit(c) || c == '(' || c == '-')) {
-            std::cout << "Error: Despues de un parentesis de apertura debe haber un operando, '-' o un parentesis de apertura." << std::endl;
-            return false;
-        }
-
-        lastWasOpenParen = (c == '(');
+        lastWasOpenParen = false;
     }
 
-    // 8. Verificar balance de parentesis
     if (parentheses != 0) {
         std::cout << "Error: Parentesis desbalanceados." << std::endl;
-        return false;
-    }
-
-    // 9. Verificar que la expresion no termine en un operador
-    if (lastWasOperator) {
-        std::cout << "Error: La expresion no puede terminar con un operador." << std::endl;
         return false;
     }
 
