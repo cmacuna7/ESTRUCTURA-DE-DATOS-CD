@@ -20,7 +20,7 @@ bool isValidExpression(const std::string& expr) {
             return false;
         }
 
-        // 2. Verificar caracteres validos
+        // 2. Verificar caracteres validos (numeros, operadores y parentesis)
         if (!(std::isdigit(c) || c == '+' || c == '-' || 
               c == '*' || c == '/' || c == '^' || c == '(' || c == ')')) {
             std::cout << "Error: La expresion contiene caracteres invalidos: " << c << std::endl;
@@ -44,33 +44,49 @@ bool isValidExpression(const std::string& expr) {
             parentheses--;
         }
 
-        // 4. Manejar operadores
-        if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+        // 4. Manejar el '-' como signo negativo o como operador
+        if (c == '-') {
+            if (lastWasOperator || lastWasOpenParen) {
+                // Se permite como signo negativo
+                lastWasOperator = false; 
+            } else {
+                // Es un operador de resta
+                if (lastWasOperator) {
+                    std::cout << "Error: Operador '-' en posicion invalida." << std::endl;
+                    return false;
+                }
+                lastWasOperator = true;
+            }
+        }
+        // 5. Manejar otros operadores
+        else if (c == '+' || c == '*' || c == '/' || c == '^') {
             if (lastWasOperator && !lastWasOpenParen) {
                 std::cout << "Error: Operador en posicion invalida o dos operadores consecutivos." << std::endl;
                 return false;
             }
             lastWasOperator = true;
-        } else {
+        } 
+        // 6. Manejar operandos
+        else if (std::isdigit(c)) {
             lastWasOperator = false;
         }
 
-        // 5. Verificar despues de '(' debe haber un operando o '('
-        if (lastWasOpenParen && !(std::isdigit(c) || c == '(')) {
-            std::cout << "Error: Despues de un parentesis de apertura debe haber un operando o un parentesis de apertura." << std::endl;
+        // 7. Verificar despues de '(' debe haber un operando o '('
+        if (lastWasOpenParen && !(std::isdigit(c) || c == '(' || c == '-')) {
+            std::cout << "Error: Despues de un parentesis de apertura debe haber un operando, '-' o un parentesis de apertura." << std::endl;
             return false;
         }
 
         lastWasOpenParen = (c == '(');
     }
 
-    // 6. Verificar balance de parentesis
+    // 8. Verificar balance de parentesis
     if (parentheses != 0) {
         std::cout << "Error: Parentesis desbalanceados." << std::endl;
         return false;
     }
 
-    // 7. Verificar que la expresion no termine en un operador
+    // 9. Verificar que la expresion no termine en un operador
     if (lastWasOperator) {
         std::cout << "Error: La expresion no puede terminar con un operador." << std::endl;
         return false;

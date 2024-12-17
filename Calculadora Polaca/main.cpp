@@ -51,6 +51,9 @@ int main() {
                 if (infix.find(' ') != string::npos) {
                     cout << "Error: La expresion no debe contener espacios. Intenta de nuevo." << endl;
                     infix = "";
+                } else if (!isValidExpression(infix)) {
+                    cout << "La expresion ingresada no es valida. Intenta de nuevo." << endl;
+                    infix = "";
                 } else {
                     cout << "Expresion infija registrada correctamente." << endl;
                 }
