@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "BackupManager.cpp"
+#include "Utilidades.h"
 #include "Ayuda.cpp"
 #include <iostream>
 #include "Validaciones.cpp" // Incluir el header de Validaciones
@@ -40,13 +41,28 @@ void mostrarMenu(ListaSimple& lista) {
             seleccion = (seleccion + 1) % opciones.size();
         } else if (tecla == '\r') { // Enter
             if (opciones[seleccion] == "Agregar persona") {
-                string nombre, cedula, fechaNac;
+                string nombre, sNombre, apellido, cedula, fechaNac, correo;
 
                 // Solicitar nombre de la persona
                 do {
-                    cout << "Ingrese nombre de la persona: ";
+                    cout << "Ingrese Primer Nombre de la persona: ";
                     getline(cin, nombre);
                 } while (!Validaciones::validarTituloNombre(nombre, "Nombre"));
+
+                do {
+                    cout << "Ingrese Segundo Nombre de la persona: ";
+                    getline(cin, sNombre);
+                } while (!Validaciones::validarTituloNombre(sNombre, "Segundo Nombre"));
+
+                do {
+                    cout << "Ingrese apellido de la persona: ";
+                    getline(cin, apellido);
+                } while (!Validaciones::validarTituloNombre(apellido, "Apellido"));
+
+                correo = Utilidades::generarCorreo(nombre, sNombre, apellido);
+
+                // Mostrar el correo generado
+                cout << "El correo generado es: " << correo << endl;
 
                 // Solicitar cédula
                 do {
@@ -62,7 +78,7 @@ void mostrarMenu(ListaSimple& lista) {
 
                 // Crear la persona
                 Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNac);
-                Persona persona(nombre, cedula, fechaNacimiento);
+                Persona persona(nombre, sNombre, apellido, cedula, fechaNacimiento);
 
                 // Agregar persona a la lista
                 lista.agregarPersona(persona);
