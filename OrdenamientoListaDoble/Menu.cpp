@@ -10,6 +10,21 @@
 
 using namespace std;
 
+string generarCorreo(string nombre, string sNombre, string apellido) {
+    // Crear el correo concatenando el primer caracter de nombre + primer caracter de segundo nombre + apellido
+    for (int i = 0; i < nombre.length(); i++) {
+        nombre[i] = tolower(nombre[i]);
+    }
+    for (int i = 0; i < sNombre.length(); i++) {
+        sNombre[i] = tolower(sNombre[i]);
+    }
+    for (int i = 0; i < apellido.length(); i++) {
+        apellido[i] = tolower(apellido[i]);
+    }
+    string correo = string(1, nombre[0]) + string(1, sNombre[0]) + apellido + "@espe.edu.ec";
+    return correo;
+}
+
 void mostrarMenu(ListaDoble& lista) {
     vector<string> opciones = {
         "Agregar persona",
@@ -40,13 +55,29 @@ void mostrarMenu(ListaDoble& lista) {
             seleccion = (seleccion + 1) % opciones.size();
         } else if (tecla == '\r') { // Enter
             if (opciones[seleccion] == "Agregar persona") {
-                string nombre, cedula, fechaNac;
+                string nombre, cedula, fechaNac, sNombre, apellido, correo;
 
                 // Solicitar nombre de la persona
                 do {
-                    cout << "Ingrese nombre de la persona: ";
+                    cout << "Ingrese Primer Nombre de la persona: ";
                     getline(cin, nombre);
                 } while (!Validaciones::validarTituloNombre(nombre, "Nombre"));
+
+                do {
+                    cout << "Ingrese Segundo Nombre de la persona: ";
+                    getline(cin, sNombre);
+                } while (!Validaciones::validarTituloNombre(sNombre, "Segundo Nombre"));
+
+                do {
+                    cout << "Ingrese apellido de la persona: ";
+                    getline(cin, apellido);
+                } while (!Validaciones::validarTituloNombre(apellido, "Apellido"));
+
+                    correo = generarCorreo(nombre, sNombre, apellido);
+
+                    // Mostrar el correo generado
+                    cout << "El correo generado es: " << correo << endl;
+
 
                 // Solicitar cédula
                 do {
