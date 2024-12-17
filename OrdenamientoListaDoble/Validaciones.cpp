@@ -102,12 +102,12 @@ bool Validaciones::validarTexto(const string& texto, const string& campo) {
 
 // Validación de título y nombre
 bool Validaciones::validarTituloNombre(const string& texto, const string& campo) {
-    regex formatoTituloNombre(R"(([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)(\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*)");
+    regex formatoTituloNombre(R"([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)");
     if (texto.empty() || texto.find_first_not_of(' ') == string::npos) {
         cout << "Error: El campo " << campo << " no puede estar vacío o contener solo espacios.\n";
         return false;
     } else if (!regex_match(texto, formatoTituloNombre)) {
-        cout << "Error: El campo " << campo << " debe comenzar con una letra mayúscula y las demas minúsculas.\n";
+        cout << "Error: El campo " << campo << " debe comenzar con una letra mayúscula y no contener espacios.\n";
         return false;
     }
     return true;
