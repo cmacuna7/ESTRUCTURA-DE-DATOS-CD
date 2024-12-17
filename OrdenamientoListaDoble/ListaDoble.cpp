@@ -1,4 +1,4 @@
-#include "ListaSimple.h"
+#include "ListaDoble.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -11,22 +11,21 @@
 using namespace std;
 
 // Agregar persona
-void ListaSimple::agregarPersona(const Persona& persona) {
+void ListaDoble::agregarPersona(const Persona& persona) {
     // Verificar si la cédula ya existe
     if (buscarPersonaPorCedula(persona.getCedula())) {
         cout << "Error: La cédula " << persona.getCedula() << " ya existe.\n";
         return;
     }
 
-    Nodo* nuevo = new Nodo{persona, nullptr};
+    Nodo* nuevo = new Nodo{persona, nullptr, nullptr};
     if (!cabeza) {
         cabeza = nuevo;
+        cola = nuevo;
     } else {
-        Nodo* actual = cabeza;
-        while (actual->siguiente) {
-            actual = actual->siguiente;
-        }
-        actual->siguiente = nuevo;
+        cola->siguiente = nuevo;
+        nuevo->anterior = cola;
+        cola = nuevo;
     }
     cout << "Persona agregada: " << persona.getNombre() << endl;
     // Guardar solo si no se está restaurando un backup
@@ -36,7 +35,7 @@ void ListaSimple::agregarPersona(const Persona& persona) {
 }
 
 // Limpiar la lista actual
-void ListaSimple::limpiarLista() {
+void ListaDoble::limpiarLista() {
     Nodo* actual = cabeza;
     while (actual) {
         Nodo* siguiente = actual->siguiente;
@@ -44,10 +43,11 @@ void ListaSimple::limpiarLista() {
         actual = siguiente;
     }
     cabeza = nullptr;
+    cola = nullptr;
 }
 
 // Imprimir todas las personas
-void ListaSimple::imprimirPersonas() {
+void ListaDoble::imprimirPersonas() {
     if (!cabeza) {
         cout << "No hay personas registradas.\n";
         return;
@@ -67,7 +67,7 @@ void ListaSimple::imprimirPersonas() {
 }
 
 // Buscar persona por nombre
-Nodo* ListaSimple::buscarPersona(const string& nombre) {
+Nodo* ListaDoble::buscarPersona(const string& nombre) {
     Nodo* actual = cabeza;
     while (actual) {
         if (actual->persona.getNombre() == nombre) return actual;
@@ -77,7 +77,7 @@ Nodo* ListaSimple::buscarPersona(const string& nombre) {
 }
 
 // Buscar persona por cédula
-Nodo* ListaSimple::buscarPersonaPorCedula(const string& cedula) {
+Nodo* ListaDoble::buscarPersonaPorCedula(const string& cedula) {
     Nodo* actual = cabeza;
     while (actual) {
         if (actual->persona.getCedula() == cedula) return actual;
@@ -87,24 +87,27 @@ Nodo* ListaSimple::buscarPersonaPorCedula(const string& cedula) {
 }
 
 // Eliminar persona por nombre y actualizar archivo
-void ListaSimple::eliminarPersona(const string& nombre) {
+void ListaDoble::eliminarPersona(const string& nombre) {
     if (!cabeza) return;
     Nodo* actual = cabeza;
-    Nodo* anterior = nullptr;
     bool encontrado = false;
     while (actual) {
         if (actual->persona.getNombre() == nombre) {
             encontrado = true;
-            if (anterior) {
-                anterior->siguiente = actual->siguiente;
+            if (actual->anterior) {
+                actual->anterior->siguiente = actual->siguiente;
             } else {
                 cabeza = actual->siguiente;
+            }
+            if (actual->siguiente) {
+                actual->siguiente->anterior = actual->anterior;
+            } else {
+                cola = actual->anterior;
             }
             delete actual;
             cout << "Persona eliminada: " << nombre << endl;
             break;
         }
-        anterior = actual;
         actual = actual->siguiente;
     }
 
@@ -117,24 +120,27 @@ void ListaSimple::eliminarPersona(const string& nombre) {
 }
 
 // Eliminar persona por cédula y actualizar archivo
-void ListaSimple::eliminarPersonaPorCedula(const string& cedula) {
+void ListaDoble::eliminarPersonaPorCedula(const string& cedula) {
     if (!cabeza) return;
     Nodo* actual = cabeza;
-    Nodo* anterior = nullptr;
     bool encontrado = false;
     while (actual) {
         if (actual->persona.getCedula() == cedula) {
             encontrado = true;
-            if (anterior) {
-                anterior->siguiente = actual->siguiente;
+            if (actual->anterior) {
+                actual->anterior->siguiente = actual->siguiente;
             } else {
                 cabeza = actual->siguiente;
+            }
+            if (actual->siguiente) {
+                actual->siguiente->anterior = actual->anterior;
+            } else {
+                cola = actual->anterior;
             }
             delete actual;
             cout << "Persona eliminada: " << cedula << endl;
             break;
         }
-        anterior = actual;
         actual = actual->siguiente;
     }
 
@@ -147,7 +153,7 @@ void ListaSimple::eliminarPersonaPorCedula(const string& cedula) {
 }
 
 // Guardar las personas en el archivo (actualizado)
-void ListaSimple::guardarPersonasEnArchivo() {
+void ListaDoble::guardarPersonasEnArchivo() {
     ofstream archivo("personas_temp.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo temporal para guardar.\n\n";
@@ -184,7 +190,7 @@ void ListaSimple::guardarPersonasEnArchivo() {
 }
 
 // Cargar las personas desde el archivo
-void ListaSimple::cargarPersonasDesdeArchivo() {
+void ListaDoble::cargarPersonasDesdeArchivo() {
     ifstream archivo(archivoPersonas);
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo para cargar las personas.\n";
@@ -210,7 +216,7 @@ void ListaSimple::cargarPersonasDesdeArchivo() {
 }
 
 // Backup
-void ListaSimple::crearBackup(const string& nombreArchivo) {
+void ListaDoble::crearBackup(const string& nombreArchivo) {
     string carpetaBackup = "backup";  // Carpeta donde se almacenan los backups
     
     // Asegurarnos de que la carpeta de backups exista
@@ -246,7 +252,7 @@ void ListaSimple::crearBackup(const string& nombreArchivo) {
 }
 
 // Restaurar backup y sobreescribir archivo
-void ListaSimple::restaurarBackup(const string& nombreArchivo) {
+void ListaDoble::restaurarBackup(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de backup.\n";
@@ -288,7 +294,7 @@ void ListaSimple::restaurarBackup(const string& nombreArchivo) {
 }
 
 // Ordenar la lista por cédula usando merge sort externo
-void ListaSimple::ordenarPorCedula() {
+void ListaDoble::ordenarPorCedula() {
     // Guardar las personas en el archivo
     guardarPersonasEnArchivo();
 

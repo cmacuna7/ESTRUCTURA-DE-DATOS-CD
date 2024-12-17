@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void mostrarMenu(ListaSimple& lista) {
+void mostrarMenu(ListaDoble& lista) {
     vector<string> opciones = {
         "Agregar persona",
         "Buscar persona",

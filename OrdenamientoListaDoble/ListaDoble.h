@@ -1,5 +1,5 @@
-#ifndef LISTASIMPLE_H
-#define LISTASIMPLE_H
+#ifndef LISTADOBLE_H
+#define LISTADOBLE_H
 
 #include <iostream>
 #include <string>
@@ -9,10 +9,11 @@
 
 using namespace std;
 
-// Clase para la lista simplemente enlazada
-class ListaSimple {
+// Clase para la lista doblemente enlazada
+class ListaDoble {
 private:
     Nodo* cabeza = nullptr;
+    Nodo* cola = nullptr;  // Puntero al último nodo de la lista
     string archivoPersonas = "personas.txt";  // Archivo donde se guardarán las personas
     bool evitarGuardar = false;               // Bandera para controlar el guardado
 public:
@@ -42,4 +43,4 @@ public:
     void ordenarPorCedula();
 };
 
-#endif // LISTASIMPLE_H
+#endif // LISTADOBLE_H

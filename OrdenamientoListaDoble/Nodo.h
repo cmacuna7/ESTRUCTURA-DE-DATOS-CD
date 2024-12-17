@@ -3,10 +3,11 @@
 
 #include "Persona.h"
 
-// Nodo de la lista simplemente enlazada
+// Nodo de la lista doblemente enlazada
 struct Nodo {
     Persona persona;   // Ahora contiene un objeto de tipo Persona
     Nodo* siguiente;
+    Nodo* anterior;    // Puntero al nodo anterior
 };
 
 #endif // NODO_H

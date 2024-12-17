@@ -1,10 +1,10 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "ListaSimple.h"
+#include "ListaDoble.h"
 #include <vector>
 
-void mostrarMenu(ListaSimple& lista);
+void mostrarMenu(ListaDoble& lista);
 void mostrarAyuda();
 
 #endif

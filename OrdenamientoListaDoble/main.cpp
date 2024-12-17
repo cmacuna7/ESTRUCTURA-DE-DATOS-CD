@@ -1,4 +1,4 @@
-#include "ListaSimple.cpp"
+#include "ListaDoble.cpp"
 #include "Menu.cpp"
 
 int main() {
@@ -8,7 +8,7 @@ int main() {
     // Verifica y crea la carpeta de backups si no existe
     BackupManager::crearCarpetaSiNoExiste("backup");
 
-    ListaSimple lista;
+    ListaDoble lista;
     // Cargar las personas desde el archivo al iniciar
     try {
         lista.cargarPersonasDesdeArchivo();

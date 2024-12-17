@@ -3,14 +3,14 @@
 
 #include <string>
 #include <vector>
-#include "ListaSimple.h"
+#include "ListaDoble.h"
 
 class BackupManager {
 public:
     // Métodos públicos de la clase
     static void crearCarpetaSiNoExiste(const std::string& ruta);
     static std::vector<std::string> listarArchivosEnCarpeta(const std::string& carpeta);
-    static void restaurarBackup(ListaSimple& lista);
+    static void restaurarBackup(ListaDoble& lista);
 };
 
 #endif // BACKUPMANAGER_H
