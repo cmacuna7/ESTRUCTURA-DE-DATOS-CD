@@ -1,3 +1,13 @@
+/***************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                  *
+ * Proposito:                      Pila para conversion de infija a prefija o posfija  *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz    *
+ * Fecha de creacion:              17/12/2024                                          *
+ * Fecha de modificacion:          18/12/2024                                          *
+ * Materia:                        Estructura de datos                                 *
+ * NRC :                           1992                                                *
+ **************************************************************************************/
+
 #ifndef PILA_CPP
 #define PILA_CPP
 
