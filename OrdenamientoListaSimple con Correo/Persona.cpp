@@ -1,3 +1,12 @@
+/*******************************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
+ * Proposito:                      Codigo para Datos personales                                        *
+ * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz                    *
+ * Fecha de creacion:              17/12/2024                                                          *
+ * Fecha de modificacion:          18/12/2024                                                          *
+ * Materia:                        Estructura de datos                                                 *
+ * NRC :                           1992                                                                *
+ *******************************************************************************************************/
 #include "Persona.h"
 #include "Utilidades.cpp" // Include the header for Utilidades
 #include <iostream>
