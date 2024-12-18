@@ -1,6 +1,3 @@
-<<<<<<< HEAD:OrdenamientoListaCircular con Correo/ListaCircular.cpp
-#include "ListaCircular.h"
-=======
 /*******************************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
  * Proposito:                      Lista circular                                                      *
@@ -10,9 +7,7 @@
  * Materia:                        Estructura de datos                                                 *
  * NRC :                           1992                                                                *
  *******************************************************************************************************/
-
-#include "ListaCircularSimple.h"
->>>>>>> 5f9593d1cf4d06ed5bc3b52ebdfadca1c1ecfd53:OrdenamientoListaCircular/ListaCircularSimple.cpp
+#include "ListaCircular.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>

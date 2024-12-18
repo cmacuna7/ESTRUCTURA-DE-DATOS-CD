@@ -1,7 +1,3 @@
-<<<<<<< HEAD:OrdenamientoListaCircular con Correo/ListaCircular.h
-#ifndef LISTACIRCULAR_H
-#define LISTACIRCULAR_H
-=======
 /*******************************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
  * Proposito:                      Lista circular                                                      *
@@ -12,10 +8,9 @@
  * NRC :                           1992                                                                *
  *******************************************************************************************************/
 
-#ifndef LISTACIRCULARSIMPLE_H
-#define LISTACIRCULARSIMPLE_H
->>>>>>> 5f9593d1cf4d06ed5bc3b52ebdfadca1c1ecfd53:OrdenamientoListaCircular/ListaCircularSimple.h
 
+#ifndef LISTACIRCULAR_H
+#define LISTACIRCULAR_H
 #include <iostream>
 #include <string>
 #include <sstream>

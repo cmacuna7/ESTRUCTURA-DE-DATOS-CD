@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
- * Proposito:                      Validacion para ordenamiento lista circular                         *
+ * Proposito:                      Validacion para ordenamiento lista doble                            *
  * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz                    *
  * Fecha de creacion:              17/12/2024                                                          *
  * Fecha de modificacion:          18/12/2024                                                          *
