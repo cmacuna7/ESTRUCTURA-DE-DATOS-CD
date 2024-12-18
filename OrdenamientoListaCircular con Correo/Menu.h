@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
- * Proposito:                      Ordenamiento lista circular                                         *
+ * Proposito:                      Menu para ordenamiento lista circular                               *
  * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz                    *
  * Fecha de creacion:              17/12/2024                                                          *
  * Fecha de modificacion:          18/12/2024                                                          *
@@ -8,25 +8,13 @@
  * NRC :                           1992                                                                *
  *******************************************************************************************************/
 
-#include "ListaCircularSimple.cpp"
-#include "Menu.cpp"
+#ifndef MENU_H
+#define MENU_H
 
-int main() {
-    // Configurar la consola para usar UTF-8
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
-    // Verifica y crea la carpeta de backups si no existe
-    BackupManager::crearCarpetaSiNoExiste("backup");
+#include "ListaCircular.h"
+#include <vector>
 
-    ListaCircularSimple lista;
-    // Cargar las personas desde el archivo al iniciar
-    try {
-        lista.cargarPersonasDesdeArchivo();
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Error al cargar las personas desde el archivo: " << e.what() << std::endl;
-        return 1;
-    }
+void mostrarMenu(ListaCircular& lista);
+void mostrarAyuda();
 
-    mostrarMenu(lista);
-    return 0;
-}
+#endif

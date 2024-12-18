@@ -1,3 +1,7 @@
+<<<<<<< HEAD:OrdenamientoListaCircular con Correo/ListaCircular.h
+#ifndef LISTACIRCULAR_H
+#define LISTACIRCULAR_H
+=======
 /*******************************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
  * Proposito:                      Lista circular                                                      *
@@ -10,6 +14,7 @@
 
 #ifndef LISTACIRCULARSIMPLE_H
 #define LISTACIRCULARSIMPLE_H
+>>>>>>> 5f9593d1cf4d06ed5bc3b52ebdfadca1c1ecfd53:OrdenamientoListaCircular/ListaCircularSimple.h
 
 #include <iostream>
 #include <string>
@@ -19,14 +24,12 @@
 
 using namespace std;
 
-// Clase para la lista circular simple
-class ListaCircularSimple {
+// Clase para la lista circular simplemente enlazada
+class ListaCircular {
 private:
     Nodo* cabeza = nullptr;
-    Nodo* cola = nullptr;  // Puntero al último nodo de la lista
     string archivoPersonas = "personas.txt";  // Archivo donde se guardarán las personas
     bool evitarGuardar = false;               // Bandera para controlar el guardado
-
 public:
     // Agregar persona
     void agregarPersona(const Persona& persona);
@@ -54,4 +57,4 @@ public:
     void ordenarPorCedula();
 };
 
-#endif // LISTACIRCULARSIMPLE_H
+#endif // LISTACIRCULAR_H

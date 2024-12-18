@@ -16,7 +16,7 @@
 // Nodo de la lista circular simple
 struct Nodo {
     Persona persona;   // Ahora contiene un objeto de tipo Persona
-    Nodo* siguiente;   // Puntero al siguiente nodo (o al primero si es el último)
+    Nodo* siguiente;
 };
 
 #endif // NODO_H

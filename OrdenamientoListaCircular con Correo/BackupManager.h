@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
- * Proposito:                      Clase persona para ordenamiento lista circular                      *
+ * Proposito:                      Backup para restaurar datos                                         *
  * Autor:                          Marcelo Acuña, Abner Arboleda, Christian Bonifaz                    *
  * Fecha de creacion:              17/12/2024                                                          *
  * Fecha de modificacion:          18/12/2024                                                          *
@@ -8,25 +8,19 @@
  * NRC :                           1992                                                                *
  *******************************************************************************************************/
 
-#include "Persona.h"
-#include <iostream>
+#ifndef BACKUPMANAGER_H
+#define BACKUPMANAGER_H
 
-Persona::Persona(string n, string c, Fecha fn) : nombre(n), cedula(c), fechaNacimiento(fn) {}
+#include <string>
+#include <vector>
+#include "ListaCircular.h"
 
-string Persona::getNombre() const { return nombre; }
+class BackupManager {
+public:
+    // Métodos públicos de la clase
+    static void crearCarpetaSiNoExiste(const std::string& ruta);
+    static std::vector<std::string> listarArchivosEnCarpeta(const std::string& carpeta);
+    static void restaurarBackup(ListaCircular& lista);
+};
 
-string Persona::getCedula() const { return cedula; }
-
-Fecha Persona::getFechaNacimiento() const { return fechaNacimiento; }
-
-void Persona::setNombre(const string& n) { nombre = n; }
-
-void Persona::setCedula(const string& c) { cedula = c; }
-
-void Persona::setFechaNacimiento(const Fecha& fn) { fechaNacimiento = fn; }
-
-void Persona::mostrar() const {
-    cout << "Nombre: " << nombre 
-        << ", Cedula: " << cedula 
-        << ", Fecha de nacimiento: " << fechaNacimiento.mostrar() << endl;
-}
+#endif // BACKUPMANAGER_H

@@ -1,3 +1,6 @@
+<<<<<<< HEAD:OrdenamientoListaCircular con Correo/ListaCircular.cpp
+#include "ListaCircular.h"
+=======
 /*******************************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                                  *
  * Proposito:                      Lista circular                                                      *
@@ -9,6 +12,7 @@
  *******************************************************************************************************/
 
 #include "ListaCircularSimple.h"
+>>>>>>> 5f9593d1cf4d06ed5bc3b52ebdfadca1c1ecfd53:OrdenamientoListaCircular/ListaCircularSimple.cpp
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -21,22 +25,24 @@
 using namespace std;
 
 // Agregar persona
-void ListaCircularSimple::agregarPersona(const Persona& persona) {
+void ListaCircular::agregarPersona(const Persona& persona) {
     // Verificar si la cédula ya existe
     if (buscarPersonaPorCedula(persona.getCedula())) {
         cout << "Error: La cédula " << persona.getCedula() << " ya existe.\n";
         return;
     }
 
-    Nodo* nuevo = new Nodo{persona, nullptr};
+    Nodo* nuevo = new Nodo{persona, cabeza};
     if (!cabeza) {
         cabeza = nuevo;
-        cola = nuevo;
-        cola->siguiente = cabeza;  // Conectar el primer nodo consigo mismo
+        cabeza->siguiente = cabeza; // Hacer circular
     } else {
-        cola->siguiente = nuevo;
-        cola = nuevo;
-        cola->siguiente = cabeza;  // Conectar el último nodo al primero
+        Nodo* actual = cabeza;
+        while (actual->siguiente != cabeza) {
+            actual = actual->siguiente;
+        }
+        actual->siguiente = nuevo;
+        nuevo->siguiente = cabeza; // Hacer circular
     }
     cout << "Persona agregada: " << persona.getNombre() << endl;
     // Guardar solo si no se está restaurando un backup
@@ -46,7 +52,7 @@ void ListaCircularSimple::agregarPersona(const Persona& persona) {
 }
 
 // Limpiar la lista actual
-void ListaCircularSimple::limpiarLista() {
+void ListaCircular::limpiarLista() {
     if (!cabeza) return;
     Nodo* actual = cabeza;
     do {
@@ -55,31 +61,36 @@ void ListaCircularSimple::limpiarLista() {
         actual = siguiente;
     } while (actual != cabeza);
     cabeza = nullptr;
-    cola = nullptr;
 }
 
 // Imprimir todas las personas
-void ListaCircularSimple::imprimirPersonas() {
+void ListaCircular::imprimirPersonas() {
     if (!cabeza) {
         cout << "No hay personas registradas.\n";
         return;
     }
     Nodo* actual = cabeza;
-    cout << left << setw(25) << "Nombre" 
+    cout << left << setw(20) << "Primer Nombre" 
+        << setw(20) << "Segundo Nombre"
+        << setw(15) << "Apellido"
         << setw(20) << "Cedula" 
-        << setw(15) << "Fecha de Nacimiento" << endl;
-    cout << string(60, '-') << endl;
+        << setw(30) << "Correo"
+        << setw(30) << "Fecha de Nacimiento" << endl;
+    cout << string(130, '-') << endl;
 
     do {
-        cout << left << setw(25) << actual->persona.getNombre()
+        cout << left << setw(20) << actual->persona.getNombre()
+            << setw(20) << actual->persona.getSegundoNombre()
+            << setw(15) << actual->persona.getApellido()
             << setw(20) << actual->persona.getCedula()
-            << setw(15) << actual->persona.getFechaNacimiento().mostrar() << endl;
+            << setw(30) << actual->persona.getCorreo()
+            << setw(30) << actual->persona.getFechaNacimiento().mostrar() << endl;
         actual = actual->siguiente;
     } while (actual != cabeza);
 }
 
 // Buscar persona por nombre
-Nodo* ListaCircularSimple::buscarPersona(const string& nombre) {
+Nodo* ListaCircular::buscarPersona(const string& nombre) {
     if (!cabeza) return nullptr;
     Nodo* actual = cabeza;
     do {
@@ -90,7 +101,7 @@ Nodo* ListaCircularSimple::buscarPersona(const string& nombre) {
 }
 
 // Buscar persona por cédula
-Nodo* ListaCircularSimple::buscarPersonaPorCedula(const string& cedula) {
+Nodo* ListaCircular::buscarPersonaPorCedula(const string& cedula) {
     if (!cabeza) return nullptr;
     Nodo* actual = cabeza;
     do {
@@ -101,7 +112,7 @@ Nodo* ListaCircularSimple::buscarPersonaPorCedula(const string& cedula) {
 }
 
 // Eliminar persona por nombre y actualizar archivo
-void ListaCircularSimple::eliminarPersona(const string& nombre) {
+void ListaCircular::eliminarPersona(const string& nombre) {
     if (!cabeza) return;
     Nodo* actual = cabeza;
     Nodo* anterior = nullptr;
@@ -112,11 +123,12 @@ void ListaCircularSimple::eliminarPersona(const string& nombre) {
             if (anterior) {
                 anterior->siguiente = actual->siguiente;
             } else {
+                Nodo* temp = cabeza;
+                while (temp->siguiente != cabeza) {
+                    temp = temp->siguiente;
+                }
                 cabeza = actual->siguiente;
-                cola->siguiente = cabeza;  // Actualizar la conexión del último nodo
-            }
-            if (actual == cola) {
-                cola = anterior;
+                temp->siguiente = cabeza;
             }
             delete actual;
             cout << "Persona eliminada: " << nombre << endl;
@@ -135,7 +147,7 @@ void ListaCircularSimple::eliminarPersona(const string& nombre) {
 }
 
 // Eliminar persona por cédula y actualizar archivo
-void ListaCircularSimple::eliminarPersonaPorCedula(const string& cedula) {
+void ListaCircular::eliminarPersonaPorCedula(const string& cedula) {
     if (!cabeza) return;
     Nodo* actual = cabeza;
     Nodo* anterior = nullptr;
@@ -146,11 +158,12 @@ void ListaCircularSimple::eliminarPersonaPorCedula(const string& cedula) {
             if (anterior) {
                 anterior->siguiente = actual->siguiente;
             } else {
+                Nodo* temp = cabeza;
+                while (temp->siguiente != cabeza) {
+                    temp = temp->siguiente;
+                }
                 cabeza = actual->siguiente;
-                cola->siguiente = cabeza;  // Actualizar la conexión del último nodo
-            }
-            if (actual == cola) {
-                cola = anterior;
+                temp->siguiente = cabeza;
             }
             delete actual;
             cout << "Persona eliminada: " << cedula << endl;
@@ -169,7 +182,7 @@ void ListaCircularSimple::eliminarPersonaPorCedula(const string& cedula) {
 }
 
 // Guardar las personas en el archivo (actualizado)
-void ListaCircularSimple::guardarPersonasEnArchivo() {
+void ListaCircular::guardarPersonasEnArchivo() {
     ofstream archivo("personas_temp.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo temporal para guardar.\n\n";
@@ -180,7 +193,10 @@ void ListaCircularSimple::guardarPersonasEnArchivo() {
     Nodo* actual = cabeza;
     do {
         archivo << actual->persona.getNombre() << ";"
+                << actual->persona.getSegundoNombre() << ";"
+                << actual->persona.getApellido() << ";"
                 << actual->persona.getCedula() << ";"
+                << actual->persona.getCorreo() << ";"
                 << actual->persona.getFechaNacimiento().mostrar() << endl;
         actual = actual->siguiente;
     } while (actual != cabeza);
@@ -207,7 +223,7 @@ void ListaCircularSimple::guardarPersonasEnArchivo() {
 }
 
 // Cargar las personas desde el archivo
-void ListaCircularSimple::cargarPersonasDesdeArchivo() {
+void ListaCircular::cargarPersonasDesdeArchivo() {
     ifstream archivo(archivoPersonas);
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo para cargar las personas.\n";
@@ -217,15 +233,18 @@ void ListaCircularSimple::cargarPersonasDesdeArchivo() {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, cedula, fechaNacimientoStr;
+        string nombre, segundoNombre, apellido, cedula, correo, fechaNacimientoStr;
         getline(ss, nombre, ';');
+        getline(ss, segundoNombre, ';');
+        getline(ss, apellido, ';');
         getline(ss, cedula, ';');
+        getline(ss, correo, ';');
         getline(ss, fechaNacimientoStr, ';');
 
         // Procesar fecha de nacimiento
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacimientoStr);
 
-        Persona persona(nombre, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento, correo);
         agregarPersona(persona);
     }
     archivo.close();
@@ -233,7 +252,7 @@ void ListaCircularSimple::cargarPersonasDesdeArchivo() {
 }
 
 // Backup
-void ListaCircularSimple::crearBackup(const string& nombreArchivo) {
+void ListaCircular::crearBackup(const string& nombreArchivo) {
     string carpetaBackup = "backup";  // Carpeta donde se almacenan los backups
     
     // Asegurarnos de que la carpeta de backups exista
@@ -259,7 +278,10 @@ void ListaCircularSimple::crearBackup(const string& nombreArchivo) {
 
         // Guardar los datos en el archivo en un formato delimitado
         archivo << persona.getNombre() << ";" 
+                << persona.getSegundoNombre() << ";"
+                << persona.getApellido() << ";"
                 << persona.getCedula() << ";"
+                << persona.getCorreo() << ";"
                 << fechaNac.getDia() << "-" << fechaNac.getMes() << "-" << fechaNac.getAnio() << "\n";
         actual = actual->siguiente;
     } while (actual != cabeza);
@@ -270,7 +292,7 @@ void ListaCircularSimple::crearBackup(const string& nombreArchivo) {
 }
 
 // Restaurar backup y sobreescribir archivo
-void ListaCircularSimple::restaurarBackup(const string& nombreArchivo) {
+void ListaCircular::restaurarBackup(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de backup.\n";
@@ -285,11 +307,14 @@ void ListaCircularSimple::restaurarBackup(const string& nombreArchivo) {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, cedula, fechaNacStr;
+        string nombre, segundoNombre, apellido, cedula, correo, fechaNacStr;
 
         // Leer datos del archivo
         getline(ss, nombre, ';');
+        getline(ss, segundoNombre, ';');
+        getline(ss, apellido, ';');
         getline(ss, cedula, ';');
+        getline(ss, correo, ';');
         getline(ss, fechaNacStr, ';');
 
         // Parsear la fecha de nacimiento
@@ -298,7 +323,7 @@ void ListaCircularSimple::restaurarBackup(const string& nombreArchivo) {
         Fecha fechaNacimiento(diaNac, mesNac, anioNac);
 
         // Crear el objeto correspondiente
-        Persona persona(nombre, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento, correo);
 
         // Agregar persona a la lista
         agregarPersona(persona);
@@ -312,7 +337,7 @@ void ListaCircularSimple::restaurarBackup(const string& nombreArchivo) {
 }
 
 // Ordenar la lista por cédula usando merge sort externo
-void ListaCircularSimple::ordenarPorCedula() {
+void ListaCircular::ordenarPorCedula() {
     // Guardar las personas en el archivo
     guardarPersonasEnArchivo();
 
@@ -330,15 +355,18 @@ void ListaCircularSimple::ordenarPorCedula() {
     string linea;
     while (getline(archivo, linea)) {
         stringstream ss(linea);
-        string nombre, cedula, fechaNacimientoStr;
+        string nombre, segundoNombre, apellido, cedula, correo, fechaNacimientoStr;
         getline(ss, nombre, ';');
+        getline(ss, segundoNombre, ';');
+        getline(ss, apellido, ';');
         getline(ss, cedula, ';');
+        getline(ss, correo, ';');
         getline(ss, fechaNacimientoStr, ';');
 
         // Procesar fecha de nacimiento
         Fecha fechaNacimiento = Fecha::crearDesdeCadena(fechaNacimientoStr);
 
-        Persona persona(nombre, cedula, fechaNacimiento);
+        Persona persona(nombre, segundoNombre, apellido, cedula, fechaNacimiento, correo);
         personas.push_back(persona);
     }
     archivo.close();
@@ -357,7 +385,10 @@ void ListaCircularSimple::ordenarPorCedula() {
 
     for (const auto& persona : personas) {
         archivoOrdenado << persona.getNombre() << ";"
+                        << persona.getSegundoNombre() << ";"
+                        << persona.getApellido() << ";"
                         << persona.getCedula() << ";"
+                        << persona.getCorreo() << ";"
                         << persona.getFechaNacimiento().mostrar() << endl;
     }
     archivoOrdenado.close();
