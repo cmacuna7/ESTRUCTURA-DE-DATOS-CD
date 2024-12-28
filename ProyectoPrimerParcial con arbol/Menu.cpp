@@ -67,7 +67,7 @@ int ingresarAnio(const string& mensaje) {
     return anio;
 }
 
-void mostrarMenu(ListaCircularDoble& lista) {
+void mostrarMenu(LibroManager& lista) {
     vector<string> opciones = {
         "Agregar libro",
         "Buscar libro",

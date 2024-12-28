@@ -8,10 +8,8 @@
  * NRC :                           1992                                                     *
  ********************************************************************************************/
 
-
-
-#ifndef LISTACIRCULARDOBLE_H
-#define LISTACIRCULARDOBLE_H
+#ifndef LIBROMANAGER_H
+#define LIBROMANAGER_H
 
 #include <iostream>
 #include <string>
@@ -23,7 +21,7 @@
 
 using namespace std;
 
-class ListaCircularDoble {
+class LibroManager {
 private:
     Trie trie;
     string archivoLibros = "libros.txt";  // Archivo donde se guardarán los libros

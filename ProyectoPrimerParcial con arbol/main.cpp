@@ -9,7 +9,7 @@
  ********************************************************************************************/
 
 
-#include "ListaCircularDoble.cpp"
+#include "LibroManager.cpp"
 #include "Menu.cpp"
 
 int main() {
@@ -19,7 +19,7 @@ int main() {
      // Verifica y crea la carpeta de backups si no existe
     BackupManager::crearCarpetaSiNoExiste("backup");
 
-    ListaCircularDoble lista;
+    LibroManager lista;
     // Cargar los libros desde el archivo al iniciar
     try {
         lista.cargarLibrosDesdeArchivo();

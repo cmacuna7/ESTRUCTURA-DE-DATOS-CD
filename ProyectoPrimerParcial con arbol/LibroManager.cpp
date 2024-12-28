@@ -8,7 +8,7 @@
  * NRC :                           1992                                                     *
  ********************************************************************************************/
 
-#include "ListaCircularDoble.h"
+#include "LibroManager.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -20,7 +20,7 @@
 using namespace std;
 
 // Agregar libro
-void ListaCircularDoble::agregarLibro(const Libro& libro) {
+void LibroManager::agregarLibro(const Libro& libro) {
     trie.insert(libro.getTitulo(), new Libro(libro));
     cout << "Libro agregado: " << libro.getTitulo() << endl;
     // Guardar solo si no se está restaurando un backup
@@ -30,12 +30,12 @@ void ListaCircularDoble::agregarLibro(const Libro& libro) {
 }
 
 // Limpiar la lista actual
-void ListaCircularDoble::limpiarLista() {
+void LibroManager::limpiarLista() {
     // Implementar si es necesario
 }
 
 // Imprimir todos los libros
-void ListaCircularDoble::imprimirLibros() {
+void LibroManager::imprimirLibros() {
     ofstream archivo("libros_temp.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo temporal para imprimir.\n\n";
@@ -46,12 +46,12 @@ void ListaCircularDoble::imprimirLibros() {
 }
 
 // Buscar libro por título
-Libro* ListaCircularDoble::buscarLibro(const string& titulo) {
+Libro* LibroManager::buscarLibro(const string& titulo) {
     return trie.search(titulo);
 }
 
 // Buscar libro por ISBN
-Libro* ListaCircularDoble::buscarLibroPorIsbn(const string& isbn) {
+Libro* LibroManager::buscarLibroPorIsbn(const string& isbn) {
     vector<Libro*> libros = trie.collectAllBooks();
     for (Libro* libro : libros) {
         if (libro->getIsbn() == isbn) {
@@ -62,7 +62,7 @@ Libro* ListaCircularDoble::buscarLibroPorIsbn(const string& isbn) {
 }
 
 // Buscar autor por ISNI
-Persona ListaCircularDoble::buscarAutorPorIsni(const string& isni) {
+Persona LibroManager::buscarAutorPorIsni(const string& isni) {
     vector<Libro*> libros = trie.collectAllBooks();
     for (Libro* libro : libros) {
         if (libro->getAutor().getIsni() == isni) {
@@ -73,7 +73,7 @@ Persona ListaCircularDoble::buscarAutorPorIsni(const string& isni) {
 }
 
 // Eliminar libro y actualizar archivo
-void ListaCircularDoble::eliminarLibro(const string& titulo) {
+void LibroManager::eliminarLibro(const string& titulo) {
     trie.remove(titulo);
     cout << "Libro eliminado: " << titulo << endl;
     // Actualizar el archivo después de la eliminación
@@ -81,7 +81,7 @@ void ListaCircularDoble::eliminarLibro(const string& titulo) {
 }
 
 // Guardar los libros en el archivo (actualizado)
-void ListaCircularDoble::guardarLibrosEnArchivo() {
+void LibroManager::guardarLibrosEnArchivo() {
     ofstream archivo("libros_temp.txt");
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo temporal para guardar.\n\n";
@@ -116,7 +116,7 @@ void ListaCircularDoble::guardarLibrosEnArchivo() {
 }
 
 // Cargar los libros desde el archivo
-void ListaCircularDoble::cargarLibrosDesdeArchivo() {
+void LibroManager::cargarLibrosDesdeArchivo() {
     ifstream archivo(archivoLibros);
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo para cargar los libros.\n";
@@ -147,7 +147,7 @@ void ListaCircularDoble::cargarLibrosDesdeArchivo() {
 }
 
 // Backup
-void ListaCircularDoble::crearBackup(const string& nombreArchivo) {
+void LibroManager::crearBackup(const string& nombreArchivo) {
     string carpetaBackup = "backup";  // Carpeta donde se almacenan los backups
     
     // Asegurarnos de que la carpeta de backups exista
@@ -171,7 +171,7 @@ void ListaCircularDoble::crearBackup(const string& nombreArchivo) {
 }
 
 // Restaurar backup y sobreescribir archivo
-void ListaCircularDoble::restaurarBackup(const string& nombreArchivo) {
+void LibroManager::restaurarBackup(const string& nombreArchivo) {
     ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo de backup.\n";

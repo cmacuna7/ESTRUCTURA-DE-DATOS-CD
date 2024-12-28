@@ -57,7 +57,7 @@ vector<string> BackupManager::listarArchivosEnCarpeta(const string& carpeta) {
     return archivos;
 }
 
-void BackupManager::restaurarBackup(ListaCircularDoble& lista) {
+void BackupManager::restaurarBackup(LibroManager& lista) {
     string carpetaBackup = "backup"; // Carpeta donde se almacenan los backups
     vector<string> archivos = listarArchivosEnCarpeta(carpetaBackup);
 
