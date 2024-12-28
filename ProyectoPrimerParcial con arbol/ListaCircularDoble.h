@@ -19,7 +19,7 @@
 #include "Nodo.h"
 #include "Libro.h"
 #include "Persona.cpp"
-#include "Trie.h"
+#include "Trie.cpp"
 
 using namespace std;
 
