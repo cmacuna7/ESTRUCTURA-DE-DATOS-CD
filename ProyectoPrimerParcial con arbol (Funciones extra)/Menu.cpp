@@ -72,6 +72,7 @@ void mostrarMenu(LibroManager& lista) {
         "Agregar libro",
         "Buscar libro",
         "Buscar libro con autocompletado",
+        "Buscar libro con errores tipograficos",
         "Eliminar libro",
         "Ver todos los libros",
         "Exportar en archivo PDF",
@@ -225,6 +226,11 @@ void mostrarMenu(LibroManager& lista) {
                 cout << "Ingrese el prefijo del título del libro a buscar: ";
                 cin >> ws; getline(cin, prefijo);
                 vector<string> sugerencias = lista.buscarLibroConAutocompletado(prefijo);
+            } else if (opciones[seleccion] == "Buscar libro con errores tipograficos") {
+                string prefijo;
+                cout << "Ingrese el prefijo del título del libro a buscar: ";
+                cin >> ws; getline(cin, prefijo);
+                vector<string> sugerencias = lista.buscarLibroConErroresTipograficos(prefijo);
             } else if (opciones[seleccion] == "Salir") {
                 break;
             }

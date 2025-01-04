@@ -54,6 +54,7 @@ public:
     void limpiarLista();
     // Buscar libro con autocompletado
     vector<string> buscarLibroConAutocompletado(const string& prefijo);
+    vector<string> buscarLibroConErroresTipograficos(const string& prefijo);
     void imprimirTitulosLibros() const; // Declaración del método imprimirTitulosLibros
 };
 

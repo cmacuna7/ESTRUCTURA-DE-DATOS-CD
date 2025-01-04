@@ -21,6 +21,7 @@ private:
     TrieNode* root;
     void collectAllBooks(TrieNode* node, vector<Libro*>& libros);
     void collectSuggestions(TrieNode* node, const string& prefix, vector<string>& suggestions);
+    int levenshteinDistance(const string& s1, const string& s2);
 public:
     Trie();
     void insert(const string& key, Libro* libro);
@@ -31,6 +32,7 @@ public:
     void printAll(ofstream& archivo);
     vector<Libro*> collectAllBooks();
     vector<string> getSuggestions(const string& prefix);
+    vector<string> getTypoSuggestions(const string& prefix, int maxDistance);
 };
 
 #endif
