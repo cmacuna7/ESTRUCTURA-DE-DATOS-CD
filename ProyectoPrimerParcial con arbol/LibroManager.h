@@ -49,8 +49,6 @@ public:
     void cargarLibrosDesdeArchivo();
     // Limpiar la lista
     void limpiarLista();
-    // Buscar libro con autocompletado
-    vector<string> buscarLibroConAutocompletado(const string& prefijo);
 };
 
 #endif
