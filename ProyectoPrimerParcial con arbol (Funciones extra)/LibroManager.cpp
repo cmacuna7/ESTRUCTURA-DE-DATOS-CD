@@ -61,13 +61,29 @@ void LibroManager::limpiarLista() {
 
 // Imprimir todos los libros
 void LibroManager::imprimirLibros() {
-    ofstream archivo("libros_temp.txt");
-    if (!archivo.is_open()) {
-        cout << "Error al abrir el archivo temporal para imprimir.\n\n";
+    vector<Libro*> libros = trie.collectAllBooks();
+    
+    if (libros.empty()) {
+        cout << "No hay libros para mostrar.\n";
         return;
     }
-    trie.printAll(archivo);
-    archivo.close();
+
+    cout << left << setw(41) << "Título" 
+        << setw(25) << "Autor" 
+        << setw(25) << "ISNI" 
+        << setw(20) << "ISBN"
+        << setw(15) << "Publicación" 
+        << setw(15) << "Nac. Autor" << endl;
+    cout << string(140, '-') << endl;
+
+    for (const Libro* libro : libros) {
+        cout << left << setw(40) << libro->getTitulo()
+            << setw(25) << libro->getAutor().getNombre()
+            << setw(25) << libro->getAutor().getIsni() 
+            << setw(20) << libro->getIsbn()
+            << setw(15) << libro->getFechaPublicacion().mostrar()
+            << setw(15) << libro->getAutor().getFechaNacimiento().mostrar() << endl;
+    }
 }
 
 // Buscar libro por título
@@ -223,12 +239,12 @@ void LibroManager::restaurarBackup(const string& nombreArchivo) {
 
         // Parsear la fecha de nacimiento del autor
         int diaNac, mesNac, anioNac;
-        sscanf(fechaNacStr.c_str(), "%d-%d-%d", &diaNac, &mesNac, &anioNac);
+        sscanf(fechaNacStr.c_str(), "%d/%d/%d", &diaNac, &mesNac, &anioNac);
         Fecha fechaNacimientoAutor(diaNac, mesNac, anioNac);
 
         // Parsear la fecha de publicación
         int diaPub, mesPub, anioPub;
-        sscanf(fechaPubStr.c_str(), "%d-%d-%d", &diaPub, &mesPub, &anioPub);
+        sscanf(fechaPubStr.c_str(), "%d/%d/%d", &diaPub, &mesPub, &anioPub);
         Fecha fechaPublicacion(diaPub, mesPub, anioPub);
 
         // Crear los objetos correspondientes

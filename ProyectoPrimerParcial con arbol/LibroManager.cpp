@@ -214,12 +214,12 @@ void LibroManager::restaurarBackup(const string& nombreArchivo) {
 
         // Parsear la fecha de nacimiento del autor
         int diaNac, mesNac, anioNac;
-        sscanf(fechaNacStr.c_str(), "%d-%d-%d", &diaNac, &mesNac, &anioNac);
+        sscanf(fechaNacStr.c_str(), "%d/%d/%d", &diaNac, &mesNac, &anioNac);
         Fecha fechaNacimientoAutor(diaNac, mesNac, anioNac);
 
         // Parsear la fecha de publicación
         int diaPub, mesPub, anioPub;
-        sscanf(fechaPubStr.c_str(), "%d-%d-%d", &diaPub, &mesPub, &anioPub);
+        sscanf(fechaPubStr.c_str(), "%d/%d/%d", &diaPub, &mesPub, &anioPub);
         Fecha fechaPublicacion(diaPub, mesPub, anioPub);
 
         // Crear los objetos correspondientes
