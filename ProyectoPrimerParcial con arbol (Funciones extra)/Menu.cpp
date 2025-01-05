@@ -73,6 +73,9 @@ void mostrarMenu(LibroManager& lista) {
         "Buscar libro",
         "Buscar libro con autocompletado",
         "Buscar libro con errores tipograficos",
+        "Función para listar libros por primer letra del título",
+        "Buscar libro por subcadena",
+        "Buscar el libro más corto y el más largo",
         "Eliminar libro",
         "Ver todos los libros",
         "Exportar en archivo PDF",
@@ -231,6 +234,18 @@ void mostrarMenu(LibroManager& lista) {
                 cout << "Ingrese el prefijo del título del libro a buscar: ";
                 cin >> ws; getline(cin, prefijo);
                 vector<string> sugerencias = lista.buscarLibroConErroresTipograficos(prefijo);
+            } else if (opciones[seleccion] == "Función para listar libros por primer letra del título") {
+                char letra;
+                cout << "Ingrese la letra por la que desea buscar: ";
+                cin >> letra;
+                lista.listarLibrosPorLetra(letra);
+            } else if (opciones[seleccion] == "Buscar el libro más corto y el más largo") {
+                lista.buscarLibroCortoLargo();
+            } else if (opciones[seleccion] == "Buscar libro por subcadena") {
+                string subcadena;
+                cout << "Ingrese la subcadena a buscar: ";
+                cin >> ws; getline(cin, subcadena);
+                lista.buscarLibroPorSubcadena(subcadena);
             } else if (opciones[seleccion] == "Salir") {
                 break;
             }

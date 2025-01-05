@@ -368,3 +368,63 @@ vector<string> LibroManager::buscarLibroConErroresTipograficos(const string& pre
     
     return sugerencias;
 }
+//Listar libros por primer letra del título
+void LibroManager::listarLibrosPorLetra(const char letra) {
+    vector<Libro*> libros = trie.collectAllBooks();
+    bool encontrado = false;
+    for (Libro* libro : libros) {
+        if (libro->getTitulo()[0] == letra) {
+            cout << "Título: " << libro->getTitulo() << endl;
+            cout << "Autor: " << libro->getAutor().getNombre() << endl;
+            cout << "ISNI: " << libro->getAutor().getIsni() << endl;
+            cout << "ISBN: " << libro->getIsbn() << endl;
+            cout << "Fecha de publicación: " << libro->getFechaPublicacion().mostrar() << endl;
+            cout << "Fecha de nacimiento del autor: " << libro->getAutor().getFechaNacimiento().mostrar() << endl;
+            cout << "-----------------------------------" << endl;
+            encontrado = true;
+        }
+    }
+    if (!encontrado) {
+        cout << "No se encontraron libros con la letra: " << letra << endl;
+    }
+}
+//Buscar el libro más corto y el más largo
+void LibroManager::buscarLibroCortoLargo() {
+    vector<Libro*> libros = trie.collectAllBooks();
+    if (libros.empty()) {
+        cout << "No hay libros para mostrar.\n";
+        return;
+    }
+    Libro* libroCorto = libros[0];
+    Libro* libroLargo = libros[0];
+    for (Libro* libro : libros) {
+        if (libro->getTitulo().length() < libroCorto->getTitulo().length()) {
+            libroCorto = libro;
+        }
+        if (libro->getTitulo().length() > libroLargo->getTitulo().length()) {
+            libroLargo = libro;
+        }
+    }
+    cout << "Libro más corto: " << libroCorto->getTitulo() << endl;
+    cout << "Libro más largo: " << libroLargo->getTitulo() << endl;
+}
+//Buscar libros que contengan una subcadena
+void LibroManager::buscarLibroPorSubcadena(const string& subcadena) {
+    vector<Libro*> libros = trie.collectAllBooks();
+    bool encontrado = false;
+    for (Libro* libro : libros) {
+        if (libro->getTitulo().find(subcadena) != string::npos) {
+            cout << "Título: " << libro->getTitulo() << endl;
+            cout << "Autor: " << libro->getAutor().getNombre() << endl;
+            cout << "ISNI: " << libro->getAutor().getIsni() << endl;
+            cout << "ISBN: " << libro->getIsbn() << endl;
+            cout << "Fecha de publicación: " << libro->getFechaPublicacion().mostrar() << endl;
+            cout << "Fecha de nacimiento del autor: " << libro->getAutor().getFechaNacimiento().mostrar() << endl;
+            cout << "-----------------------------------" << endl;
+            encontrado = true;
+        }
+    }
+    if (!encontrado) {
+        cout << "No se encontraron libros con la subcadena: " << subcadena << endl;
+    }
+}
