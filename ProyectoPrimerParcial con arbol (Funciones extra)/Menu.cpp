@@ -76,6 +76,8 @@ void mostrarMenu(LibroManager& lista) {
         "Función para listar libros por primer letra del título",
         "Buscar libro por subcadena",
         "Buscar el libro más corto y el más largo",
+        "Buscar libro por ISBN con autocompletado",
+        "Encontrar libros cercanos a un título",
         "Eliminar libro",
         "Ver todos los libros",
         "Exportar en archivo PDF",
@@ -273,10 +275,39 @@ void mostrarMenu(LibroManager& lista) {
                     
                 } while (!esValida);  // Repetir mientras no sea válida
 
+
                 lista.buscarLibroPorSubcadena(subcadena);
+            }  
+            else if (opciones[seleccion] == "Buscar libro por ISBN con autocompletado") {
+                string prefijo;
+                cout << "Ingrese el prefijo del ISBN del libro a buscar: ";
+                cin >> ws; getline(cin, prefijo);
+                lista.buscarLibroPorIsbnConAutocompletado(prefijo);
+            
+                 
+            }  else if (opciones[seleccion] == "Encontrar libros cercanos a un título") {
+                const std::string inputFile = "libros.txt";
+                while (true) {
+                    anioFin = ingresarAnio("Ingrese el año de fin (0001 a 2024): ");
+                    anioInicio = ingresarAnio("Ingrese el año de inicio (0001 a 2024): ");
+
+                    // Validar que el año final sea mayor al inicial
+                    if (anioFin > anioInicio) {
+                        break;
+                    } else {
+                        cout << "Error: El año de fin debe ser mayor al año de inicio, y no pueden ser iguales." << endl;
+                    }
+                }
+
+                cout << "Registros encontrados entre " << anioInicio << " y " << anioFin << ":\n";
+                lista.buscarLibroCercano(ruta, anioInicio, anioFin);
             } else if (opciones[seleccion] == "Salir") {
                 break;
             }
+            else if (opciones[seleccion] == "Salir") {
+                break;
+            }
+            
             cout << "Presione cualquier tecla para continuar...\n";
             _getch();
         } else if (tecla == 59) { // F1

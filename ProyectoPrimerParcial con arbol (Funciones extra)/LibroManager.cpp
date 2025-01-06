@@ -428,3 +428,69 @@ void LibroManager::buscarLibroPorSubcadena(const string& subcadena) {
         cout << "No se encontraron libros con la subcadena: " << subcadena << endl;
     }
 }
+//Buscar por ISBN con autocompletado
+void LibroManager::buscarLibroPorIsbnConAutocompletado(const string& prefijo) {
+    vector<string> sugerencias;
+    vector<Libro*> libros = trie.collectAllBooks();
+    for (Libro* libro : libros) {
+        if (libro->getIsbn().find(prefijo) != string::npos) {
+            sugerencias.push_back(libro->getIsbn());
+        }
+    }
+    if (sugerencias.empty()) {
+        cout << "No se encontraron sugerencias para el prefijo: " << prefijo << endl;
+        return;
+    }
+    cout << "Sugerencias encontradas:" << endl;
+    for (size_t i = 0; i < sugerencias.size(); ++i) {
+        cout << i + 1 << ". " << sugerencias[i] << endl;
+    }
+    int seleccion;
+    cout << "Seleccione una sugerencia (1-" << sugerencias.size() << "): ";
+    cin >> seleccion;
+    if (seleccion < 1 || seleccion > sugerencias.size()) {
+        cout << "Selección inválida." << endl;
+        return;
+    }
+    string isbnSeleccionado = sugerencias[seleccion - 1];
+    trim(isbnSeleccionado);
+    cout << "Sugerencia seleccionada: " << isbnSeleccionado << endl;
+    Libro* libro = buscarLibroPorIsbn(isbnSeleccionado);
+    if (libro) {
+        cout << "Información del libro: " << endl;
+        libro->mostrar();
+    } else {
+        cout << "Libro no encontrado.\n";
+    }
+}
+
+// Función para encontrar libros cercanos a un título
+void LibroManager::buscarLibroCercano(const string& ruta, const int anioInicio, const int anioFin) {
+    vector<Libro*> libros = trie.collectAllBooks();
+    vector<Libro*> librosCercanos;
+    for (Libro* libro : libros) {
+        if (libro->getFechaPublicacion().getAnio() >= anioInicio && libro->getFechaPublicacion().getAnio() <= anioFin) {
+            librosCercanos.push_back(libro);
+        }
+    }
+    if (librosCercanos.empty()) {
+        cout << "No se encontraron libros en el rango de años especificado.\n";
+        return;
+    }
+    ofstream archivo(ruta);
+    if (!archivo.is_open()) {
+        cout << "Error al abrir el archivo para guardar los libros cercanos.\n";
+        return;
+    }
+    for (Libro* libro : librosCercanos) {
+        archivo << "Título: " << libro->getTitulo() << endl;
+        archivo << "Autor: " << libro->getAutor().getNombre() << endl;
+        archivo << "ISNI: " << libro->getAutor().getIsni() << endl;
+        archivo << "ISBN: " << libro->getIsbn() << endl;
+        archivo << "Fecha de publicación: " << libro->getFechaPublicacion().mostrar() << endl;
+        archivo << "Fecha de nacimiento del autor: " << libro->getAutor().getFechaNacimiento().mostrar() << endl;
+        archivo << "-----------------------------------" << endl;
+    }
+    archivo.close();
+    cout << "Libros guardados en el archivo: " << ruta << endl;
+}

@@ -59,6 +59,10 @@ public:
     void listarLibrosPorLetra(const char letra); // Declaración del método listarLibrosPorLetra
     void buscarLibroCortoLargo(); // Declaración del método buscarLibroCortoLargo
     void buscarLibroPorSubcadena(const string& subcadena); // Declaración del método buscarLibroPorSubcadena
+    void buscarLibroPorIsbnConAutocompletado(const string& prefijo); // Declaración del método buscarLibroPorIsbnConAutocompletado
+    void buscarLibroCercano(const string& ruta, const int anioInicio, const int anioFin); // Declaración del método buscarLibroPorRango
+
+
 };
 
 #endif
