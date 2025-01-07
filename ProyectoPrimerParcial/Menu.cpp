@@ -197,9 +197,9 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 const std::string inputFile12 = "libros.txt";
 
                 while (true) {
-                     anioFin = ingresarAnio("Ingrese el año de fin (0001 a 2024): ");
+                    anioFin = ingresarAnio("Ingrese el año de fin (0001 a 2024): ");
                     anioInicio = ingresarAnio("Ingrese el año de inicio (0001 a 2024): ");
-                   
+                
 
                     // Validar que el año final sea mayor al inicial
                     if (anioFin > anioInicio) {
