@@ -12,6 +12,7 @@
 #define MENU_H
 
 #include "ListaCircularDoble.h"
+#include "ListaCircularMenu.cpp"
 #include <vector>
 
 void mostrarMenu(ListaCircularDoble& lista);

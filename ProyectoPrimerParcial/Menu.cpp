@@ -56,105 +56,98 @@ int ingresarAnio(const string& mensaje) {
     return anio;
 }
 void mostrarMenu(ListaCircularDoble& lista) {
-    vector<string> opciones = {
-        "Agregar libro",
-        "Buscar libro",
-        "Eliminar libro",
-        "Ver todos los libros",
-        "Exportar en archivo PDF",
-        "Crear backup",
-        "Restaurar backup",
-        "Buscar por rango",
-        "Salir"
-    };
+    ListaCircularMenu menuOpciones;
+    menuOpciones.insertar("Agregar libro");
+    menuOpciones.insertar("Buscar libro");
+    menuOpciones.insertar("Eliminar libro");
+    menuOpciones.insertar("Ver todos los libros");
+    menuOpciones.insertar("Exportar en archivo PDF");
+    menuOpciones.insertar("Crear backup");
+    menuOpciones.insertar("Restaurar backup");
+    menuOpciones.insertar("Buscar por rango");
+    menuOpciones.insertar("Salir");
+
     int seleccion = 0;
-    string ruta = "libros.txt"; // Ruta del archivo
+    string ruta = "libros.txt";
     int anioInicio, anioFin;
 
     while (true) {
         system("cls");
         cout << "=== Menu Principal ===\n";
-        for (size_t i = 0; i < opciones.size(); ++i) {
+        NodoMenu* actual = menuOpciones.getPrimero();
+        for (int i = 0; i < menuOpciones.getTamano(); i++) {
             if (i == seleccion)
-                cout << ">> " << opciones[i] << " <<\n";
+                cout << ">> " << actual->dato << " <<\n";
             else
-                cout << "   " << opciones[i] << endl;
+                cout << "   " << actual->dato << endl;
+            actual = actual->siguiente;
         }
 
         char tecla = _getch();
         if (tecla == 72) { // Flecha Arriba
-            seleccion = (seleccion - 1 + opciones.size()) % opciones.size();
+            seleccion = (seleccion - 1 + menuOpciones.getTamano()) % menuOpciones.getTamano();
         } else if (tecla == 80) { // Flecha Abajo
-            seleccion = (seleccion + 1) % opciones.size();
+            seleccion = (seleccion + 1) % menuOpciones.getTamano();
         } else if (tecla == '\r') { // Enter
-            if (opciones[seleccion] == "Agregar libro") {
+            string opcionSeleccionada = menuOpciones.obtenerOpcion(seleccion);
+
+            if (opcionSeleccionada == "Agregar libro") {
                 string titulo, isbn, isni;
                 string fechaPub, fechaNac;
                 Persona autor;
 
-                // Solicitar titulo del libro
                 do {
                     cout << "Ingrese título del libro: ";
                     getline(cin, titulo);
                 } while (!Validaciones::validarTitulo(titulo, "Título"));
 
-                // Solicitar ISBN
                 do {
                     cout << "Ingrese ISBN: ";
                     getline(cin, isbn);
                 } while (!Validaciones::validarIsbn(isbn));
 
-                // Verificar si el ISBN ya existe
                 Nodo* libroExistente = lista.buscarLibroPorIsbn(isbn);
                 if (libroExistente) {
                     cout << "El ISBN ya existe. Información del libro existente:\n";
                     libroExistente->libro.mostrar();
                 } else {
-                    // Solicitar ISNI del autor
                     do {
                         cout << "Ingrese ISNI del autor: ";
                         getline(cin, isni);
                     } while (!Validaciones::validarIsni(isni));
 
-                    // Verificar si el ISNI ya existe
                     Persona autorExistente = lista.buscarAutorPorIsni(isni);
                     if (autorExistente.getNombre() != "") {
                         cout << "Autor existente encontrado. Usando información del autor.\n";
                         autor = autorExistente;
+                        // Guardamos la fecha de nacimiento del autor existente
+                        fechaNac = autorExistente.getFechaNacimiento().toString();
                     } else {
                         string nombreAutor;
-
-                        // Solicitar nombre del autor
                         do {
                             cout << "Ingrese nombre del autor: ";
                             getline(cin, nombreAutor);
                         } while (!Validaciones::validarTituloNombre(nombreAutor, "Nombre del Autor"));
 
-                        // Solicitar fecha de nacimiento del autor
                         do {
                             cout << "Ingrese fecha de nacimiento del autor (DD-MM-YYYY): ";
                             getline(cin, fechaNac);
                         } while (!Validaciones::validarFecha(fechaNac));
 
-                        // Crear el autor
                         Fecha fechaNacimientoAutor = Fecha::crearDesdeCadena(fechaNac);
                         autor = Persona(nombreAutor, isni, fechaNacimientoAutor);
                     }
 
-                    // Solicitar fecha de publicación del libro
                     do {
                         cout << "Ingrese fecha de publicación del libro (DD-MM-YYYY): ";
                         getline(cin, fechaPub);
                     } while (!Validaciones::validarFechaPublicacion(fechaPub, fechaNac));
 
-                    // Crear el libro
                     Fecha fechaPublicacion = Fecha::crearDesdeCadena(fechaPub);
                     Libro libro(titulo, isbn, autor, fechaPublicacion);
-
-                    // Agregar libro a la lista
                     lista.agregarLibro(libro);
                 }
-            } else if (opciones[seleccion] == "Buscar libro") {
+            } else if (opcionSeleccionada == "Buscar libro") {
                 string isbn;
                 cout << "Ingrese el ISBN del libro a buscar: ";
                 cin >> ws; getline(cin, isbn);
@@ -164,11 +157,10 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 } else {
                     cout << "Libro no encontrado.\n";
                 }
-            } else if (opciones[seleccion] == "Eliminar libro") {
+            } else if (opcionSeleccionada == "Eliminar libro") {
                 string isbn;
                 cout << "Ingrese el ISBN del libro a eliminar: ";
                 cin >> ws; getline(cin, isbn);
-                // Eliminar usando ISBN
                 Nodo* libroAEliminar = lista.buscarLibroPorIsbn(isbn);
                 if (libroAEliminar) {
                     string titulo = libroAEliminar->libro.getTitulo();
@@ -176,44 +168,34 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 } else {
                     cout << "Libro no encontrado con ISBN: " << isbn << endl;
                 }
-            } else if (opciones[seleccion] == "Ver todos los libros") {
+            } else if (opcionSeleccionada == "Ver todos los libros") {
                 lista.imprimirLibros();
-            }else if (opciones[seleccion] == "Exportar en archivo PDF") {
-
-                    const std::string inputFile = "libros.txt";
-                    createPDF(inputFile);
-
-
-            } else if (opciones[seleccion] == "Crear backup") {
+            } else if (opcionSeleccionada == "Exportar en archivo PDF") {
+                const std::string inputFile = "libros.txt";
+                createPDF(inputFile);
+            } else if (opcionSeleccionada == "Crear backup") {
                 time_t ahora = time(0);
                 tm* tiempo = localtime(&ahora);
                 stringstream ss;
                 ss << (1900 + tiempo->tm_year) << "_" << (1 + tiempo->tm_mon) << "_" << tiempo->tm_mday << "_"
                 << tiempo->tm_hour << "_" << tiempo->tm_min << "_" << tiempo->tm_sec << ".txt";
                 lista.crearBackup(ss.str());
-            } else if (opciones[seleccion] == "Restaurar backup") {
-                BackupManager::restaurarBackup(lista);  // Llama a la función para restaurar el backup
-            } else if (opciones[seleccion] == "Buscar por rango"){
-                const std::string inputFile12 = "libros.txt";
-
+            } else if (opcionSeleccionada == "Restaurar backup") {
+                BackupManager::restaurarBackup(lista);
+            } else if (opcionSeleccionada == "Buscar por rango") {
                 while (true) {
                     anioFin = ingresarAnio("Ingrese el año de fin (0001 a 2024): ");
                     anioInicio = ingresarAnio("Ingrese el año de inicio (0001 a 2024): ");
-                
 
-                    // Validar que el año final sea mayor al inicial
                     if (anioFin > anioInicio) {
                         break;
                     } else {
                         cout << "Error: El año de fin debe ser mayor al año de inicio, y no pueden ser iguales." << endl;
                     }
                 }
-
                 cout << "Registros encontrados entre " << anioInicio << " y " << anioFin << ":\n";
                 buscarPorRango(ruta, anioInicio, anioFin);
-
-            
-            }else if (opciones[seleccion] == "Salir") {
+            } else if (opcionSeleccionada == "Salir") {
                 break;
             }
             cout << "Presione cualquier tecla para continuar...\n";
