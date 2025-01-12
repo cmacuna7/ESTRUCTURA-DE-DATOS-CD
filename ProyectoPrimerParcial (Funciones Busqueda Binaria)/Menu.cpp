@@ -67,7 +67,11 @@ void mostrarMenu(ListaCircularDoble& lista) {
         "Buscar por rango",
         "Buscar por rango de fecha de nacimiento",
         "Buscar por prefijo de autor",
+        "Búsqueda por Rango de ISBN",
         "Buscar por prefijo de ISBN",
+        "Buscar por prefijo de ISNI",
+        "Buscar por sufijo de autor",
+
         "Salir"
     };
     int seleccion = 0;
@@ -246,6 +250,26 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 cin >> ws; getline(cin, prefijo);
                 cout << "Registros encontrados con ISBN que empieza con '" << prefijo << "':\n";
                 buscarPorPrefijoISBN(ruta, prefijo);
+            }else if (opciones[seleccion] == "Buscar por prefijo de ISNI") {
+                string prefijo;
+                cout << "Ingrese el prefijo del ISNI: ";
+                cin >> ws; getline(cin, prefijo);
+                cout << "Registros encontrados con ISNI que empieza con '" << prefijo << "':\n";
+                buscarPorPrefijoISNI(ruta, prefijo);
+            }else if (opciones[seleccion] == "Buscar por sufijo de autor") {
+                string sufijo;
+                cout << "Ingrese el sufijo del autor: ";
+                cin >> ws; getline(cin, sufijo);
+                cout << "Registros encontrados con autor que termina con '" << sufijo << "':\n";
+                buscarPorSufijoAutor(ruta, sufijo);
+            }else if (opciones[seleccion] == "Búsqueda por Rango de ISBN") {
+                string isbnInicio, isbnFin;
+                cout << "Ingrese el ISBN de inicio: ";
+                cin >> ws; getline(cin, isbnInicio);
+                cout << "Ingrese el ISBN de fin: ";
+                cin >> ws; getline(cin, isbnFin);
+                cout << "Registros encontrados con ISBN entre '" << isbnInicio << "' y '" << isbnFin << "':\n";
+                buscarPorRangoISBN(ruta, isbnInicio, isbnFin);
             }else if (opciones[seleccion] == "Salir") {
                 break;
             }
