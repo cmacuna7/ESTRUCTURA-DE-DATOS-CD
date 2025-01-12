@@ -65,6 +65,9 @@ void mostrarMenu(ListaCircularDoble& lista) {
         "Crear backup",
         "Restaurar backup",
         "Buscar por rango",
+        "Buscar por rango de fecha de nacimiento",
+        "Buscar por prefijo de autor",
+        "Buscar por prefijo de ISBN",
         "Salir"
     };
     int seleccion = 0;
@@ -213,6 +216,36 @@ void mostrarMenu(ListaCircularDoble& lista) {
                 buscarPorRango(ruta, anioInicio, anioFin);
 
             
+            } else if (opciones[seleccion] == "Buscar por rango de fecha de nacimiento") {
+                const std::string inputFile12 = "libros.txt";
+                
+
+                while (true) {
+                    anioFin = ingresarAnio("Ingrese el año de fin (0001 a 2024): ");
+                    anioInicio = ingresarAnio("Ingrese el año de inicio (0001 a 2024): ");
+                
+
+                    // Validar que el año final sea mayor al inicial
+                    if (anioFin > anioInicio) {
+                        break;
+                    } else {
+                        cout << "Error: El año de fin debe ser mayor al año de inicio, y no pueden ser iguales." << endl;
+                    }
+                }
+                cout << "Registros encontrados entre " << anioInicio << " y " << anioFin << ":\n";
+                buscarPorRangoFechaNacimiento(ruta, anioInicio, anioFin);
+            } else if (opciones[seleccion] == "Buscar por prefijo de autor") {
+                string prefijo;
+                cout << "Ingrese el prefijo del autor: ";
+                cin >> ws; getline(cin, prefijo);
+                cout << "Registros encontrados con autor que empieza con '" << prefijo << "':\n";
+                buscarPorPrefijoAutor(ruta, prefijo);
+            } else if (opciones[seleccion] == "Buscar por prefijo de ISBN") {
+                string prefijo;
+                cout << "Ingrese el prefijo del ISBN: ";
+                cin >> ws; getline(cin, prefijo);
+                cout << "Registros encontrados con ISBN que empieza con '" << prefijo << "':\n";
+                buscarPorPrefijoISBN(ruta, prefijo);
             }else if (opciones[seleccion] == "Salir") {
                 break;
             }
