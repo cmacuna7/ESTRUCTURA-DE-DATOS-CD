@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 
@@ -20,6 +21,8 @@ int busquedaBinaria(int arr[], int inicio, int fin, int objetivo) {
 }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
+
     int arr[] = {1, 3, 5, 7, 9, 11, 13, 15}; // Arreglo ordenado
     int n = sizeof(arr) / sizeof(arr[0]); // Tamaño del arreglo
     int objetivo;
@@ -31,8 +34,15 @@ int main() {
 
     if (resultado != -1)
         cout << "Elemento encontrado en la posicion: " << resultado << endl;
-    else
+    else{
         cout << "Elemento no encontrado" << endl;
+    }
+
+    // Captura el tiempo de finalización
+    auto end = std::chrono::high_resolution_clock::now();
+    // Calcula la duración en milisegundos
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de ejecucion: " << duration.count() << " ms" << std::endl;
 
     return 0;
 }

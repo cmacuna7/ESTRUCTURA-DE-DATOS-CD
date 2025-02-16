@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 
@@ -77,6 +78,8 @@ void imprimirArreglo(int arr[], int n) {
 }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
+
     int arr[] = {38, 27, 43, 3, 9, 82, 10};
     int n = sizeof(arr) / sizeof(arr[0]);
 
@@ -87,6 +90,12 @@ int main() {
 
     cout << "Arreglo ordenado: ";
     imprimirArreglo(arr, n);
+
+    // Captura el tiempo de finalización
+    auto end = std::chrono::high_resolution_clock::now();
+    // Calcula la duración en milisegundos
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de ejecucion: " << duration.count() << " ms" << std::endl;
 
     return 0;
 }

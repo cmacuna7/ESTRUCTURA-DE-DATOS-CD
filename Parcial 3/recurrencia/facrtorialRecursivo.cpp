@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 
@@ -14,10 +15,18 @@ int factorial(int n) {
 }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
+    
     int num;
     cout << "Ingrese un numero: ";
     cin >> num;
     cout << "El factorial de " << num << " es: " << factorial(num) << endl;
+
+    // Captura el tiempo de finalización
+    auto end = std::chrono::high_resolution_clock::now();
+    // Calcula la duración en milisegundos
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de ejecucion: " << duration.count() << " ms" << std::endl;
     return 0;
 }
 
