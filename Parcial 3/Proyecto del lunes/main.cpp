@@ -37,26 +37,24 @@ vector<string> extractFunctionNames(const string& filePath) {
 }
 
 void analyzeFunctionPerformance(vector<int>& inputs, vector<long long>& times) {
+    // Se asegura que data.txt se sobrescribe con datos correctos
     for (int n : inputs) {
         auto start = high_resolution_clock::now();
-        
-        // Simulación de una función lambda
+        // Se simula una función con trabajo proporcional a n, usando un factor de escalado
         auto lambdaFunction = [n]() {
-            int sum = 0;
-            for (int i = 0; i < n; i++) {
+            volatile long long sum = 0;
+            int iterations = n * 1000; // Factor de escalado para generar tiempos medibles
+            for (int i = 0; i < iterations; i++) {
                 sum += i;
             }
             return sum;
         };
-        
         lambdaFunction();
-        
         auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<microseconds>(stop - start);
-        times.push_back(duration.count());
+        times.push_back(duration_cast<microseconds>(stop - start).count());
     }
-    
     ofstream file("data.txt");
+    // Escribir cada par (n, tiempo) en una línea separada por un espacio
     for (size_t i = 0; i < inputs.size(); i++) {
         file << inputs[i] << " " << times[i] << endl;
     }
@@ -64,23 +62,25 @@ void analyzeFunctionPerformance(vector<int>& inputs, vector<long long>& times) {
 }
 
 void determineBigONotation() {
+    // Se simula la evaluación de la función seleccionada
     vector<int> inputs = {10, 100, 1000, 10000, 50000};
     vector<long long> times;
     analyzeFunctionPerformance(inputs, times);
-    // Aquí se puede agregar un cálculo real. Dado que la función lambda es O(n)
+    // La simulación para la función elegida se estima como O(n)
     globalBigONotation = "O(n)";
-    cout << "Notación asintótica estimada: " << globalBigONotation << endl;
+    cout << "Notación asintótica estimada para la función evaluada: " << globalBigONotation << endl;
 }
 
 void graphBigONotation() {
-    // Función que utiliza la notación determinada para generar graficas
+    // Genera nuevamente data.txt para asegurar datos actualizados
     vector<int> inputs = {10, 100, 1000, 10000, 50000};
     vector<long long> times;
     analyzeFunctionPerformance(inputs, times);
     cout << "Datos guardados en data.txt. Generando gráficas para la notación " << globalBigONotation << "..." << endl;
     string pythonCmd = "python graph_big_o.py " + globalBigONotation;
     system(pythonCmd.c_str());
-    string matlabCmd = "matlab -batch \"run('graph_big_o_matlab.m','" + globalBigONotation + "'); exit;\"";
+    // Se llama a la función MATLAB pasando la notación (la función MATLAB debe usar el parámetro)
+    string matlabCmd = "matlab -batch \"graph_big_o_matlab('" + globalBigONotation + "'); exit;\"";
     system(matlabCmd.c_str());
 }
 
