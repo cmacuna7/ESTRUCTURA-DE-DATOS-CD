@@ -6,5 +6,10 @@ figure;
 plot(inputs, times, 'o-', 'LineWidth', 2);
 xlabel('Tamaño de entrada (n)');
 ylabel('Tiempo de ejecución (µs)');
-title('Análisis de Complejidad Big-O');
+// Si la variable "notation" existe, se actualiza el título
+if exist('notation','var')
+    title(['Análisis de Complejidad ' notation]);
+else
+    title('Análisis de Complejidad Big-O');
+end
 grid on;
