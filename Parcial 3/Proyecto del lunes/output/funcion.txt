@@ -1,0 +1,4 @@
+double Calculadora::fibonacciExponencial(int n) {
+    if (n <= 1) return n;
+    return fibonacciExponencial(n-1) + fibonacciExponencial(n-2);
+}
