@@ -151,15 +151,21 @@ void showFunctionContent(const string& filePath, const string& functionName) {
     }
 
     string line;
-    regex functionStartRegex(R"(^\s*[\w<>:\s]+?\s+(\w+)::)" + functionName + R"(\s*\([^)]*\)\s*\{)");
-    smatch match;
     bool inFunction = false;
     int braceCount = 0;
 
     while (getline(file, line)) {
         if (!inFunction) {
-            if (regex_search(line, match, functionStartRegex)) {
+            if (line.find(functionName + "(") != string::npos && line.find("{") != string::npos) {
                 inFunction = true;
+                cout << line << endl;
+                braceCount = count(line.begin(), line.end(), '{') - count(line.begin(), line.end(), '}');
+            } else if (line.find(functionName + "(") != string::npos) {
+                inFunction = true;
+                cout << line << endl;
+                while (getline(file, line) && line.find("{") == string::npos) {
+                    cout << line << endl;
+                }
                 cout << line << endl;
                 braceCount = count(line.begin(), line.end(), '{') - count(line.begin(), line.end(), '}');
             }
