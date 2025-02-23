@@ -6,7 +6,7 @@ using namespace std;
 
 void mostrarMenu() {
     cout << "\nCalculadora - Operaciones\n";
-    cout << "Operaciones Básicas O(1):\n";
+    cout << "Operaciones Basicas O(1):\n";
     cout << "1. Sumar\n";
     cout << "2. Restar\n";
     cout << "3. Multiplicar\n";
@@ -17,7 +17,8 @@ void mostrarMenu() {
     cout << "7. Suma Ordenada (O(n log n))\n";
     cout << "8. Multiplicar Matrices (O(n²))\n";
     cout << "9. Fibonacci (O(2^n))\n";
-    cout << "10. Salir\n";
+    cout << "10. Permutaciones (O(n!))\n";
+    cout << "11. Salir\n";
 }
 
 int main() {
@@ -26,15 +27,15 @@ int main() {
 
     do {
         mostrarMenu();
-        cout << "Seleccione una opción: ";
+        cout << "Seleccione una opcion: ";
         cin >> opcion;
 
         try {
             switch (opcion) {
                 case 1: case 2: case 3: case 4: {
-                    cout << "Ingrese el primer número: ";
+                    cout << "Ingrese el primer numero: ";
                     cin >> num1;
-                    cout << "Ingrese el segundo número: ";
+                    cout << "Ingrese el segundo numero: ";
                     cin >> num2;
                     
                     switch (opcion) {
@@ -60,9 +61,9 @@ int main() {
                 case 6: {
                     vector<double> numeros;
                     int n;
-                    cout << "Ingrese la cantidad de números: ";
+                    cout << "Ingrese la cantidad de numeros: ";
                     cin >> n;
-                    cout << "Ingrese los números:\n";
+                    cout << "Ingrese los numeros:\n";
                     for (int i = 0; i < n; i++) {
                         double num;
                         cin >> num;
@@ -75,9 +76,9 @@ int main() {
                 case 7: {
                     vector<double> numeros;
                     int n;
-                    cout << "Ingrese la cantidad de números: ";
+                    cout << "Ingrese la cantidad de numeros: ";
                     cin >> n;
-                    cout << "Ingrese los números:\n";
+                    cout << "Ingrese los numeros:\n";
                     for (int i = 0; i < n; i++) {
                         double num;
                         cin >> num;
@@ -89,7 +90,7 @@ int main() {
                 }
                 case 8: {
                     int n;
-                    cout << "Ingrese el tamaño de las matrices cuadradas: ";
+                    cout << "Ingrese el tamano de las matrices cuadradas: ";
                     cin >> n;
                     vector<vector<double>> matriz1(n, vector<double>(n));
                     vector<vector<double>> matriz2(n, vector<double>(n));
@@ -105,7 +106,7 @@ int main() {
                             cin >> matriz2[i][j];
                     
                     auto resultado = Calculadora::multiplicarMatrices(matriz1, matriz2);
-                    cout << "Resultado de la multiplicación:\n";
+                    cout << "Resultado de la multiplicacion:\n";
                     for (const auto& fila : resultado) {
                         for (double elem : fila)
                             cout << elem << " ";
@@ -115,23 +116,36 @@ int main() {
                 }
                 case 9: {
                     int n;
-                    cout << "Ingrese el número para calcular Fibonacci (advertencia: números grandes pueden tardar mucho): ";
+                    cout << "Ingrese el numero para calcular Fibonacci (advertencia: numeros grandes pueden tardar mucho): ";
                     cin >> n;
                     resultado = Calculadora::fibonacciExponencial(n);
                     cout << "Fibonacci(" << n << ") = " << resultado << endl;
                     break;
                 }
-                case 10:
+                case 10: {
+                    int n;
+                    cout << "Ingrese el numero para calcular permutaciones: ";
+                    cin >> n;
+                    auto resultado = Calculadora::permutaciones(n);
+                    cout << "Permutaciones de " << n << " elementos:\n";
+                    for (const auto& perm : resultado) {
+                        for (int elem : perm)
+                            cout << elem << " ";
+                        cout << endl;
+                    }
+                    break;
+                }
+                case 11:
                     cout << "Saliendo del programa...\n";
                     break;
                 default:
-                    cout << "Opción no válida. Intente nuevamente.\n";
+                    cout << "Opcion no valida. Intente nuevamente.\n";
             }
         } catch (const exception& e) {
             cout << "Error: " << e.what() << endl;
         }
 
-    } while (opcion != 10);
+    } while (opcion != 11);
 
     return 0;
 }

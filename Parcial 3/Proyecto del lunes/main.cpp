@@ -14,6 +14,13 @@ using namespace std::chrono;
 vector<string> globalFunctions;
 string globalBigONotation = "";
 
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <regex>
+
+using namespace std;
+
 vector<string> extractFunctionNames(const string& filePath) {
     vector<string> functionNames;
     ifstream file(filePath);
@@ -23,12 +30,18 @@ vector<string> extractFunctionNames(const string& filePath) {
     }
     
     string line;
-    regex functionRegex(R"((\w+)\s+(\w+)\s*\(([^)]*)\)\s*;)");
+    regex functionDeclRegex(R"(^\s*[\w<>:\s]+?\s+(\w+)\s*\([^)]*\)\s*;)");
+    regex methodDefRegex(R"(^\s*[\w<>:\s]+?\s+(\w+)::(\w+)\s*\([^)]*\)\s*\{?)");
     smatch match;
     
     while (getline(file, line)) {
-        if (regex_search(line, match, functionRegex)) {
-            functionNames.push_back(match[2]);
+        // Buscar declaraciones en .h
+        if (regex_search(line, match, functionDeclRegex)) {
+            functionNames.push_back(match[1]);  // Captura el nombre de la función
+        }
+        // Buscar métodos en .cpp (solo si tiene "Clase::")
+        else if (regex_search(line, match, methodDefRegex)) {
+            functionNames.push_back(match[2]);  // Captura el nombre del método
         }
     }
     
@@ -40,7 +53,7 @@ void analyzeFunctionPerformance(vector<int>& inputs, vector<long long>& times) {
     // Se asegura que data.txt se sobrescribe con datos correctos
     for (int n : inputs) {
         auto start = high_resolution_clock::now();
-        // Se simula una función con trabajo proporcional a n, usando un factor de escalado
+        // Se simula una funcion con trabajo proporcional a n, usando un factor de escalado
         auto lambdaFunction = [n]() {
             volatile long long sum = 0;
             int iterations = n * 1000; // Factor de escalado para generar tiempos medibles
@@ -54,7 +67,7 @@ void analyzeFunctionPerformance(vector<int>& inputs, vector<long long>& times) {
         times.push_back(duration_cast<microseconds>(stop - start).count());
     }
     ofstream file("data.txt");
-    // Escribir cada par (n, tiempo) en una línea separada por un espacio
+    // Escribir cada par (n, tiempo) en una linea separada por un espacio
     for (size_t i = 0; i < inputs.size(); i++) {
         file << inputs[i] << " " << times[i] << endl;
     }
@@ -62,13 +75,13 @@ void analyzeFunctionPerformance(vector<int>& inputs, vector<long long>& times) {
 }
 
 void determineBigONotation() {
-    // Se simula la evaluación de la función seleccionada
+    // Se simula la evaluacion de la funcion seleccionada
     vector<int> inputs = {10, 100, 1000, 10000, 50000};
     vector<long long> times;
     analyzeFunctionPerformance(inputs, times);
-    // La simulación para la función elegida se estima como O(n)
+    // La simulacion para la funcion elegida se estima como O(n)
     globalBigONotation = "O(n)";
-    cout << "Notación asintótica estimada para la función evaluada: " << globalBigONotation << endl;
+    cout << "Notacion asintotica estimada para la funcion evaluada: " << globalBigONotation << endl;
 }
 
 void graphBigONotation() {
@@ -76,10 +89,10 @@ void graphBigONotation() {
     vector<int> inputs = {10, 100, 1000, 10000, 50000};
     vector<long long> times;
     analyzeFunctionPerformance(inputs, times);
-    cout << "Datos guardados en data.txt. Generando gráficas para la notación " << globalBigONotation << "..." << endl;
+    cout << "Datos guardados en data.txt. Generando graficas para la notacion " << globalBigONotation << "..." << endl;
     string pythonCmd = "python graph_big_o.py " + globalBigONotation;
     system(pythonCmd.c_str());
-    // Se llama a la función MATLAB pasando la notación (la función MATLAB debe usar el parámetro)
+    // Se llama a la funcion MATLAB pasando la notacion (la funcion MATLAB debe usar el parametro)
     string matlabCmd = "matlab -batch \"graph_big_o_matlab('" + globalBigONotation + "'); exit;\"";
     system(matlabCmd.c_str());
 }
@@ -90,12 +103,12 @@ int main() {
     string headerPath;
     
     do {
-        cout << "\nMenú:\n";
+        cout << "\nMenu:\n";
         cout << "1. Mostrar funciones del .h (ingresar path)\n";
-        cout << "2. Calcular notación asintótica de una función (evaluación individual)\n";
-        cout << "3. Generar gráficas según la notación determinada\n";
+        cout << "2. Calcular notacion asintotica de una funcion (evaluacion individual)\n";
+        cout << "3. Generar graficas segun la notacion determinada\n";
         cout << "4. Salir\n";
-        cout << "Seleccione una opción: ";
+        cout << "Seleccione una opcion: ";
         cin >> opcion;
         cin.ignore(); // limpiar buffer
         
@@ -116,9 +129,9 @@ int main() {
             }
             case 2: {
                 if(globalFunctions.empty()){
-                    cout << "Primero ingrese el path y extraiga las funciones en la opción 1." << endl;
+                    cout << "Primero ingrese el path y extraiga las funciones en la opcion 1." << endl;
                 } else {
-                    cout << "Seleccione el índice de la función a evaluar:" << endl;
+                    cout << "Seleccione el indice de la funcion a evaluar:" << endl;
                     for (size_t i = 0; i < globalFunctions.size(); i++) {
                         cout << i << ": " << globalFunctions[i] << endl;
                     }
@@ -126,10 +139,10 @@ int main() {
                     cin >> idx;
                     cin.ignore(); // limpiar buffer
                     if(idx < 0 || idx >= globalFunctions.size()){
-                        cout << "Índice inválido." << endl;
+                        cout << "Indice invalido." << endl;
                     } else {
-                        cout << "Evaluando la función: " << globalFunctions[idx] << endl;
-                        // Se simula el desempeño para la función seleccionada (por ejemplo, se asume O(n))
+                        cout << "Evaluando la funcion: " << globalFunctions[idx] << endl;
+                        // Se simula el desempeno para la funcion seleccionada (por ejemplo, se asume O(n))
                         determineBigONotation();
                     }
                 }
@@ -137,7 +150,7 @@ int main() {
             }
             case 3: {
                 if(globalBigONotation.empty()){
-                    cout << "Primero calcule la notación asintótica en la opción 2." << endl;
+                    cout << "Primero calcule la notacion asintotica en la opcion 2." << endl;
                 } else {
                     graphBigONotation();
                 }
@@ -147,7 +160,7 @@ int main() {
                 cout << "Saliendo del programa..." << endl;
                 break;
             default:
-                cout << "Opción no válida, intente de nuevo." << endl;
+                cout << "Opcion no valida, intente de nuevo." << endl;
         }
     } while (opcion != 4);
 
