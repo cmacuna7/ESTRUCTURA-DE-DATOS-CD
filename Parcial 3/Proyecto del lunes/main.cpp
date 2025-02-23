@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <sstream>
 #include <clocale>
+#include <numeric>
+#include <cmath>
 
 using namespace std;
 using namespace std::chrono;
@@ -13,13 +15,8 @@ using namespace std::chrono;
 // Variables globales para almacenar funciones y notacion determinada
 vector<string> globalFunctions;
 string globalBigONotation = "";
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <regex>
-
-using namespace std;
+string headerPath;
+string cppPath;
 
 vector<string> extractFunctionNames(const string& filePath) {
     vector<string> functionNames;
@@ -74,14 +71,63 @@ void analyzeFunctionPerformance(vector<int>& inputs, vector<long long>& times) {
     file.close();
 }
 
-void determineBigONotation() {
+double calculateRSquared(const vector<double>& observed, const vector<double>& predicted) {
+    double mean = accumulate(observed.begin(), observed.end(), 0.0) / observed.size();
+    double ssTotal = 0, ssResidual = 0;
+    for (size_t i = 0; i < observed.size(); ++i) {
+        ssTotal += pow(observed[i] - mean, 2);
+        ssResidual += pow(observed[i] - predicted[i], 2);
+    }
+    return 1 - (ssResidual / ssTotal);
+}
+
+string determineBigONotation() {
     // Se simula la evaluacion de la funcion seleccionada
     vector<int> inputs = {10, 100, 1000, 10000, 50000};
     vector<long long> times;
     analyzeFunctionPerformance(inputs, times);
-    // La simulacion para la funcion elegida se estima como O(n)
-    globalBigONotation = "O(n)";
+
+    // Convertir tiempos a logaritmos para ajuste de curvas
+    vector<double> logInputs(inputs.size()), logTimes(times.size());
+    for (size_t i = 0; i < inputs.size(); ++i) {
+        logInputs[i] = log(inputs[i]);
+        logTimes[i] = log(times[i]);
+    }
+
+    // Ajustar diferentes modelos
+    vector<double> predictedConstant(inputs.size(), logTimes[0]);
+    vector<double> predictedLogarithmic(inputs.size()), predictedLinear(inputs.size());
+    vector<double> predictedNLogN(inputs.size()), predictedQuadratic(inputs.size());
+    for (size_t i = 0; i < inputs.size(); ++i) {
+        predictedLogarithmic[i] = log(logInputs[i]);
+        predictedLinear[i] = logInputs[i];
+        predictedNLogN[i] = logInputs[i] + log(logInputs[i]);
+        predictedQuadratic[i] = 2 * logInputs[i];
+    }
+
+    // Calcular R^2 para cada modelo
+    double r2Constant = calculateRSquared(logTimes, predictedConstant);
+    double r2Logarithmic = calculateRSquared(logTimes, predictedLogarithmic);
+    double r2Linear = calculateRSquared(logTimes, predictedLinear);
+    double r2NLogN = calculateRSquared(logTimes, predictedNLogN);
+    double r2Quadratic = calculateRSquared(logTimes, predictedQuadratic);
+
+    // Determinar el mejor ajuste
+    double maxR2 = max({r2Constant, r2Logarithmic, r2Linear, r2NLogN, r2Quadratic});
+    if (maxR2 == r2Constant) {
+        globalBigONotation = "O(1)";
+    } else if (maxR2 == r2Logarithmic) {
+        globalBigONotation = "O(log n)";
+    } else if (maxR2 == r2Linear) {
+        globalBigONotation = "O(n)";
+    } else if (maxR2 == r2NLogN) {
+        globalBigONotation = "O(n log n)";
+    } else if (maxR2 == r2Quadratic) {
+        globalBigONotation = "O(n^2)";
+    }
+
     cout << "Notacion asintotica estimada para la funcion evaluada: " << globalBigONotation << endl;
+    return globalBigONotation;
 }
 
 void graphBigONotation() {
@@ -97,10 +143,41 @@ void graphBigONotation() {
     system(matlabCmd.c_str());
 }
 
+void showFunctionContent(const string& filePath, const string& functionName) {
+    ifstream file(filePath);
+    if (!file.is_open()) {
+        cerr << "Error: No se pudo abrir el archivo." << endl;
+        return;
+    }
+
+    string line;
+    regex functionStartRegex(R"(^\s*[\w<>:\s]+?\s+(\w+)::)" + functionName + R"(\s*\([^)]*\)\s*\{)");
+    smatch match;
+    bool inFunction = false;
+    int braceCount = 0;
+
+    while (getline(file, line)) {
+        if (!inFunction) {
+            if (regex_search(line, match, functionStartRegex)) {
+                inFunction = true;
+                cout << line << endl;
+                braceCount = count(line.begin(), line.end(), '{') - count(line.begin(), line.end(), '}');
+            }
+        } else {
+            cout << line << endl;
+            braceCount += count(line.begin(), line.end(), '{') - count(line.begin(), line.end(), '}');
+            if (braceCount == 0) {
+                break;
+            }
+        }
+    }
+
+    file.close();
+}
+
 int main() {
     setlocale(LC_ALL, "");  // Habilita la muestra de caracteres especiales en el CMD
     int opcion;
-    string headerPath;
     
     do {
         cout << "\nMenu:\n";
@@ -124,6 +201,8 @@ int main() {
                     for (size_t i = 0; i < globalFunctions.size(); i++) {
                         cout << i << ": " << globalFunctions[i] << endl;
                     }
+                    // Asumimos que el archivo .cpp tiene el mismo nombre que el archivo .h
+                    cppPath = headerPath.substr(0, headerPath.find_last_of('.')) + ".cpp";
                 }
                 break;
             }
@@ -142,7 +221,10 @@ int main() {
                         cout << "Indice invalido." << endl;
                     } else {
                         cout << "Evaluando la funcion: " << globalFunctions[idx] << endl;
-                        // Se simula el desempeno para la funcion seleccionada (por ejemplo, se asume O(n))
+                        // Mostrar el contenido de la función seleccionada
+                        cout << "Contenido de la funcion:" << endl;
+                        showFunctionContent(cppPath, globalFunctions[idx]);
+                        // Calcular la notación Big-O
                         determineBigONotation();
                     }
                 }
