@@ -6,8 +6,14 @@
 #include <cstdlib>
 #include <sstream>
 #include <clocale>
+<<<<<<< HEAD
 #include <cmath>   // Include cmath for log functions
 #include <conio.h> // Include conio.h for _getch()
+=======
+#include <numeric>
+#include <cmath>
+#include "bigO.cpp"
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
 
 using namespace std;
 using namespace std::chrono;
@@ -15,6 +21,8 @@ using namespace std::chrono;
 // Variables globales para almacenar funciones y notacion determinada
 vector<string> globalFunctions;
 string globalBigONotation = "";
+string headerPath;
+string cppPath;
 
 vector<string> extractFunctionNames(const string &filePath)
 {
@@ -27,14 +35,27 @@ vector<string> extractFunctionNames(const string &filePath)
     }
 
     string line;
-    regex functionRegex(R"((\w+)\s+(\w+)\s*\(([^)]*)\)\s*;)");
+    regex functionDeclRegex(R"(^\s*[\w<>:\s]+?\s+(\w+)\s*\([^)]*\)\s*;)");
+    regex methodDefRegex(R"(^\s*[\w<>:\s]+?\s+(\w+)::(\w+)\s*\([^)]*\)\s*\{?)");
     smatch match;
+<<<<<<< HEAD
 
     while (getline(file, line))
     {
         if (regex_search(line, match, functionRegex))
         {
             functionNames.push_back(match[2]);
+=======
+    
+    while (getline(file, line)) {
+        // Buscar declaraciones en .h
+        if (regex_search(line, match, functionDeclRegex)) {
+            functionNames.push_back(match[1]);  // Captura el nombre de la función
+        }
+        // Buscar métodos en .cpp (solo si tiene "Clase::")
+        else if (regex_search(line, match, methodDefRegex)) {
+            functionNames.push_back(match[2]);  // Captura el nombre del método
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
         }
     }
 
@@ -42,6 +63,7 @@ vector<string> extractFunctionNames(const string &filePath)
     return functionNames;
 }
 
+<<<<<<< HEAD
 void analyzeFunctionPerformance(vector<int> &inputs, vector<long long> &times)
 {
     // Se asegura que data.txt se sobrescribe con datos correctos
@@ -68,8 +90,68 @@ void analyzeFunctionPerformance(vector<int> &inputs, vector<long long> &times)
     for (size_t i = 0; i < inputs.size(); i++)
     {
         file << inputs[i] << " " << times[i] << endl;
+=======
+
+void generarGrafica(const string& bigO) {
+    // Ejecutar Python
+    string comandoPython = "python graph_big_o.py \"" + bigO + "\"";
+    system(comandoPython.c_str());
+    
+    // Ejecutar MATLAB (requiere MATLAB instalado y en el PATH)
+    string comandoMatlab = "matlab -batch \"graph_big_o('" + bigO + "'); exit\"";
+    system(comandoMatlab.c_str());
+}
+
+
+void showFunctionContent(const string& filePath, const string& functionName) {
+    ifstream file(filePath);
+    if (!file.is_open()) {
+        cerr << "Error: No se pudo abrir el archivo." << endl;
+        return;
     }
+
+    ofstream outFile("funcion.txt");
+    if (!outFile.is_open()) {
+        cerr << "Error: No se pudo abrir el archivo de salida." << endl;
+        return;
+    }
+
+    string line;
+    bool inFunction = false;
+    int braceCount = 0;
+
+    while (getline(file, line)) {
+        if (!inFunction) {
+            if (line.find(functionName + "(") != string::npos && line.find("{") != string::npos) {
+                inFunction = true;
+                cout << line << endl;
+                outFile << line << endl;
+                braceCount = count(line.begin(), line.end(), '{') - count(line.begin(), line.end(), '}');
+            } else if (line.find(functionName + "(") != string::npos) {
+                inFunction = true;
+                cout << line << endl;
+                outFile << line << endl;
+                while (getline(file, line) && line.find("{") == string::npos) {
+                    cout << line << endl;
+                    outFile << line << endl;
+                }
+                cout << line << endl;
+                outFile << line << endl;
+                braceCount = count(line.begin(), line.end(), '{') - count(line.begin(), line.end(), '}');
+            }
+        } else {
+            cout << line << endl;
+            outFile << line << endl;
+            braceCount += count(line.begin(), line.end(), '{') - count(line.begin(), line.end(), '}');
+            if (braceCount == 0) {
+                break;
+            }
+        }
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
+    }
+
     file.close();
+<<<<<<< HEAD
 }
 
 string determineBestFit(const vector<int> &inputs, const vector<long long> &times)
@@ -169,6 +251,30 @@ int main()
             {
             case 1:
             {
+=======
+    outFile.close();
+}
+
+int main() {
+    setlocale(LC_ALL, "");  // Habilita la muestra de caracteres especiales en el CMD
+    int opcion;
+    string filename = "funcion.txt";
+    string code;
+    string bigO;
+    
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Mostrar funciones del .h (ingresar path)\n";
+        cout << "2. Calcular notacion asintotica de una funcion (evaluacion individual)\n";
+        cout << "3. Generar graficas segun la notacion determinada\n";
+        cout << "4. Salir\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+        cin.ignore(); // limpiar buffer
+        
+        switch (opcion) {
+            case 1: {
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
                 cout << "Ingrese el path del archivo .h: ";
                 getline(cin, headerPath);
                 globalFunctions = extractFunctionNames(headerPath);
@@ -183,10 +289,13 @@ int main()
                     {
                         cout << i << ": " << globalFunctions[i] << endl;
                     }
+                    // Asumimos que el archivo .cpp tiene el mismo nombre que el archivo .h
+                    cppPath = headerPath.substr(0, headerPath.find_last_of('.')) + ".cpp";
                 }
                 system("pause");
                 break;
             }
+<<<<<<< HEAD
             case 2:
             {
                 if (globalFunctions.empty())
@@ -198,11 +307,20 @@ int main()
                     cout << "Seleccione el índice de la función a evaluar:" << endl;
                     for (size_t i = 0; i < globalFunctions.size(); i++)
                     {
+=======
+            case 2: {
+                if(globalFunctions.empty()){
+                    cout << "Primero ingrese el path y extraiga las funciones en la opcion 1." << endl;
+                } else {
+                    cout << "Seleccione el indice de la funcion a evaluar:" << endl;
+                    for (size_t i = 0; i < globalFunctions.size(); i++) {
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
                         cout << i << ": " << globalFunctions[i] << endl;
                     }
                     int idx;
                     cin >> idx;
                     cin.ignore(); // limpiar buffer
+<<<<<<< HEAD
                     if (idx < 0 || idx >= globalFunctions.size())
                     {
                         cout << "Índice inválido." << endl;
@@ -211,11 +329,24 @@ int main()
                     {
                         cout << "Evaluando la función: " << globalFunctions[idx] << endl;
                         determineBigONotation();
+=======
+                    if(idx < 0 || idx >= globalFunctions.size()){
+                        cout << "Indice invalido." << endl;
+                    } else {
+                        cout << "Evaluando la funcion: " << globalFunctions[idx] << endl;
+                        // Mostrar el contenido de la función seleccionada
+                        cout << "Contenido de la funcion:" << endl;
+                        showFunctionContent(cppPath, globalFunctions[idx]);
+                        code = readFile(filename);
+                        bigO = determineBigO(code);
+                        cout << "La notacion Big O de la funcion es: " << bigO << endl;
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
                     }
                 }
                 system("pause");
                 break;
             }
+<<<<<<< HEAD
             case 3:
             {
                 if (globalBigONotation.empty())
@@ -225,6 +356,13 @@ int main()
                 else
                 {
                     graphBigONotation();
+=======
+            case 3: {
+                if(bigO.empty()){
+                    cout << "Primero calcule la notacion Big O de una funcion en la opcion 2." << endl;
+                } else {
+                    generarGrafica(bigO);
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
                 }
                 system("pause");
                 break;
@@ -233,8 +371,12 @@ int main()
                 cout << "Saliendo del programa..." << endl;
                 break;
             default:
+<<<<<<< HEAD
                 cout << "Opción no válida, intente de nuevo." << endl;
             }
+=======
+                cout << "Opcion no valida, intente de nuevo." << endl;
+>>>>>>> c173680d4113dfb9ebdeaf1b7b9e1b80956eec89
         }
     } while (opcion != 4);
 

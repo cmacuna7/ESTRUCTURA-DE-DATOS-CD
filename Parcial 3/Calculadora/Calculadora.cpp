@@ -16,7 +16,7 @@ double Calculadora::multiplicar(double a, double b) {
 
 double Calculadora::dividir(double a, double b) {
     if (b == 0) {
-        throw std::runtime_error("Error: División por cero.");
+        throw std::runtime_error("Error: Division por cero.");
     }
     return a / b;
 }
@@ -73,4 +73,17 @@ std::vector<std::vector<double>> Calculadora::multiplicarMatrices(
 double Calculadora::fibonacciExponencial(int n) {
     if (n <= 1) return n;
     return fibonacciExponencial(n-1) + fibonacciExponencial(n-2);
+}
+
+// O(n!) - Permutaciones
+std::vector<std::vector<int>> Calculadora::permutaciones(int n) {
+    std::vector<std::vector<int>> resultado;
+    std::vector<int> numeros;
+    for (int i = 1; i <= n; i++) {
+        numeros.push_back(i);
+    }
+    do {
+        resultado.push_back(numeros);
+    } while (std::next_permutation(numeros.begin(), numeros.end()));
+    return resultado;
 }

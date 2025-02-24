@@ -24,6 +24,9 @@ public:
 
     // Función O(2^n) - Fibonacci recursivo
     static double fibonacciExponencial(int n);
+
+    // Funcion O(n!) - Permutaciones
+    static std::vector<std::vector<int>> permutaciones(int n);
 };
 
 #endif // CALCULADORA_H
