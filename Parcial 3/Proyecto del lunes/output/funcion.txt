@@ -1,4 +1,6 @@
-double Calculadora::fibonacciExponencial(int n) {
-    if (n <= 1) return n;
-    return fibonacciExponencial(n-1) + fibonacciExponencial(n-2);
+double Calculadora::dividir(double a, double b) {
+    if (b == 0) {
+        throw std::runtime_error("Error: Division por cero.");
+    }
+    return a / b;
 }
