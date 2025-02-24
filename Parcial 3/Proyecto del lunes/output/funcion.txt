@@ -1,6 +1,7 @@
-double Calculadora::dividir(double a, double b) {
-    if (b == 0) {
-        throw std::runtime_error("Error: Division por cero.");
+double Calculadora::sumaSerie(const std::vector<double>& numeros) {
+    double suma = 0;
+    for (double num : numeros) {
+        suma += num;
     }
-    return a / b;
+    return suma;
 }

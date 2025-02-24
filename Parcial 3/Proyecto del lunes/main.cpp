@@ -8,10 +8,58 @@
 #include <clocale>
 #include <numeric>
 #include <cmath>
+#include <conio.h>
 #include "bigO.cpp"
 
 using namespace std;
 using namespace std::chrono;
+
+// Clases para el menú
+class NodoMenu {
+    public:
+        string dato;
+        NodoMenu* siguiente;
+        NodoMenu* anterior;
+        
+        NodoMenu(string valor) : dato(valor), siguiente(nullptr), anterior(nullptr) {}
+    };
+    
+    class ListaCircularMenu {
+    private:
+        NodoMenu* primero;
+        int tamano;
+        
+    public:
+        ListaCircularMenu() : primero(nullptr), tamano(0) {}
+        
+        void insertar(string valor) {
+            NodoMenu* nuevo = new NodoMenu(valor);
+            if (!primero) {
+                primero = nuevo;
+                nuevo->siguiente = nuevo;
+                nuevo->anterior = nuevo;
+            } else {
+                NodoMenu* ultimo = primero->anterior;
+                nuevo->siguiente = primero;
+                nuevo->anterior = ultimo;
+                ultimo->siguiente = nuevo;
+                primero->anterior = nuevo;
+            }
+            tamano++;
+        }
+        
+        NodoMenu* getPrimero() { return primero; }
+        int getTamano() { return tamano; }
+        
+        string obtenerOpcion(int indice) {
+            if (indice >= tamano) return "";
+            NodoMenu* actual = primero;
+            for (int i = 0; i < indice; i++) {
+                actual = actual->siguiente;
+            }
+            return actual->dato;
+        }
+};
 
 // Variables globales para almacenar funciones y notacion determinada
 vector<string> globalFunctions;
@@ -110,79 +158,98 @@ void showFunctionContent(const string& filePath, const string& functionName) {
 }
 
 int main() {
-    setlocale(LC_ALL, "");  // Habilita la muestra de caracteres especiales en el CMD
-    int opcion;
+    setlocale(LC_ALL, "");
+    
+    ListaCircularMenu menuOpciones;
+    menuOpciones.insertar("Mostrar funciones del .h (ingresar path)");
+    menuOpciones.insertar("Calcular notacion asintotica de una funcion");
+    menuOpciones.insertar("Generar graficas segun la notacion determinada");
+    menuOpciones.insertar("Salir");
+    
+    int seleccion = 0;
     string filename = "funcion.txt";
     string code;
     string bigO;
     
-    do {
-        cout << "\nMenu:\n";
-        cout << "1. Mostrar funciones del .h (ingresar path)\n";
-        cout << "2. Calcular notacion asintotica de una funcion (evaluacion individual)\n";
-        cout << "3. Generar graficas segun la notacion determinada\n";
-        cout << "4. Salir\n";
-        cout << "Seleccione una opcion: ";
-        cin >> opcion;
-        cin.ignore(); // limpiar buffer
-        
-        switch (opcion) {
-            case 1: {
-                cout << "Ingrese el path del archivo .h: ";
-                getline(cin, headerPath);
-                globalFunctions = extractFunctionNames(headerPath);
-                if(globalFunctions.empty()){
-                    cout << "No se encontraron funciones o no se pudo abrir el archivo." << endl;
-                } else {
-                    cout << "Funciones encontradas:" << endl;
-                    for (size_t i = 0; i < globalFunctions.size(); i++) {
-                        cout << i << ": " << globalFunctions[i] << endl;
-                    }
-                    // Asumimos que el archivo .cpp tiene el mismo nombre que el archivo .h
-                    cppPath = headerPath.substr(0, headerPath.find_last_of('.')) + ".cpp";
-                }
-                break;
-            }
-            case 2: {
-                if(globalFunctions.empty()){
-                    cout << "Primero ingrese el path y extraiga las funciones en la opcion 1." << endl;
-                } else {
-                    cout << "Seleccione el indice de la funcion a evaluar:" << endl;
-                    for (size_t i = 0; i < globalFunctions.size(); i++) {
-                        cout << i << ": " << globalFunctions[i] << endl;
-                    }
-                    int idx;
-                    cin >> idx;
-                    cin.ignore(); // limpiar buffer
-                    if(idx < 0 || idx >= globalFunctions.size()){
-                        cout << "Indice invalido." << endl;
-                    } else {
-                        cout << "Evaluando la funcion: " << globalFunctions[idx] << endl;
-                        // Mostrar el contenido de la función seleccionada
-                        cout << "Contenido de la funcion:" << endl;
-                        showFunctionContent(cppPath, globalFunctions[idx]);
-                        code = readFile(filename);
-                        bigO = determineBigO(code);
-                        cout << "La notacion Big O de la funcion es: " << bigO << endl;
-                    }
-                }
-                break;
-            }
-            case 3: {
-                if(bigO.empty()){
-                    cout << "Primero calcule la notacion Big O de una funcion en la opcion 2." << endl;
-                } else {
-                    generarGrafica(bigO);
-                }
-                break;
-            }
-            case 4:
-                cout << "Saliendo del programa..." << endl;
-                break;
-            default:
-                cout << "Opcion no valida, intente de nuevo." << endl;
+    while (true) {
+        system("cls");
+        cout << "=== Analisis de Complejidad Algoritmica ===\n\n";
+        NodoMenu* actual = menuOpciones.getPrimero();
+        for (int i = 0; i < menuOpciones.getTamano(); i++) {
+            if (i == seleccion)
+                cout << ">> " << actual->dato << " <<\n";
+            else
+                cout << "   " << actual->dato << endl;
+            actual = actual->siguiente;
         }
-    } while (opcion != 4);
+
+        char tecla = _getch();
+        if (tecla == 72) { // Flecha Arriba
+            seleccion = (seleccion - 1 + menuOpciones.getTamano()) % menuOpciones.getTamano();
+        } else if (tecla == 80) { // Flecha Abajo
+            seleccion = (seleccion + 1) % menuOpciones.getTamano();
+        } else if (tecla == '\r') { // Enter
+            system("cls");
+            int opcion = seleccion + 1;
+            
+            switch (opcion) {
+                case 1: {
+                    cout << "Ingrese el path del archivo .h: ";
+                    getline(cin, headerPath);
+                    globalFunctions = extractFunctionNames(headerPath);
+                    if(globalFunctions.empty()){
+                        cout << "No se encontraron funciones o no se pudo abrir el archivo." << endl;
+                    } else {
+                        cout << "Funciones encontradas:" << endl;
+                        for (size_t i = 0; i < globalFunctions.size(); i++) {
+                            cout << i << ": " << globalFunctions[i] << endl;
+                        }
+                        cppPath = headerPath.substr(0, headerPath.find_last_of('.')) + ".cpp";
+                    }
+                    break;
+                }
+                case 2: {
+                    if(globalFunctions.empty()){
+                        cout << "Primero ingrese el path y extraiga las funciones en la opcion 1." << endl;
+                    } else {
+                        cout << "Seleccione el indice de la funcion a evaluar:" << endl;
+                        for (size_t i = 0; i < globalFunctions.size(); i++) {
+                            cout << i << ": " << globalFunctions[i] << endl;
+                        }
+                        int idx;
+                        cin >> idx;
+                        cin.ignore();
+                        if(idx < 0 || idx >= globalFunctions.size()){
+                            cout << "Indice invalido." << endl;
+                        } else {
+                            cout << "Evaluando la funcion: " << globalFunctions[idx] << endl;
+                            cout << "Contenido de la funcion:" << endl;
+                            showFunctionContent(cppPath, globalFunctions[idx]);
+                            code = readFile(filename);
+                            bigO = determineBigO(code);
+                            cout << "La notacion Big O de la funcion es: " << bigO << endl;
+                        }
+                    }
+                    break;
+                }
+                case 3: {
+                    if(bigO.empty()){
+                        cout << "Primero calcule la notacion Big O de una funcion en la opcion 2." << endl;
+                    } else {
+                        generarGrafica(bigO);
+                    }
+                    break;
+                }
+                case 4: {
+                    cout << "Saliendo del programa..." << endl;
+                    return 0;
+                }
+            }
+            
+            cout << "\nPresione cualquier tecla para continuar...";
+            _getch();
+        }
+    }
 
     return 0;
 }
