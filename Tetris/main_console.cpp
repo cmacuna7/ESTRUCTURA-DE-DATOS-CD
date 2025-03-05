@@ -1,11 +1,11 @@
 /********************************************************************************************
  *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                       *
- * Proposito:       Versión en consola del juego (números cayendo y eliminándose)          *
- * Autor:           Abner Arboleda                                                        *
- * Fecha de creacion: 01/12/2024                                                      *
- * Fecha de modificacion: 08/11/2024                                                  *
- * Materia:         Estructura de datos                                                   *
- * NRC :            1992                                                                  *
+ * Proposito:       Tetris                                                                  *
+ * Autor:           Abner Arboleda                                                          *
+ * Fecha de creacion: 01/12/2024                                                            *
+ * Fecha de modificacion: 08/11/2024                                                        *
+ * Materia:         Estructura de datos                                                     *
+ * NRC :            1992                                                                    *
  ********************************************************************************************/
 #include <iostream>
 #include <conio.h>

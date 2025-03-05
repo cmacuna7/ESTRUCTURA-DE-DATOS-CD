@@ -16,24 +16,34 @@
 using namespace std;
 
 void processElimination(Board &b) {
-    bool changed;
+    bool changed = false;
     int rows = b.getRows(), cols = b.getCols();
-    do {
-        changed = false;
-        for (int i = 0; i < rows; i++){
-            for (int j = 0; j < cols; j++){
-                if(b.cell(i,j) == -1) continue;
-                if(j+1 < cols && b.cell(i,j) == b.cell(i,j+1)){
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            int val = b.cell(i,j);
+            if(val == -1) continue;
+            // Eliminación horizontal: 
+            if(j+1 < cols && b.cell(i,j+1) == val) {
+                bool leftOK = (j-1 < 0) || (b.cell(i,j-1) != val);
+                bool rightOK = (j+2 >= cols) || (b.cell(i,j+2) != val);
+                if(leftOK && rightOK) {
                     b.cell(i,j) = b.cell(i,j+1) = -1;
                     changed = true;
                 }
-                if(i+1 < rows && b.cell(i,j) == b.cell(i+1,j)){
+            }
+            // Eliminación vertical:
+            if(i+1 < rows && b.cell(i+1,j) == val) {
+                bool aboveOK = (i-1 < 0) || (b.cell(i-1,j) != val);
+                bool belowOK = (i+2 >= rows) || (b.cell(i+2,j) != val);
+                if(aboveOK && belowOK) {
                     b.cell(i,j) = b.cell(i+1,j) = -1;
                     changed = true;
                 }
             }
         }
-    } while(changed);
+    }
+    if(changed)
+        processElimination(b); // repetir para encontrar nuevas eliminaciones
 }
 
 void applyGravity(Board &b) {
