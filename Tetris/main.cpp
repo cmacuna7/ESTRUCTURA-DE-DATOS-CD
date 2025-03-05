@@ -180,9 +180,24 @@ int main() {
         setactivepage(page);
         cleardevice(); // Limpia esta página
 
-        // Dibuja fondo negro y el tablero (piezas congeladas)
+        // Dibuja fondo negro
         setfillstyle(SOLID_FILL, BLACK);
         bar(0, 0, boardWidth * blockSize, boardHeight * blockSize);
+
+        // --- Actualización: dibuja la cuadrícula con líneas entrecortadas visibles ---
+        setcolor(LIGHTGRAY);
+        setlinestyle(DASHED_LINE, 0, 1);
+        for (int i = 0; i <= boardWidth; i++) {
+            line(i * blockSize, 0, i * blockSize, boardHeight * blockSize);
+        }
+        for (int i = 0; i <= boardHeight; i++) {
+            line(0, i * blockSize, boardWidth * blockSize, i * blockSize);
+        }
+        setlinestyle(SOLID_LINE, 0, 1);
+        setcolor(WHITE);
+        // --- Fin de la cuadrícula ---
+
+        // Dibuja las piezas ya congeladas en el tablero
         for (int y = 0; y < board.size(); y++) {
             for (int x = 0; x < board[0].size(); x++) {
                 if(board[y][x] != 0) {
