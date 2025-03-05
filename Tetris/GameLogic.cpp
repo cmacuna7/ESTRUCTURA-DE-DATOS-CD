@@ -54,19 +54,19 @@ void applyGravity(Board &b) {
         for (int i = rows - 1; i > 0; i--) {
             for (int j = 0; j < cols; j++) {
                 if(b.cell(i, j) == -1) {
+                    // Primero, intenta bajar la celda directamente arriba.
                     if(b.cell(i-1, j) != -1) {
                         b.cell(i, j) = b.cell(i-1, j);
                         b.cell(i-1, j) = -1;
                         moved = true;
-                    } else if(j > 0 && b.cell(i-1, j-1) != -1) {
+                    }
+                    // Si no pudo bajar de la misma columna, intenta la diagonal izquierda.
+                    else if(j > 0 && b.cell(i-1, j-1) != -1) {
                         b.cell(i, j) = b.cell(i-1, j-1);
                         b.cell(i-1, j-1) = -1;
                         moved = true;
-                    } else if(j < cols - 1 && b.cell(i-1, j+1) != -1) {
-                        b.cell(i, j) = b.cell(i-1, j+1);
-                        b.cell(i-1, j+1) = -1;
-                        moved = true;
                     }
+                    // No se usa la diagonal derecha.
                 }
             }
         }
