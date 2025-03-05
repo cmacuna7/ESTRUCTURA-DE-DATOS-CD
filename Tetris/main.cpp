@@ -1,9 +1,19 @@
+/********************************************************************************************
+ *            UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE                                       *
+ * Proposito:                      Archivo principal de proyecto                            *
+ * Autor:                          Abner Arboleda                                           *
+ * Fecha de creacion:              01/12/2024                                               *
+ * Fecha de modificacion:          08/11/2024                                               *
+ * Materia:                        Estructura de datos                                      *
+ * NRC :                           1992                                                     *
+ ********************************************************************************************/
 #include <graphics.h>
 #include <conio.h>
 #include <iostream>
 #include <vector>
 #include <cstdlib>  // para rand() si se desea extender más adelante
 #include <ctime>
+#include <sstream>
 
 using namespace std;
 
@@ -11,215 +21,196 @@ const int blockSize = 30;
 const int boardWidth = 10;
 const int boardHeight = 20;
 
-// Añadimos lista de piezas de Tetris
-vector<vector<vector<int>>> pieces = {
-    // T
-    {
-        {0,1,0},
-        {1,1,1}
-    },
-    // I
-    {
-        {1,1,1,1}
-    },
-    // O
-    {
-        {1,1},
-        {1,1}
-    },
-    // L
-    {
-        {1,0},
-        {1,0},
-        {1,1}
-    },
-    // J
-    {
-        {0,1},
-        {0,1},
-        {1,1}
-    },
-    // S
-    {
-        {0,1,1},
-        {1,1,0}
-    },
-    // Z
-    {
-        {1,1,0},
-        {0,1,1}
+// Estructura DynamicBoard
+struct DynamicBoard {
+    int rows, cols;
+    int **data;
+    DynamicBoard(int r, int c) : rows(r), cols(c) {
+        data = new int*[r];
+        for (int i = 0; i < r; i++){
+            data[i] = new int[c];
+            for (int j = 0; j < c; j++){
+                data[i][j] = -1;
+            }
+        }
+    }
+    ~DynamicBoard() {
+        for (int i = 0; i < rows; i++){
+            delete [] data[i];
+        }
+        delete [] data;
     }
 };
 
-void drawBlock(int x, int y, int color) {
-    setfillstyle(SOLID_FILL, color);
-    bar(x, y, x + blockSize, y + blockSize);
-    setcolor(WHITE);
-    rectangle(x, y, x + blockSize, y + blockSize);
-}
-
-// Función para verificar si la pieza se puede mover a (newX, newY)
-bool canMove(int newX, int newY, const vector<vector<int>> &tetromino, const vector<vector<int>> &board) {
-    for (int i = 0; i < tetromino.size(); i++) {
-        for (int j = 0; j < tetromino[i].size(); j++) {
-            if (tetromino[i][j]) {
-                int posX = newX + j;
-                int posY = newY + i;
-                if (posX < 0 || posX >= board[0].size() || posY >= board.size())
-                    return false;
-                if(board[posY][posX] != 0)
-                    return false;
-            }
-        }
-    }
-    return true;
-}
-
-// Función para eliminar líneas completas
-void clearLines(vector<vector<int>> &board) {
-    for (int y = board.size()-1; y >= 0; y--) {
-        bool full = true;
-        for (int x = 0; x < board[0].size(); x++) {
-            if(board[y][x] == 0) {
-                full = false;
-                break;
-            }
-        }
-        if(full) {
-            board.erase(board.begin() + y);
-            board.insert(board.begin(), vector<int>(board[0].size(), 0));
-            // Vuelve a analizar la misma fila tras bajar
-            y++;
-        }
-    }
-}
-
 int main() {
-    srand(time(0)); // Inicializa semilla para números aleatorios
-    // Inicializa la ventana gráfica
+    srand(time(0));
     initwindow(boardWidth * blockSize, boardHeight * blockSize, "Tetris");
+    // Reemplaza la creación de board con vectores por una instancia de DynamicBoard:
+    DynamicBoard board(boardHeight, boardWidth);
 
-    // Inicializa el tablero (sin uso completo en este ejemplo)
-    vector<vector<int>> board(boardHeight, vector<int>(boardWidth, 0));
-
-    // Modificamos newPiece para elegir piezas de la lista
-    auto newPiece = [&]() -> vector<vector<int>> {
-        return pieces[rand() % pieces.size()];
+    // Función para dibujar un bloque con número dentro
+    auto drawNumberBlock = [&](int x, int y, int number) {
+        setfillstyle(SOLID_FILL, RED); // fondo de bloque
+        bar(x, y, x+blockSize, y+blockSize);
+        setcolor(WHITE);
+        rectangle(x, y, x+blockSize, y+blockSize);
+        // Dibuja el dígito en el centro
+        std::stringstream ss; ss << number;
+        int textX = x + blockSize/3;
+        int textY = y + blockSize/3;
+        {
+            std::string s = ss.str();
+            outtextxy(textX, textY, &s[0]);
+        }
     };
 
-    vector<vector<int>> tetromino = newPiece();
-    int tetroX = boardWidth / 2 - 1;
-    int tetroY = 0;
-
-    // Lambda para rotar el tetromino (rotación 90°)
-    auto rotate = [&tetromino, &board, &tetroX, &tetroY]() {
-        vector<vector<int>> rotated(tetromino[0].size(), vector<int>(tetromino.size(), 0));
-        for (int i = 0; i < tetromino.size(); i++) {
-            for (int j = 0; j < tetromino[0].size(); j++) {
-                rotated[j][tetromino.size() - 1 - i] = tetromino[i][j];
-            }
-        }
-        // Solo rota si no causa colisión
-        if(canMove(tetroX, tetroY, rotated, board))
-            tetromino = rotated;
-    };
-
-    // Variables para control de tiempo y doble buffering
-    unsigned long lastFall = clock();
-    const int fallInterval = 500; // milisegundos
-    int page = 0;  // para doble buffering
-
-    // Bucle principal del juego (fluido con doble buffering)
-    while (true) {
-
-        // Procesa entrada del usuario
-        if (kbhit()){
-            int key = getch();
-            if(key == 27) { // ESC para salir
-                break;
-            }
-            if(key == 'a' || key == 'A') {
-                if(canMove(tetroX - 1, tetroY, tetromino, board))
-                    tetroX--;
-            } else if(key == 'd' || key == 'D') {
-                if(canMove(tetroX + 1, tetroY, tetromino, board))
-                    tetroX++;
-            } else if(key == 'w' || key == 'W') {
-                rotate();
-            } else if(key == 's' || key == 'S') {
-                if(canMove(tetroX, tetroY + 1, tetromino, board))
-                    tetroY++;
-            }
-        }
-
-        // Controla la caída automática según el tiempo transcurrido
-        unsigned long current = clock();
-        if(((current - lastFall) * 1000 / CLOCKS_PER_SEC) >= fallInterval) {
-            if(canMove(tetroX, tetroY + 1, tetromino, board)) {
-                tetroY++;
-            } else {
-                for (int i = 0; i < tetromino.size(); i++) {
-                    for (int j = 0; j < tetromino[i].size(); j++) {
-                        if(tetromino[i][j]) {
-                            board[tetroY + i][tetroX + j] = RED;
-                        }
+    // Función de eliminación de pares (horizontal y vertical)
+    auto processElimination = [&](DynamicBoard &b) {
+        bool changed;
+        do {
+            changed = false;
+            for(int i = 0; i < boardHeight; i++){
+                for(int j = 0; j < boardWidth; j++){
+                    if(b.data[i][j] == -1) continue;
+                    // Chequea derecha
+                    if(j+1 < boardWidth && b.data[i][j] == b.data[i][j+1]){
+                        b.data[i][j] = b.data[i][j+1] = -1;
+                        changed = true;
+                    }
+                    // Chequea abajo
+                    if(i+1 < boardHeight && b.data[i][j] == b.data[i+1][j]){
+                        b.data[i][j] = b.data[i+1][j] = -1;
+                        changed = true;
                     }
                 }
-                clearLines(board);
-                tetromino = newPiece();
-                tetroX = boardWidth / 2 - 1;
-                tetroY = 0;
-                if(!canMove(tetroX, tetroY, tetromino, board)) {
-                    break;
+            }
+        } while(changed);
+    };
+
+    // MODIFICACIÓN: función applyGravity
+    auto applyGravity = [&](DynamicBoard &b) {
+        bool moved;
+        do {
+            moved = false;
+            for (int j = 0; j < boardWidth; j++){
+                for (int i = boardHeight - 2; i >= 0; i--){
+                    if(b.data[i][j] != -1 && b.data[i+1][j] == -1){
+                        swap(b.data[i][j], b.data[i+1][j]);
+                        moved = true;
+                    }
                 }
+            }
+        } while(moved);
+    };
+
+    // MODIFICACIÓN: función applyHorizontalCompression
+    auto applyHorizontalCompression = [&](DynamicBoard &b) {
+        for (int i = 0; i < boardHeight; i++){
+            int count = 0;
+            for (int j = 0; j < boardWidth; j++){
+                if(b.data[i][j] != -1)
+                    count++;
+            }
+            // Si solo hay un número en la fila, no comprimir horizontalmente.
+            if(count <= 1) continue;
+            for (int j = 1; j < boardWidth; j++){
+                int k = j;
+                while(k > 0 && b.data[i][k] != -1 && b.data[i][k-1] == -1){
+                    swap(b.data[i][k], b.data[i][k-1]);
+                    k--;
+                }
+            }
+        }
+    };
+
+    // Variables para el "número" que cae
+    int fallingValue = rand() % 10;
+    int fallingX = boardWidth / 2; // posición inicial (columna)
+    int fallingY = 0;            // fila inicial
+
+    // Variables para tiempo y doble buffering
+    unsigned long lastFall = clock();
+    const int fallInterval = 500; // milisegundos
+    int page = 0;
+
+    // Bucle principal del juego (modificado para números)
+    while (true) {
+        // Proceso de entrada
+        if(kbhit()){
+            int key = getch();
+            if(key == 27) break; // ESC para salir
+            // Si se ingresa un dígito, se actualiza fallingValue
+            if(key >= '0' && key <= '9'){
+                fallingValue = key - '0';
+            } else if(key == 'a' || key == 'A'){
+                if(fallingX > 0 && board.data[fallingY][fallingX-1] == -1)
+                    fallingX--;
+            } else if(key == 'd' || key == 'D'){
+                if(fallingX < boardWidth-1 && board.data[fallingY][fallingX+1] == -1)
+                    fallingX++;
+            } else if(key == 's' || key == 'S'){
+                // Forzar caída
+                if(fallingY < boardHeight-1 && board.data[fallingY+1][fallingX] == -1)
+                    fallingY++;
+            }
+        }
+
+        // Control de la caída automática
+        unsigned long current = clock();
+        if(((current - lastFall) * 1000 / CLOCKS_PER_SEC) >= fallInterval) {
+            if(fallingY < boardHeight-1 && board.data[fallingY+1][fallingX] == -1) {
+                fallingY++;
+            } else {
+                // Coloca el número en board
+                board.data[fallingY][fallingX] = fallingValue;
+                // Procesa eliminación y efectos de gravedad y compresión
+                processElimination(board);
+                applyGravity(board);
+                applyHorizontalCompression(board);
+                // Genera nuevo número
+                fallingValue = rand() % 10;
+                fallingX = boardWidth / 2;
+                fallingY = 0;
+                // Si ya no hay espacio, termina el juego
+                if(board.data[fallingY][fallingX] != -1) break;
             }
             lastFall = current;
         }
 
-        // Empieza a dibujar en la página activa (off-screen)
+        // Doble buffering: dibuja en página activa (off-screen)
         setactivepage(page);
-        cleardevice(); // Limpia esta página
-
+        cleardevice();
         // Dibuja fondo negro
         setfillstyle(SOLID_FILL, BLACK);
-        bar(0, 0, boardWidth * blockSize, boardHeight * blockSize);
-
-        // --- Actualización: dibuja la cuadrícula con líneas entrecortadas visibles ---
+        bar(0, 0, boardWidth*blockSize, boardHeight*blockSize);
+        
+        // Dibuja cuadrícula (líneas entrecortadas)
         setcolor(LIGHTGRAY);
         setlinestyle(DASHED_LINE, 0, 1);
-        for (int i = 0; i <= boardWidth; i++) {
-            line(i * blockSize, 0, i * blockSize, boardHeight * blockSize);
+        for(int i = 0; i <= boardWidth; i++){
+            line(i*blockSize, 0, i*blockSize, boardHeight*blockSize);
         }
-        for (int i = 0; i <= boardHeight; i++) {
-            line(0, i * blockSize, boardWidth * blockSize, i * blockSize);
+        for(int i = 0; i <= boardHeight; i++){
+            line(0, i*blockSize, boardWidth*blockSize, i*blockSize);
         }
         setlinestyle(SOLID_LINE, 0, 1);
         setcolor(WHITE);
-        // --- Fin de la cuadrícula ---
-
-        // Dibuja las piezas ya congeladas en el tablero
-        for (int y = 0; y < board.size(); y++) {
-            for (int x = 0; x < board[0].size(); x++) {
-                if(board[y][x] != 0) {
-                    drawBlock(x * blockSize, y * blockSize, board[y][x]);
-                }
+        
+        // Dibuja los números ya colocados en el tablero
+        for(int i = 0; i < boardHeight; i++){
+            for(int j = 0; j < boardWidth; j++){
+                if(board.data[i][j] != -1)
+                    drawNumberBlock(j * blockSize, i * blockSize, board.data[i][j]);
             }
         }
-        // Dibuja el tetromino activo
-        for (int i = 0; i < tetromino.size(); i++) {
-            for (int j = 0; j < tetromino[i].size(); j++) {
-                if (tetromino[i][j]) {
-                    drawBlock((tetroX + j) * blockSize, (tetroY + i) * blockSize, RED);
-                }
-            }
-        }
+        // Dibuja el número que cae
+        drawNumberBlock(fallingX * blockSize, fallingY * blockSize, fallingValue);
 
-        // Muestra la página ya dibujada
         setvisualpage(page);
-        delay(50);  // Pequeña espera para fluidez
-        page = 1 - page; // Alterna la página para el siguiente frame
+        delay(50);
+        page = 1 - page;
     }
-
+    
     getch();
     closegraph();
     return 0;
